@@ -20,7 +20,7 @@ setup(
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            'ledcontrol=ledcontrol:main'
+            'ledcontrol=ledcontrol:create_app'
         ]
     },
     license='MIT',

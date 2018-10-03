@@ -1,8 +1,8 @@
-import sys
+from flask import Flask
+from config import Config
 
-def main(args=None):
-    """Main"""
-    if args is None:
-        args = sys.argv[1:]
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
 
-    print("Test.")
+    return app
