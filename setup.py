@@ -6,8 +6,8 @@ from setuptools import find_packages, setup
 # Where the magic happens:
 setup(
     name='led-control',
-    version='0.1.0',
-    description='WS2812 LED controller with web interface for Raspberry Pi',
+    version='1.0.0',
+    description='WS2812 LED strip controller with web interface for Raspberry Pi',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     author='jackw01',
@@ -33,5 +33,4 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy'
     ]
-
 )

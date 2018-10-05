@@ -5,6 +5,6 @@ def create_app():
 
     @app.route('/')
     def index():
-        return flask.render_template('index.html')
+        return render_template('index.html')
 
     return app
