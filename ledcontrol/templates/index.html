@@ -1,19 +1,35 @@
 <!doctype html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>LED Control</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1.0,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
-        <link rel="icon" href="static/favicon.ico" type="image/x-icon">
-        <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
-        <link rel="apple-touch-icon" href="static/img/Apple Home Screen Icon.png">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <link rel="stylesheet" href="static/css/normalize.min.css">
-        <link rel="stylesheet" href="static/css/style.css">
-        <link rel="stylesheet" href="static/css/extra.css">
-    </head>
-    <body class="body-dark">
-
-    </body>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>LED Control</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1.0,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+  <link rel="icon" href="static/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="static/img/Apple Home Screen Icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="stylesheet" href="static/css/normalize.min.css">
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="stylesheet" href="static/css/extra.css">
+</head>
+<body class="body-dark">
+  <table class="input-table">
+    <tr>
+      <td>
+        <span class="label">Mode: </span>
+      </td>
+      <td>
+        <span class="select-container dark-button" style="width:288px">
+          <span style="display:none" id="selectModeValue">{{ animation_mode }}</span>
+          <select style="width:288px" class="update-params-on-change" id="select-mode">
+            {% for mode in animation_modes %}
+              <option value="{{ loop.index0 }}">{{ mode }}</option>
+            {% endfor %}
+          </select>
+        </span>
+      </td>
+    </tr>
+  </table>
+</body>
 </html>
