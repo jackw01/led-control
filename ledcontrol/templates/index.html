@@ -15,22 +15,30 @@
 </head>
 <body class="body-dark">
   <table class="input-table">
-    <tr>
-      <td>
-        <span class="label">Mode: </span>
-      </td>
-      <td>
-        <span class="select-container dark-button" style="width:288px">
-          <select style="width:288px" class="update-on-change" autocomplete="off" id="animation_mode">
-            {% for mode in animation_modes %}
-              <option value="{{ loop.index0 }}" {% if loop.index0 == animation_mode %}selected="selected"{% endif %}>
-                {{ mode }}
-              </option>
-            {% endfor %}
-          </select>
-        </span>
-      </td>
-    </tr>
+    {% for input in form %}
+      <tr>
+        <td>
+          <span class="label">{{ input.label }}: </span>
+        </td>
+        <td>
+          {% if input.control == 'select' %}
+            <span class="select-container dark-button" style="width:288px">
+              <select style="width:288px" class="update-on-change" autocomplete="off" id="{{ input.key }}">
+                {% for opt in input.options %}
+                  <option value="{{ loop.index0 }}" {% if loop.index0 == input.val %}selected{% endif %}>
+                    {{ opt }}
+                  </option>
+                {% endfor %}
+              </select>
+            </span>
+          {% elif input.control == 'range' %}
+            <span class="slider-container">
+              <input type="range" style="width:300px" min="{{ input.min }}" max="{{ input.max }}" step="{{ input.step }}" value="{{ input.val }}" class="dark-slider update-on-change" id="{{ input.key }}">
+            </span>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
   </table>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="static/js/main.js"></script>
