@@ -13,7 +13,7 @@ def create_app():
     @app.route('/')
     def index():
         return render_template('index.html',
-        animation_mode = LEDAnimationMode.SolidColor,
+        animation_mode = int(animation_controller.params['animation_mode']),
         animation_modes = [add_spaces(e.name) for e in LEDAnimationMode])
 
     @app.route('/setparam')

@@ -11,11 +11,17 @@ class ColorHSV:
         return colorsys.hsv_to_rgb(h, s, v)
 
 class AnimationController:
+    paramSchema = (
+        { 'key': 'master_brightness', 'range' : (0, 1), 'unit' : '' },
+        { 'key': 'animation_speed', 'range' : (0, 100), 'unit' : 'LEDs/sec' },
+    )
+
     def __init__(self):
         self.params = {
             'master_brightness' : 1,
             'animation_mode' : LEDAnimationMode.SolidColor,
-            'colors' : [ ColorHSV(0.0, 0.0, 255.0) ]
+            'animation_speed' : 10,
+            'colors' : [ (0.0, 0.0, 255.0) ]
         }
         self.time = 0
 
