@@ -1,0 +1,2 @@
+#!/bin/sh
+lessc ledcontrol/static/css/style.less ledcontrol/static/css/style.css
