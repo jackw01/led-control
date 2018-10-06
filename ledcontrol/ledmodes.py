@@ -1,5 +1,5 @@
-from enum import Enum
+from enum import IntEnum
 
-class LEDAnimationMode(Enum):
+class LEDAnimationMode(IntEnum):
     SolidColor = 0
     CycleHue = 1

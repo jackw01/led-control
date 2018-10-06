@@ -22,7 +22,7 @@
       <td>
         <span class="select-container dark-button" style="width:288px">
           <span style="display:none" id="selectModeValue">{{ animation_mode }}</span>
-          <select style="width:288px" class="update-params-on-change" id="select-mode">
+          <select style="width:288px" class="update-on-change" id="animation_mode">
             {% for mode in animation_modes %}
               <option value="{{ loop.index0 }}">{{ mode }}</option>
             {% endfor %}
@@ -31,5 +31,7 @@
       </td>
     </tr>
   </table>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="static/js/main.js"></script>
 </body>
 </html>

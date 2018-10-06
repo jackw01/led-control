@@ -1,5 +1,5 @@
 import re
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 from ledcontrol.animationcontroller import AnimationController
 from ledcontrol.ledmodes import LEDAnimationMode
 
@@ -13,7 +13,14 @@ def create_app():
     @app.route('/')
     def index():
         return render_template('index.html',
-                               animation_mode = LEDAnimationMode.SolidColor,
-                               animation_modes = [add_spaces(e.name) for e in LEDAnimationMode])
+        animation_mode = LEDAnimationMode.SolidColor,
+        animation_modes = [add_spaces(e.name) for e in LEDAnimationMode])
+
+    @app.route('/setparam')
+    def set_param():
+        key = request.args.get('key', type=str)
+        value = request.args.get('value')
+        animation_controller.set_param(key, value)
+        return jsonify(result = '')
 
     return app
