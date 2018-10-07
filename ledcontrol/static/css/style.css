@@ -32,24 +32,6 @@ pre {
   clear: both;
   visibility: hidden;
 }
-.indented {
-  margin-left: 2rem;
-}
-.float-left {
-  float: left;
-}
-.float-right {
-  float: right;
-}
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.flex-center * {
-  max-width: 50%;
-  vertical-align: middle;
-}
 body {
   padding: 0;
   margin: 0;
@@ -100,8 +82,8 @@ h6 {
 strong {
   font-weight: 700;
 }
-.small {
-  font-size: 0.8rem;
+small {
+  font-size: 0.9rem;
 }
 ::-moz-selection {
   background-color: rgba(6, 162, 171, 0.3);
@@ -119,42 +101,6 @@ a:hover,
 a:active {
   color: #07c3cd;
   text-decoration: underline;
-}
-p {
-  margin-bottom: 1rem;
-}
-img {
-  max-width: 100%;
-  border-radius: 2px;
-}
-ul,
-ol {
-  margin-top: 0;
-}
-hr {
-  display: block;
-  width: 100%;
-  margin: 1.5rem;
-  margin-right: auto;
-  margin-left: auto;
-  border: 0;
-  border-top: 1px solid #373a3f;
-}
-div + hr {
-  margin-top: 0;
-}
-audio,
-canvas,
-iframe,
-img,
-svg,
-video {
-  vertical-align: middle;
-}
-fieldset {
-  margin: 0;
-  padding: 0;
-  border: 0;
 }
 textarea {
   resize: vertical;
@@ -180,7 +126,7 @@ textarea {
   margin: 5px 0;
   text-decoration: none;
   transition: all 220ms ease 80ms;
-  background: #303337;
+  background: #373a3f;
   color: #cacaca;
 }
 .button:hover {
@@ -201,7 +147,7 @@ textarea {
 }
 .text-view {
   border-radius: 5px;
-  background: #242629;
+  background: #2b2e32;
   color: #cacaca;
 }
 textarea,
@@ -215,7 +161,7 @@ input[type="number"] {
   outline: none;
   font-size: 0.9em;
   transition: all 220ms ease 80ms;
-  background: #242629;
+  background: #2b2e32;
   color: #cacaca;
 }
 textarea:focus,
@@ -277,7 +223,7 @@ input[type="number"]:focus {
 }
 option {
   color: #cacaca;
-  background: #303337;
+  background: #373a3f;
   border: none;
 }
 option:hover,
@@ -293,7 +239,7 @@ input[type="range"] {
   -webkit-appearance: none !important;
   display: inline-block;
   outline: none;
-  background: #242629;
+  background: #2b2e32;
 }
 input[type="range"]:focus {
   outline: none;
@@ -309,7 +255,7 @@ input[type="range"]::-webkit-slider-thumb {
   height: 20px;
   margin-top: 2px;
   border-radius: 10px;
-  background: #303337;
+  background: #373a3f;
   color: #cacaca;
 }
 input[type="range"]::-webkit-slider-thumb:hover {
@@ -324,7 +270,7 @@ input[type="range"]::-moz-range-thumb {
   height: 20px;
   margin-top: 2px;
   border-radius: 10px;
-  background: #303337;
+  background: #373a3f;
   color: #cacaca;
   border: none;
   outline: none;

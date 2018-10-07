@@ -1,7 +1,7 @@
 import re
 from flask import Flask, render_template, request, jsonify
 from ledcontrol.animationcontroller import AnimationController
-from ledcontrol.ledmodes import LEDAnimationMode
+from ledcontrol.ledmodes import LEDColorAnimationMode, LEDSecondaryAnimationMode
 
 def camel_case_to_title(text):
     return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', text)
@@ -10,7 +10,8 @@ def snake_case_to_title(text):
     return text.replace('_', ' ').title()
 
 class FormItem:
-    def __init__(self, control, key, type, label='', min=0, max=1, step=0.01, options=(), val=0, unit=''):
+    def __init__(self, control, key, type,
+                 label='', min=0, max=1, step=0.1, options=(), val=0, unit='', e_class=''):
         self.control = control
         self.label = label if label != '' else snake_case_to_title(key)
         self.key = key
@@ -20,6 +21,7 @@ class FormItem:
         self.options = options
         self.val = type(val)
         self.unit = unit
+        self.e_class = e_class
 
 def create_app():
     app = Flask(__name__)
@@ -28,10 +30,21 @@ def create_app():
     @app.route('/')
     def index():
         form = (
-            FormItem('select', 'animation_mode', int,
-                     options=[camel_case_to_title(e.name) for e in LEDAnimationMode]),
             FormItem('range', 'master_brightness', float, min=0, max=1, step=0.001),
-            FormItem('range', 'animation_speed', float, min=0, max=100, step=10, unit='LEDs/sec')
+            FormItem('select', 'color_animation_mode', int,
+                     options=[camel_case_to_title(e.name) for e in LEDColorAnimationMode]),
+            FormItem('range', 'color_animation_speed', float, min=0, max=100, step=1, unit=''),
+            FormItem('range', 'color_animation_scale', float, min=0, max=100, step=1, unit='LEDs'),
+            FormItem('select', 'secondary_animation_mode', int,
+                     options=[camel_case_to_title(e.name) for e in LEDSecondaryAnimationMode]),
+            FormItem('range', 'secondary_animation_speed', float, max=100, step=1, e_class='secondary'),
+            FormItem('range', 'secondary_animation_scale', float, max=100, step=1, unit='LEDs', e_class='secondary'),
+            FormItem('range', 'red_frequency', float, min=0, max=1, step=0.01, e_class='sine'),
+            FormItem('range', 'green_frequency', float, min=0, max=1, step=0.01, e_class='sine'),
+            FormItem('range', 'blue_frequency', float, min=0, max=1, step=0.01, e_class='sine'),
+            FormItem('range', 'red_phase_offset', float, min=0, max=1, step=0.01, e_class='sine'),
+            FormItem('range', 'green_phase_offset', float, min=0, max=1, step=0.01, e_class='sine'),
+            FormItem('range', 'blue_phase_offset', float, min=0, max=1, step=0.01, e_class='sine'),
         )
 
         for item in form:

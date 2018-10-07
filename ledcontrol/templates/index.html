@@ -16,32 +16,36 @@
 <body class="body-dark">
   <div class="wrapper clearfix">
     <main>
-    <table class="input-table">
-      {% for input in form %}
-        <tr>
+      <table class="input-table">
+        {% for input in form %}
+        <tr class="{{ input.e_class }}">
           <td>
             <label>{{ input.label }}:</label>
           </td>
           <td>
             {% if input.control == 'select' %}
-              <span class="select-container button">
-                <select class="update-on-change" style="width:98%" autocomplete="off" id="{{ input.key }}">
-                  {% for opt in input.options %}
-                    <option value="{{ loop.index0 }}" {% if loop.index0 == input.val %}selected{% endif %}>
-                      {{ opt }}
-                    </option>
-                  {% endfor %}
-                </select>
-              </span>
+            <span class="select-container button">
+              <select class="update-on-change {{ input.e_class }}" style="width:98%" autocomplete="off" id="{{ input.key }}">
+                {% for opt in input.options %}
+                <option value="{{ loop.index0 }}" {% if loop.index0 == input.val %}selected{% endif %}>
+                  {{ opt }}
+                </option>
+                {% endfor %}
+              </select>
+            </span>
             {% elif input.control == 'range' %}
-              <span class="slider-container">
-                <input type="range" style="width:300px" min="{{ input.min }}" max="{{ input.max }}" step="{{ input.step }}" value="{{ input.val }}" class="update-on-change" id="{{ input.key }}">
-              </span>
+            <span class="slider-container">
+              <input type="range" style="width:300px" min="{{ input.min }}" max="{{ input.max }}" step="{{ input.step }}" value="{{ input.val }}" class="update-on-change {{ input.e_class }}" id="{{ input.key }}">
+            </span>
             {% endif %}
           </td>
         </tr>
-      {% endfor %}
-    </table>
+        {% endfor %}
+      </table>
+    </main>
+    <footer>
+      <small><a href="https://github.com/jackw01/ledcontrol">LEDControl Server</a> by <a href="https://github.com/jackw01">@jackw01</a>. Released under the MIT License.</small>
+    </footer>
   </div>
   <script src="static/js/jquery-3.3.1.min.js"></script>
   <script src="static/js/main.js"></script>

@@ -3,7 +3,6 @@
 
 from setuptools import find_packages, setup
 
-# Where the magic happens:
 setup(
     name='led-control',
     version='1.0.0',
