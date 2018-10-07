@@ -20,12 +20,12 @@
       {% for input in form %}
         <tr>
           <td>
-            <span class="label">{{ input.label }}: </span>
+            <label>{{ input.label }}:</label>
           </td>
           <td>
             {% if input.control == 'select' %}
               <span class="select-container button">
-                <select class="update-on-change" style="width:270px" autocomplete="off" id="{{ input.key }}">
+                <select class="update-on-change" style="width:98%" autocomplete="off" id="{{ input.key }}">
                   {% for opt in input.options %}
                     <option value="{{ loop.index0 }}" {% if loop.index0 == input.val %}selected{% endif %}>
                       {{ opt }}

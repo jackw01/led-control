@@ -11,8 +11,8 @@
 @accent-color-alt-lighter: lighten(@accent-color-alt, 7%);
 @accent-color-alt-darker: darken(@accent-color-alt, 7%);
 
-@dark-shade-1: lighten(@dark-background, 2%);
-@dark-shade-2: lighten(@dark-background, 7%);
+@dark-shade-1: lighten(@dark-background, 5%);
+@dark-shade-2: lighten(@dark-background, 10%);
 
 .transition() {
   transition: all 220ms ease 80ms;
@@ -309,8 +309,10 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    position: absolute;
     display: inline-block;
     height: 30px;
+    padding-top: 1px;
     margin-top: 0px;
     padding-left: 3px;
     border: none;
@@ -393,4 +395,20 @@ input[type="range"], .progress-bar-track {
   height: 8px;
   margin: 5px 0;
   border-radius: 4px;
+}
+
+.input-table td {
+  padding-bottom: 0.5rem;
+  padding-right: 1rem;
+  height: 30px;
+
+  & .slider-container {
+    padding-top: 7px;
+    height: 30px;
+    margin: 0;
+  }
+
+  & .select-container {
+    margin-bottom: 0;
+  }
 }

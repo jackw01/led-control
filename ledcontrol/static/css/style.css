@@ -241,8 +241,10 @@ input[type="number"]:focus {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+  position: absolute;
   display: inline-block;
   height: 30px;
+  padding-top: 1px;
   margin-top: 0px;
   padding-left: 3px;
   border: none;
@@ -336,4 +338,17 @@ input[type="range"],
   height: 8px;
   margin: 5px 0;
   border-radius: 4px;
+}
+.input-table td {
+  padding-bottom: 0.5rem;
+  padding-right: 1rem;
+  height: 30px;
+}
+.input-table td .slider-container {
+  padding-top: 7px;
+  height: 30px;
+  margin: 0;
+}
+.input-table td .select-container {
+  margin-bottom: 0;
 }
