@@ -1,6 +1,6 @@
 import re
 from flask import Flask, render_template, request, jsonify
-from ledcontrol.animationcontroller import AnimationController
+from ledcontrol.animationcontroller import AnimationController, Point
 from ledcontrol.ledmodes import LEDColorAnimationMode, LEDSecondaryAnimationMode
 
 def camel_case_to_title(text):
@@ -24,8 +24,12 @@ class FormItem:
         self.e_class = e_class
 
 def create_app():
+    points = []
+    for i in range(0, 150):
+        points.append(Point(i, 0))
+
     app = Flask(__name__)
-    animation_controller = AnimationController()
+    animation_controller = AnimationController(points)
 
     @app.route('/')
     def index():
