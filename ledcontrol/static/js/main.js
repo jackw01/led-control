@@ -1,8 +1,8 @@
 function updateControls() {
   if ($('#color_animation_mode').val() == 2) $('tr.sine').show();
   else $('tr.sine').hide();
-  if ($('#secondary_animation_mode').val() == 0) $('tr.secondary').hide();
-  else $('tr.secondary').show();
+  if ($('#secondary_animation_mode').val() == 0) $('tr.a2').hide();
+  else $('tr.a2').show();
 }
 
 $('.update-on-change').change(function update(evt) {

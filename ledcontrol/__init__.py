@@ -13,11 +13,17 @@ def main():
     parser.add_argument('--strip', type=int, default=0,
                         help='Configure for a LED strip of this length.')
     parser.add_argument('--fps', type=int, default=24,
-                        help='Refresh rate for LEDs, in FPS.')
+                        help='Refresh rate for LEDs, in FPS. Default: 24')
+    parser.add_argument('--led_pin', type=int, default=18,
+                        help='Pin for LEDs. Default: 18')
+    parser.add_argument('--led_data_rate', type=int, default=800000,
+                        help='Data rate for LEDs. Default: 800000 Hz')
+    parser.add_argument('--led_dma_channel', type=int, default=5,
+                        help='DMA channel for LEDs. Default: 5')
     args = parser.parse_args()
 
-    app = create_app(args.strip, args.fps)
-    run_simple(args.host, int(args.port), app,
+    app = create_app(args.strip, args.fps, args.led_pin, args.led_data_rate, args.led_dma_channel)
+    run_simple(args.host, args.port, app,
                use_reloader=False,
                use_debugger=True,
                use_evalex=True)
