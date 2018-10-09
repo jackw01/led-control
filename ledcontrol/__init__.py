@@ -10,10 +10,14 @@ def main():
                         help='Port to use for web interface. Default: 80')
     parser.add_argument('--host', default='0.0.0.0',
                         help='Hostname to use for web interface. Default: 0.0.0.0')
+    parser.add_argument('--strip', type=int, default=0,
+                        help='Configure for a LED strip of this length.')
+    parser.add_argument('--fps', type=int, default=24,
+                        help='Refresh rate for LEDs, in FPS.')
     args = parser.parse_args()
 
-    app = create_app()
+    app = create_app(args.strip, args.fps)
     run_simple(args.host, int(args.port), app,
-               use_reloader=True,
+               use_reloader=False,
                use_debugger=True,
                use_evalex=True)

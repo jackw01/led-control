@@ -1,4 +1,4 @@
-import re
+import re, atexit
 from flask import Flask, render_template, request, jsonify
 from ledcontrol.animationcontroller import AnimationController, Point
 from ledcontrol.ledmodes import LEDColorAnimationMode, LEDSecondaryAnimationMode
@@ -23,13 +23,13 @@ class FormItem:
         self.unit = unit
         self.e_class = e_class
 
-def create_app():
+def create_app(led_strip, refresh_rate):
     points = []
-    for i in range(0, 150):
-        points.append(Point(i, 0))
+    if led_strip > 0:
+        points = [Point(i, 0) for i in range(0, led_strip)]
 
     app = Flask(__name__)
-    animation_controller = AnimationController(points)
+    animation_controller = AnimationController(points, refresh_rate)
 
     @app.route('/')
     def index():
@@ -62,5 +62,8 @@ def create_app():
         value = request.args.get('value')
         animation_controller.set_param(key, value)
         return jsonify(result = '')
+
+    animation_controller.begin_animation_thread()
+    atexit.register(animation_controller.end_animation_thread)
 
     return app
