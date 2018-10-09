@@ -58,7 +58,6 @@ def create_app(led_strip, refresh_rate, led_pin, led_data_rate, led_dma_channel)
     def index():
         for item in form:
             item.val = item.type(animation_controller.params[item.key])
-
         return render_template('index.html', form=form, params=animation_controller.params)
 
     @app.route('/setparam')

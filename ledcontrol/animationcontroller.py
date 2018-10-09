@@ -66,14 +66,17 @@ class AnimationController:
     def get_next_frame(self):
         led_states = []
         for i, point in enumerate(self.points):
-            color = (0.0, 0.0, 0.0)
+            color = ColorHSV([0.0, 0.0, 0.0])
             if self.params['color_animation_mode'] == LEDColorAnimationMode.SolidColor:
-                color = self.params['colors'][0]
+                color = ColorHSV(self.params['colors'][0])
             elif self.params['color_animation_mode'] == LEDColorAnimationMode.CycleHue:
-                color = ((self.time * self.params['color_animation_speed'] +
-                          i / float(self.params['color_animation_scale'])) % 1.0,
-                         1.0, 1.0)
-            led_states.append(ColorHSV(color))
+                color = ColorHSV(((self.time * self.params['color_animation_speed'] +
+                                   i / float(self.params['color_animation_scale'])) % 1.0,
+                                  1.0, 1.0))
+
+            color.s = color.s * self.params['saturation']
+            color.v = color.v * self.params['master_brightness']
+            led_states.append(color)
 
         self.time += 1.0 / self.refresh_rate
         return led_states

@@ -5,7 +5,7 @@ function updateControls() {
   else $('tr.a2').show();
 }
 
-$('.update-on-change').change(function update(evt) {
+$('.update-on-change').on('change', function update(evt) {
   var key = $(this).attr('id');
   var val = parseFloat($(this).val(), 10);
   $.getJSON('/setparam', { key: key, value: val, }, function(data, status, jqXHR) {});
