@@ -1,7 +1,14 @@
+import math
 import time
+import colorsys
 from threading import Event, Thread
-from ledcontrol.ledcontroller import ColorHSV
 from ledcontrol.ledmodes import LEDColorAnimationMode, LEDSecondaryAnimationMode
+
+def hsv_to_rgb(triplet):
+    return [int(x * 255) for x in colorsys.hsv_to_rgb(triplet[0], triplet[1], triplet[2])]
+
+def hsv_to_rgb_norm(triplet):
+    return colorsys.hsv_to_rgb(triplet[0], triplet[1], triplet[2])
 
 class RepeatedTimer:
     """Repeat `function` every `interval` seconds."""
@@ -66,17 +73,30 @@ class AnimationController:
     def get_next_frame(self):
         led_states = []
         for i, point in enumerate(self.points):
-            color = ColorHSV([0.0, 0.0, 0.0])
-            if self.params['color_animation_mode'] == LEDColorAnimationMode.SolidColor:
-                color = ColorHSV(self.params['colors'][0])
-            elif self.params['color_animation_mode'] == LEDColorAnimationMode.CycleHue:
-                color = ColorHSV(((self.time * self.params['color_animation_speed'] +
-                                   i / float(self.params['color_animation_scale'])) % 1.0,
-                                  1.0, 1.0))
+            color = (0.0, 0.0, 0.0)
+            color_anim_time = self.time * self.params['color_animation_speed']
+            color_anim_scale = i / float(self.params['color_animation_scale'])
 
-            color.s = color.s * self.params['saturation']
-            color.v = color.v * self.params['master_brightness']
-            led_states.append(color)
+            if self.params['color_animation_mode'] == LEDColorAnimationMode.SolidColor:
+                color = self.params['colors'][0]
+
+            elif self.params['color_animation_mode'] == LEDColorAnimationMode.CycleHue:
+                color = ((color_anim_time + color_anim_scale) % 1.0,
+                         self.params['saturation'], 1.0)
+
+            elif self.params['color_animation_mode'] == LEDColorAnimationMode.Sines:
+                rgb = hsv_to_rgb_norm(self.params['colors'][0])
+                r_half, g_half, b_half = [x / 2 for x in rgb]
+                r = r_half * math.sin(color_anim_time * self.params['red_frequency'] +
+                                      self.params['red_phase_offset'] + color_anim_scale) + r_half
+                g = g_half * math.sin(color_anim_time * self.params['green_frequency'] +
+                                      self.params['green_phase_offset'] + color_anim_scale) + g_half
+                b = b_half * math.sin(color_anim_time * self.params['blue_frequency'] +
+                                      self.params['blue_phase_offset'] + color_anim_scale) + b_half
+                color = colorsys.rgb_to_hsv(r, g, b)
+
+            color = (color[0], color[1], color[2] * self.params['master_brightness'])
+            led_states.append(hsv_to_rgb(color))
 
         self.time += 1.0 / self.refresh_rate
         return led_states
