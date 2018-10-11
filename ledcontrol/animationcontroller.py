@@ -107,8 +107,7 @@ class AnimationController:
                                             2 * math.pi * sec_anim_scale) + 0.5) ** 1.7
 
             elif self.params['secondary_animation_mode'] == LEDSecondaryAnimationMode.Trail:
-                color[2] *= (0.5 * math.sin(2 * math.pi * sec_anim_time +
-                                            2 * math.pi * sec_anim_scale) + 0.5) ** 1.7
+                color[2] *= (1.0 - (sec_anim_time + sec_anim_scale) % 1) ** 4
 
             color[2] *= self.params['master_brightness']
             led_states.append(hsv_to_rgb(color))
