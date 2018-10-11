@@ -44,10 +44,10 @@ class AnimationController:
     def __init__(self, led_locations, refresh_rate, led_controller):
         self.params = {
             'master_brightness' : 1.0,
-            'color_animation_mode' : LEDColorAnimationMode.CycleHue,
+            'color_animation_mode' : LEDColorAnimationMode.SolidColor,
             'color_animation_speed' : 0.2,
             'color_animation_scale' : 10,
-            'secondary_animation_mode' : LEDSecondaryAnimationMode.Static,
+            'secondary_animation_mode' : LEDSecondaryAnimationMode.Trail,
             'secondary_animation_speed' : 0.2,
             'secondary_animation_scale' : 10,
             'saturation': 1.0,
@@ -76,6 +76,8 @@ class AnimationController:
             color = (0.0, 0.0, 0.0)
             color_anim_time = self.time * self.params['color_animation_speed']
             color_anim_scale = i / float(self.params['color_animation_scale'])
+            sec_anim_time = self.time * self.params['secondary_animation_speed']
+            sec_anim_scale = i / float(self.params['secondary_animation_scale'])
 
             if self.params['color_animation_mode'] == LEDColorAnimationMode.SolidColor:
                 color = self.params['colors'][0]
@@ -95,7 +97,20 @@ class AnimationController:
                                       self.params['blue_phase_offset'] + color_anim_scale) + b_half
                 color = colorsys.rgb_to_hsv(r, g, b)
 
-            color = (color[0], color[1], color[2] * self.params['master_brightness'])
+            color = [color[0], color[1], color[2]]
+
+            if self.params['secondary_animation_mode'] == LEDSecondaryAnimationMode.Static:
+                pass
+
+            elif self.params['secondary_animation_mode'] == LEDSecondaryAnimationMode.Wave:
+                color[2] *= (0.5 * math.sin(2 * math.pi * sec_anim_time +
+                                            2 * math.pi * sec_anim_scale) + 0.5) ** 1.7
+
+            elif self.params['secondary_animation_mode'] == LEDSecondaryAnimationMode.Trail:
+                color[2] *= (0.5 * math.sin(2 * math.pi * sec_anim_time +
+                                            2 * math.pi * sec_anim_scale) + 0.5) ** 1.7
+
+            color[2] *= self.params['master_brightness']
             led_states.append(hsv_to_rgb(color))
 
         self.time += 1.0 / self.refresh_rate

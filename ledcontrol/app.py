@@ -26,13 +26,13 @@ class FormItem:
         self.unit = unit
         self.e_class = e_class
 
-def create_app(led_strip, refresh_rate, led_pin, led_data_rate, led_dma_channel):
+def create_app(led_strip, refresh_rate, led_pin, led_data_rate, led_dma_channel, led_pixel_order):
     points = []
     if led_strip > 0:
         points = [Point(i, 0) for i in range(0, led_strip)]
 
     app = Flask(__name__)
-    led_controller = LEDController(len(points), led_pin, led_data_rate, led_dma_channel)
+    led_controller = LEDController(len(points), led_pin, led_data_rate, led_dma_channel, led_pixel_order)
     animation_controller = AnimationController(points, refresh_rate, led_controller)
 
     form = (
