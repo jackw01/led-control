@@ -8,8 +8,14 @@ function updateControls() {
 }
 
 $('.update-on-change').on('change', function update(evt) {
-  var key = $(this).attr('id');
+  var key = $(this).data('id');
   var val = parseFloat($(this).val(), 10);
+  if (!$(this).is('select')) {
+    var min = parseFloat($(this).attr('min'), 10);
+    var max = parseFloat($(this).attr('max'), 10);
+    if (val < min || val > max) return;
+  }
+  $('*[data-id=' + key + ']').val(val);
   $.getJSON('/setparam', { key: key, value: val, }, function(data, status, jqXHR) {});
 });
 
