@@ -1,3 +1,6 @@
+// led-control WS2812B LED Controller Server
+// Copyright 2018 jackw01. Released under the MIT License (see LICENSE for details).
+
 function updateControls() {
   if ($('#color_animation_mode').val() == 1) $('tr.saturation').show();
   else $('tr.saturation').hide();

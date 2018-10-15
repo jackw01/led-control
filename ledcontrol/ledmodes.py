@@ -1,3 +1,6 @@
+# led-control WS2812B LED Controller Server
+# Copyright 2018 jackw01. Released under the MIT License (see LICENSE for details).
+
 from enum import IntEnum
 
 class LEDColorAnimationMode(IntEnum):

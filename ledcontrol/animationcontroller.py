@@ -1,3 +1,6 @@
+# led-control WS2812B LED Controller Server
+# Copyright 2018 jackw01. Released under the MIT License (see LICENSE for details).
+
 import math
 import time
 import colorsys
@@ -44,10 +47,10 @@ class AnimationController:
     def __init__(self, led_locations, refresh_rate, led_controller):
         self.params = {
             'master_brightness' : 1.0,
-            'color_animation_mode' : LEDColorAnimationMode.SolidColor,
+            'color_animation_mode' : LEDColorAnimationMode.CycleHue,
             'color_animation_speed' : 0.2,
             'color_animation_scale' : 10,
-            'secondary_animation_mode' : LEDSecondaryAnimationMode.Trail,
+            'secondary_animation_mode' : LEDSecondaryAnimationMode.Static,
             'secondary_animation_speed' : 0.2,
             'secondary_animation_scale' : 10,
             'saturation': 1.0,

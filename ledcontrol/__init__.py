@@ -1,3 +1,6 @@
+# led-control WS2812B LED Controller Server
+# Copyright 2018 jackw01. Released under the MIT License (see LICENSE for details).
+
 __version__ = '1.0.0'
 
 import argparse
@@ -18,8 +21,8 @@ def main():
                         help='Pin for LEDs. Default: 18')
     parser.add_argument('--led_data_rate', type=int, default=800000,
                         help='Data rate for LEDs. Default: 800000 Hz')
-    parser.add_argument('--led_dma_channel', type=int, default=5,
-                        help='DMA channel for LEDs. Default: 5')
+    parser.add_argument('--led_dma_channel', type=int, default=10,
+                        help='DMA channel for LEDs. Default: 10')
     parser.add_argument('--led_pixel_order', default='GRB',
                         help='LED color channel order. Either RGB or GRB. Default: GRB')
     args = parser.parse_args()
