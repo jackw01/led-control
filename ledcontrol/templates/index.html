@@ -38,11 +38,11 @@
           {% elif input.control == 'range' %}
             <td>
               <span class="slider-container">
-                <input type="range" style="width:300px" min="{{ input.min }}" max="{{ input.max }}" step="{{ input.step }}" value="{{ input.val }}" class="update-on-change {{ input.e_class }}" data-id="{{ input.key }}">
+                <input type="range" style="width:300px" min="{{ input.min }}" max="{{ input.max }}" step="{{ input.step }}" value="{{ input.val }}" class="update-on-change {{ input.e_class }}" autocomplete="off" data-id="{{ input.key }}">
               </span>
             </td>
             <td>
-              <input type="number" style="width:70px" min="{{ input.min }}" max="{{ input.max }}" step="{{ input.step }}" value="{{ input.val }}" class="update-on-change {{ input.e_class }}" data-id="{{ input.key }}">
+              <input type="number" style="width:70px" min="{{ input.min }}" max="{{ input.max }}" step="{{ input.step }}" value="{{ input.val }}" class="update-on-change {{ input.e_class }}" autocomplete="off" data-id="{{ input.key }}">
             </td>
           {% endif %}
         </tr>
@@ -58,7 +58,7 @@
           </td>
           <td>
             <span class="slider-container">
-              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[0] }}" class="update-color-on-change" data-idx="{{ loop.index0 }}" data-cmp="{{ 0 }}">
+              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[0] }}" class="update-color-on-change hue-grad" autocomplete="off" data-idx="{{ loop.index0 }}" data-cmp="{{ 0 }}">
             </span>
           </td>
         </tr>
@@ -68,7 +68,7 @@
           </td>
           <td>
             <span class="slider-container">
-              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[1] }}" class="update-color-on-change" data-idx="{{ loop.index0 }}" data-cmp="{{ 1 }}">
+              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[1] }}" class="update-color-on-change sat-grad" autocomplete="off" data-idx="{{ loop.index0 }}" data-cmp="{{ 1 }}">
             </span>
           </td>
         </tr>
@@ -78,7 +78,7 @@
           </td>
           <td>
             <span class="slider-container">
-              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[2] }}" class="update-color-on-change" data-idx="{{ loop.index0 }}" data-cmp="{{ 2 }}">
+              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[2] }}" class="update-color-on-change val-grad" autocomplete="off" data-idx="{{ loop.index0 }}" data-cmp="{{ 2 }}">
             </span>
           </td>
         </tr>

@@ -61,7 +61,7 @@ class AnimationController:
             'green_phase_offset': 0.5,
             'blue_phase_offset': 1.0
         }
-        self.colors = [ [0.0, 0.0, 1.0] ]
+        self.colors = [ [0.0, 1.0, 1.0] ]
         self.points = led_locations
         self.refresh_rate = refresh_rate
         self.led_controller = led_controller

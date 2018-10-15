@@ -1,8 +1,10 @@
 # led-control WS2812B LED Controller Server
 # Copyright 2018 jackw01. Released under the MIT License (see LICENSE for details).
 
+import json
 import re
 import atexit
+from pathlib import Path
 from flask import Flask, render_template, request, jsonify
 from ledcontrol.animationcontroller import AnimationController, Point
 from ledcontrol.ledcontroller import LEDController
@@ -37,6 +39,18 @@ def create_app(led_strip, refresh_rate, led_pin, led_data_rate, led_dma_channel,
     app = Flask(__name__)
     led_controller = LEDController(len(points), led_pin, led_data_rate, led_dma_channel, led_pixel_order)
     animation_controller = AnimationController(points, refresh_rate, led_controller)
+
+    filename = Path.cwd() / 'ledcontrol.json'
+    filename.touch(exist_ok=True)
+
+    with open(str(filename), mode='r') as data_file:
+        try:
+            settings = json.load(data_file)
+            animation_controller.params = settings['params']
+            animation_controller.colors = settings['colors']
+            print('Loaded saved settings from {}'.format(filename))
+        except:
+            print('Could not open saved settings at {}, ignoring.'.format(filename))
 
     form = (
         FormItem('range', 'master_brightness', float, min=0, max=1),
@@ -80,7 +94,17 @@ def create_app(led_strip, refresh_rate, led_pin, led_data_rate, led_dma_channel,
         animation_controller.set_color(index, component, value)
         return jsonify(result = '')
 
+    def save_settings():
+        data = { 'params': animation_controller.params, 'colors': animation_controller.colors }
+        with open(str(filename), 'w') as data_file:
+            try:
+                json.dump(data, data_file, sort_keys=True, indent=4, separators=(',', ': '))
+                print('Saved settings to {}'.format(filename))
+            except:
+                print('Could not save settings to {}'.format(filename))
+
     animation_controller.begin_animation_thread()
+    atexit.register(save_settings)
     atexit.register(animation_controller.end_animation_thread)
 
     return app
