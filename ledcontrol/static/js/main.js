@@ -22,6 +22,16 @@ $('.update-on-change').on('change', function update(evt) {
   $.getJSON('/setparam', { key: key, value: val, }, function(data, status, jqXHR) {});
 });
 
+$('.update-color-on-change').on('change', function update(evt) {
+  var idx = $(this).data('idx');
+  var cmp = $(this).data('cmp');
+  var val = parseFloat($(this).val(), 10);
+  var min = parseFloat($(this).attr('min'), 10);
+  var max = parseFloat($(this).attr('max'), 10);
+  if (val < min || val > max) return;
+  $.getJSON('/setcolor', { index: idx, component: cmp, value: val, }, function(data, status, jqXHR) {});
+});
+
 $('#color_animation_mode, #secondary_animation_mode').change(function update(evt) {
   updateControls();
 });

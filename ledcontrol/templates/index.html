@@ -48,6 +48,42 @@
         </tr>
         {% endfor %}
       </table>
+      <hr>
+      {% for color in colors %}
+      <h4>Color {{ loop.index }}</h4>
+      <table class="input-table">
+        <tr>
+          <td>
+            <label>Hue:</label>
+          </td>
+          <td>
+            <span class="slider-container">
+              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[0] }}" class="update-color-on-change" data-idx="{{ loop.index0 }}" data-cmp="{{ 0 }}">
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>Saturation:</label>
+          </td>
+          <td>
+            <span class="slider-container">
+              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[1] }}" class="update-color-on-change" data-idx="{{ loop.index0 }}" data-cmp="{{ 1 }}">
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>Value:</label>
+          </td>
+          <td>
+            <span class="slider-container">
+              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[2] }}" class="update-color-on-change" data-idx="{{ loop.index0 }}" data-cmp="{{ 2 }}">
+            </span>
+          </td>
+        </tr>
+      </table>
+      {% endfor %}
     </main>
     <footer>
       <small><a href="https://github.com/jackw01/ledcontrol">LEDControl Server</a> by <a href="https://github.com/jackw01">@jackw01</a>. Released under the MIT License.</small>

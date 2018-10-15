@@ -61,13 +61,23 @@ def create_app(led_strip, refresh_rate, led_pin, led_data_rate, led_dma_channel,
     def index():
         for item in form:
             item.val = item.type(animation_controller.params[item.key])
-        return render_template('index.html', form=form, params=animation_controller.params)
+        return render_template('index.html', form=form,
+                                             params=animation_controller.params,
+                                             colors=animation_controller.colors)
 
     @app.route('/setparam')
     def set_param():
         key = request.args.get('key', type=str)
         value = request.args.get('value')
         animation_controller.set_param(key, next(filter(lambda i: i.key == key, form)).type(value))
+        return jsonify(result = '')
+
+    @app.route('/setcolor')
+    def set_color():
+        index = request.args.get('index', type=int)
+        component = request.args.get('component', type=int)
+        value = request.args.get('value', type=float)
+        animation_controller.set_color(index, component, value)
         return jsonify(result = '')
 
     animation_controller.begin_animation_thread()

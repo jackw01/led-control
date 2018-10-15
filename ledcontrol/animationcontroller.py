@@ -59,9 +59,9 @@ class AnimationController:
             'blue_frequency': 0.333,
             'red_phase_offset': 0.0,
             'green_phase_offset': 0.5,
-            'blue_phase_offset': 1.0,
-            'colors' : [ (0.0, 0.0, 1.0) ]
+            'blue_phase_offset': 1.0
         }
+        self.colors = [ [0.0, 0.0, 1.0] ]
         self.points = led_locations
         self.refresh_rate = refresh_rate
         self.led_controller = led_controller
@@ -69,6 +69,9 @@ class AnimationController:
 
     def set_param(self, key, value):
         self.params[key] = value
+
+    def set_color(self, index, component, value):
+        self.colors[index][component] = value
 
     def begin_animation_thread(self):
         self.timer = RepeatedTimer(1 / self.refresh_rate, self.update_leds)
@@ -83,7 +86,7 @@ class AnimationController:
             sec_anim_scale = i / float(self.params['secondary_animation_scale'])
 
             if self.params['color_animation_mode'] == LEDColorAnimationMode.SolidColor:
-                color = self.params['colors'][0]
+                color = self.colors[0]
 
             elif self.params['color_animation_mode'] == LEDColorAnimationMode.CycleHue:
                 color = ((color_anim_time + color_anim_scale) % 1.0,
