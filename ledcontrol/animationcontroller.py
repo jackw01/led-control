@@ -93,13 +93,13 @@ class AnimationController:
                          self.params['saturation'], 1.0)
 
             elif self.params['color_animation_mode'] == LEDColorAnimationMode.Sines:
-                rgb = hsv_to_rgb_norm(self.params['colors'][0])
+                rgb = hsv_to_rgb_norm(self.colors[0])
                 r_half, g_half, b_half = [x / 2 for x in rgb]
-                r = r_half * math.sin(math.pi * color_anim_time * self.params['red_frequency'] +
+                r = r_half * math.sin(math.pi * color_anim_time * 10 * self.params['red_frequency'] +
                                       self.params['red_phase_offset'] + color_anim_scale) + r_half
-                g = g_half * math.sin(math.pi * color_anim_time * self.params['green_frequency'] +
+                g = g_half * math.sin(math.pi * color_anim_time * 10 * self.params['green_frequency'] +
                                       self.params['green_phase_offset'] + color_anim_scale) + g_half
-                b = b_half * math.sin(math.pi * color_anim_time * self.params['blue_frequency'] +
+                b = b_half * math.sin(math.pi * color_anim_time * 10 * self.params['blue_frequency'] +
                                       self.params['blue_phase_offset'] + color_anim_scale) + b_half
                 color = colorsys.rgb_to_hsv(r, g, b)
 

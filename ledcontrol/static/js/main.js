@@ -2,11 +2,11 @@
 // Copyright 2018 jackw01. Released under the MIT License (see LICENSE for details).
 
 function updateControls() {
-  if ($('#color_animation_mode').val() == 1) $('tr.saturation').show();
+  if ($('*[data-id=color_animation_mode]').val() == 1) $('tr.saturation').show();
   else $('tr.saturation').hide();
-  if ($('#color_animation_mode').val() == 2) $('tr.sine').show();
+  if ($('*[data-id=color_animation_mode]').val() == 2) $('tr.sine').show();
   else $('tr.sine').hide();
-  if ($('#secondary_animation_mode').val() == 0) $('tr.a2').hide();
+  if ($('*[data-id=secondary_animation_mode]').val() == 0) $('tr.a2').hide();
   else $('tr.a2').show();
 }
 
@@ -36,6 +36,6 @@ function handleColorUpdate() {
 
 $('.update-on-change').on('change', handleParamUpdate);
 $('.update-color-on-change').on('change mousemove touchmove', handleColorUpdate);
-$('#color_animation_mode, #secondary_animation_mode').change(updateControls);
+$('*[data-id=color_animation_mode], *[data-id=secondary_animation_mode]').change(updateControls);
 
 window.onload = updateControls;
