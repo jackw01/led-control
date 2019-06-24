@@ -14,7 +14,7 @@ def main():
     parser.add_argument('--host', default='0.0.0.0',
                         help='Hostname to use for web interface. Default: 0.0.0.0')
     parser.add_argument('--strip', type=int, default=0,
-                        help='Configure for a LED strip of this length.')
+                        help='Length of the LED strip.')
     parser.add_argument('--fps', type=int, default=24,
                         help='Refresh rate for LEDs, in FPS. Default: 24')
     parser.add_argument('--led_pin', type=int, default=18,
