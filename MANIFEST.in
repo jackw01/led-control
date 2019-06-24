@@ -1,0 +1,2 @@
+recursive-include ledcontrol/templates *
+recursive-include ledcontrol/static *

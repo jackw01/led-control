@@ -3,7 +3,6 @@
 
 from setuptools import find_packages, setup
 
-# Where the magic happens:
 setup(
     name='led-control',
     version='1.0.0',
@@ -14,6 +13,7 @@ setup(
     python_requires='>=3.3.0',
     url='https://github.com/jackw01/led-control',
     packages=find_packages(),
+    zip_safe=False,
     install_requires=[
         'Flask>=1.0.2'
     ],
