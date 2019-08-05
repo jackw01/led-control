@@ -18,7 +18,7 @@ def main():
     parser.add_argument('--fps', type=int, default=24,
                         help='Refresh rate for LEDs, in FPS. Default: 24')
     parser.add_argument('--led_pin', type=int, default=18,
-                        help='Pin for LEDs. Default: 18')
+                        help='Pin for LEDs (GPIO10, GPIO12, GPIO18 or GPIO21). Default: 18')
     parser.add_argument('--led_data_rate', type=int, default=800000,
                         help='Data rate for LEDs. Default: 800000 Hz')
     parser.add_argument('--led_dma_channel', type=int, default=10,
