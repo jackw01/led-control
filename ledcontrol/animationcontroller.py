@@ -39,17 +39,18 @@ class RepeatedTimer:
 		self.thread.join()
 
 class AnimationController:
-	def __init__(self, led_controller, refresh_rate, led_count, mapping):
+	def __init__(self, led_controller, refresh_rate, led_count, mapping, pattern):
 		self.led_controller = led_controller
 		self.refresh_rate = refresh_rate
 		self.led_count = led_count
 		self.mapping = mapping
+		self.pattern = pattern
 
 		self.params = {
 			'master_brightness' : 1.0,
 			'master_saturation': 1.0,
-			'primary_speed': 0.2,
-			'primary_scale': 10,
+			'primary_speed': 1.0,
+			'primary_scale': 1.0,
 		}
 
 		self.time = 0
@@ -60,10 +61,18 @@ class AnimationController:
 	def get_next_frame(self):
 		led_states = []
 		for i in enumerate(self.led_count):
-			point = self.mapping(i)
-			color = (0.0, 0.0, 0.0)
+			point = self.mapping(i) # map led index to normalized vector
+
+			# Calculate time and scale components to determine animation position
+			# time component = time (s) * speed (cycle/s)
+			# scale component = position (max size) * scale (repeats / max size)
+			# one cycle is a normalized input value's transition from 0 to 1
 			primary_time_component = self.time * self.params['primary_speed']
-			primary_scale_component = point[0] / float(self.params['primary_scale'])
+			primary_scale_component_x = point[0] * self.params['primary_scale']
+			primary_scale_component_y = point[1] * self.params['primary_scale']
+
+			color = self.pattern((primary_time_component + primary_scale_component_x) % 1.0, 
+			                     (primary_time_component + primary_scale_component_y) % 1.0)
 
 			"""
 			if self.params['color_animation_mode'] == LEDColorAnimationMode.SolidColor:

@@ -8,7 +8,9 @@ from pathlib import Path
 from flask import Flask, render_template, request, jsonify
 from ledcontrol.animationcontroller import AnimationController
 from ledcontrol.ledcontroller import LEDController
+
 import ledcontrol.pixelmappings as pixelmappings
+import ledcontrol.animationpatterns as patterns
 
 def camel_case_to_title(text):
 	return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', text)
@@ -34,8 +36,8 @@ class FormItem:
 def create_app(led_count, refresh_rate, led_pin, led_data_rate, led_dma_channel, led_pixel_order):
 	app = Flask(__name__)
 	leds = LEDController(led_count, led_pin, led_data_rate, led_dma_channel, led_pixel_order)
-	mapping = pixelmappings.line(led_count)
-	animation_controller = AnimationController(leds, refresh_rate, led_count, mapping)
+	animation_controller = AnimationController(leds, refresh_rate, led_count, 
+	                                           pixelmappings.line(led_count), patterns.cycle_hue_1d)
 
 	filename = Path.cwd() / 'ledcontrol.json'
 	filename.touch(exist_ok=True)
