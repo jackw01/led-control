@@ -2,7 +2,7 @@
 WS2812 LED controller with web interface for Raspberry Pi
 
 ## Install
-1. Install the rpi_ws2812x library and connect an LED strip to your Raspberry Pi: https://learn.adafruit.com/neopixels-on-raspberry-pi
+1. Read this Adafruit guide and follow the directions to connect an LED strip to your Raspberry Pi, install the Python library, and test the strip: https://learn.adafruit.com/neopixels-on-raspberry-pi
 2. `git clone https://github.com/jackw01/led-control.git`
 3. `cd led-control`
 4. `python3 setup.py install`

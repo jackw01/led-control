@@ -5,7 +5,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='led-control',
-    version='1.0.0',
+    version='2.0.0',
     description='WS2812 LED strip controller with web interface for Raspberry Pi',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
@@ -15,7 +15,8 @@ setup(
     packages=find_packages(),
     zip_safe=False,
     install_requires=[
-        'Flask>=1.0.2'
+        'Flask>=1.0.2',
+        'rpi_ws281x>=4.2.2'
     ],
     include_package_data=True,
     entry_points={
