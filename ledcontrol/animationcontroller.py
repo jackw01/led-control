@@ -3,15 +3,8 @@
 
 import math
 import time
-import colorsys
 from threading import Event, Thread
 from ledcontrol.ledmodes import LEDColorAnimationMode, LEDSecondaryAnimationMode
-
-def hsv_to_rgb(triplet):
-    return [int(x * 255) for x in colorsys.hsv_to_rgb(triplet[0], triplet[1], triplet[2])]
-
-def hsv_to_rgb_norm(triplet):
-    return colorsys.hsv_to_rgb(triplet[0], triplet[1], triplet[2])
 
 class RepeatedTimer:
     """Repeat `function` every `interval` seconds."""
@@ -118,7 +111,7 @@ class AnimationController:
             color = [color[0],
                      color[1] * self.params['master_saturation'],
                      color[2] * self.params['master_brightness']]
-            led_states.append(hsv_to_rgb(color))
+            led_states.append(color)
 
         return led_states
 
