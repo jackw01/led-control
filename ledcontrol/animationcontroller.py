@@ -21,18 +21,26 @@ class RepeatedTimer:
         self.function = function
         self.args = args
         self.kwargs = kwargs
-        self.start = time.time()
+        self.last_frame = time.time()
+        self.last_render_start = time.time()
+        self.last_render_end = time.time()
         self.event = Event()
-        self.thread = Thread(target=self._target, daemon=True)
+        self.thread = Thread(target=self.target, daemon=True)
         self.thread.start()
 
-    def _target(self):
-        while not self.event.wait(self._time):
-            self.function(*self.args, **self.kwargs)
+    def target(self):
+        while not self.event.wait(self.wait_time):
+            self.last_render_start = time.time()
+            self.function(*self.args, **self.kwargs) # call target function
+            now = time.time() # calculate fps
+            print('FPS: {}'.format(1.0 / (now - self.last_frame)))
+            self.last_frame = now
+            self.last_render_end = time.time()
 
     @property
-    def _time(self):
-        return self.interval - ((time.time() - self.start) % self.interval)
+    def wait_time(self): # calculate wait time based on last frame duration
+        wait = max(0, self.interval - (self.last_render_end - self.last_render_start))
+        return wait
 
     def stop(self):
         self.event.set()
@@ -47,16 +55,17 @@ class AnimationController:
         self.pattern = pattern
 
         self.params = {
-            'master_brightness': 1.0,
+            'master_brightness': 0.03125,
             'master_saturation': 1.0,
             'primary_speed': 1.0,
             'primary_scale': 1.0,
         }
 
+        self.start = time.time()
         self.time = 0
 
     def begin_animation_thread(self):
-        self.timer = RepeatedTimer(1 / self.refresh_rate, self.update_leds)
+        self.timer = RepeatedTimer(1.0 / self.refresh_rate, self.update_leds)
 
     def get_next_frame(self):
         led_states = []
@@ -111,13 +120,11 @@ class AnimationController:
             color[2] *= self.params['master_brightness']
             led_states.append(hsv_to_rgb(color))
 
-        self.time += 1.0 / self.refresh_rate
-        print('Time1 ' + str(self.time))
-        print('Time2 ' + str(time.time() - self.timer.start))
         return led_states
 
     def update_leds(self):
+        self.time = time.time() - self.start
         self.led_controller.set_led_states(self.get_next_frame())
-
+        
     def end_animation_thread(self):
         self.timer.stop()

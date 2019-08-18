@@ -107,6 +107,7 @@ def create_app(led_count, refresh_rate, led_pin, led_data_rate, led_dma_channel,
 
     controller.begin_animation_thread()
     atexit.register(save_settings)
+    atexit.register(leds.clear)
     atexit.register(controller.end_animation_thread)
 
     return app

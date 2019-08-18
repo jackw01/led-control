@@ -7,8 +7,12 @@ class LEDController:
     def __init__(self, led_count, led_pin, led_data_rate, led_dma_channel, led_pixel_order):
         self.leds = PixelStrip(led_count, led_pin, led_data_rate, led_dma_channel, False, 255)
         self.px_order = led_pixel_order
+        self.count = led_count
         self.leds.begin()
-        for i in range(led_count):
+        self.clear()
+
+    def clear(self):
+        for i in range(self.count):
             self.leds.setPixelColor(i, Color(0, 0, 0))
         self.leds.show()
 
