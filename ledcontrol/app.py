@@ -33,9 +33,12 @@ class FormItem:
         self.unit = unit
         self.e_class = e_class
 
-def create_app(led_count, refresh_rate, led_pin, led_data_rate, led_dma_channel, led_pixel_order):
+def create_app(led_count, refresh_rate,
+               led_pin, led_data_rate, led_dma_channel,
+               led_strip_type, led_pixel_order):
     app = Flask(__name__)
-    leds = LEDController(led_count, led_pin, led_data_rate, led_dma_channel, led_pixel_order)
+    leds = LEDController(led_count, led_pin,
+                         led_data_rate, led_dma_channel, led_strip_type, led_pixel_order)
     controller = AnimationController(leds, refresh_rate, led_count,
                                      pixelmappings.line(led_count),
                                      patterns.cycle_hue_1d)

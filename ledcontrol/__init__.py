@@ -23,12 +23,15 @@ def main():
                         help='Data rate for LEDs. Default: 800000 Hz')
     parser.add_argument('--led_dma_channel', type=int, default=10,
                         help='DMA channel for LEDs. Default: 10')
+    parser.add_argument('--led_strip_type', default='WS2812',
+                        help='LED chipset. Either WS2812 or SK6812. Default: WS2812')
     parser.add_argument('--led_pixel_order', default='GRB',
-                        help='LED color channel order. Either RGB or GRB. Default: GRB')
+                        help='LED color channel order. Any combination of RGB with or without a W at the end. Default: GRB')
     args = parser.parse_args()
 
     app = create_app(args.strip, args.fps,
-                     args.led_pin, args.led_data_rate, args.led_dma_channel, args.led_pixel_order)
+                     args.led_pin, args.led_data_rate, args.led_dma_channel,
+                     args.led_strip_type, args.led_pixel_order)
     run_simple(args.host, args.port, app,
                use_reloader=False,
                use_debugger=True,

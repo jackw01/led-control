@@ -31,10 +31,9 @@ class RepeatedTimer:
     def target(self):
         while not self.event.wait(self.wait_time):
             self.last_render_start = time.time()
+            print('FPS: {}'.format(1.0 / (self.last_render_start - self.last_frame))) # fps
+            self.last_frame = self.last_render_start
             self.function(*self.args, **self.kwargs) # call target function
-            now = time.time() # calculate fps
-            print('FPS: {}'.format(1.0 / (now - self.last_frame)))
-            self.last_frame = now
             self.last_render_end = time.time()
 
     @property
@@ -54,10 +53,13 @@ class AnimationController:
         self.mapping = mapping
         self.pattern = pattern
 
+        # map led indices to normalized position vectors
+        self.mappedPoints = [self.mapping(i) for i in range(self.led_count)]
+
         self.params = {
             'master_brightness': 0.03125,
             'master_saturation': 1.0,
-            'primary_speed': 1.0,
+            'primary_speed': 0.2,
             'primary_scale': 1.0,
         }
 
@@ -69,9 +71,7 @@ class AnimationController:
 
     def get_next_frame(self):
         led_states = []
-        for i in range(self.led_count):
-            point = self.mapping(i) # map led index to normalized vector
-
+        for point in self.mappedPoints:
             # Calculate time and scale components to determine animation position
             # time component = time (s) * speed (cycle/s)
             # scale component = position (max size) * scale (repeats / max size)
@@ -114,16 +114,16 @@ class AnimationController:
             elif self.params['secondary_animation_mode'] == LEDSecondaryAnimationMode.Trail:
             color[2] *= (1.0 - (sec_anim_time + sec_anim_scale) % 1) ** 4
             """
-            
-            color = [color[0], color[1], color[2]]
-            color[1] *= self.params['master_saturation']
-            color[2] *= self.params['master_brightness']
+
+            color = [color[0],
+                     color[1] * self.params['master_saturation'],
+                     color[2] * self.params['master_brightness']]
             led_states.append(hsv_to_rgb(color))
 
         return led_states
 
     def update_leds(self):
-        self.time = time.time() - self.start
+        self.time = self.timer.last_frame - self.start
         self.led_controller.set_led_states(self.get_next_frame())
         
     def end_animation_thread(self):
