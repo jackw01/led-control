@@ -197,28 +197,29 @@ textarea {
 
 // UI
 
-.input-table {
-  width: 100%;
+label {
+  display: block;
 }
 
-.input-table td {
+.number-units {
+  margin-left: 0.35rem;
+  color: $gray-600;
+}
+
+.input-row {
+  display: flex;
+  align-items: flex-start;
   padding-bottom: 0.25rem;
-  height: 30px;
 
-  &:not(:last-child) {
+  & .input-slider-container {
+    padding-top: 0.35rem;
     padding-right: 1rem;
+    flex-basis: 100%;
   }
 
-  &.slider-container {
-    width: 100%;
-  }
-
-  &:not(.slider-container) {
+  & .input-number-container {
     white-space: nowrap;
-  }
-
-  & .select-container {
-    margin-bottom: 0;
+    flex-basis: content;
   }
 }
 
@@ -291,7 +292,6 @@ input[type="range"] {
   width: 100%;
   height: 1px;
   margin: 0;
-  margin-bottom: 6px;
   background: $input-bg;
   border-radius: $border-radius;
   box-shadow: inset 10px 0 $body-bg, inset -10px 0 $body-bg;

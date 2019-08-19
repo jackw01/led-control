@@ -3,7 +3,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>LED Control Center</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1.0,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=1.0,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
   <link rel="icon" href="static/favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" href="static/img/Apple Home Screen Icon.png">
@@ -20,36 +21,52 @@
   <div class="wrapper clearfix">
     <main>
       <h2 class="header-stylized-text">LED Control Center</h2>
-      <table class="input-table">
-        {% for input in form %}
-        <tr>
-          <td>
-            <label>{{ input.label }}:</label>
-          </td>
-          {% if input.control == 'select' %}
-            <td>
-              <span class="select-container">
-                <select class="update-on-change {{ input.e_class }}" style="width:98%" autocomplete="off" data-id="{{ input.key }}">
-                  {% for opt in input.options %}
-                  <option value="{{ loop.index0 }}" {% if loop.index0 == input.val %}selected{% endif %}>
-                    {{ opt }}
-                  </option>
-                  {% endfor %}
-                </select>
-              </span>
-            </td>
-          {% elif input.control == 'range' %}
-            <td class="slider-container">
-              <input type="range" min="{{ input.min }}" max="{{ input.max }}" step="{{ input.step }}" value="{{ input.val }}" class="update-on-change {{ input.e_class }}" autocomplete="off" data-id="{{ input.key }}">
-            </td>
-            <td>
-              <input type="number" style="width:80px" min="{{ input.min }}" max="{{ input.max }}" step="{{ input.step }}" value="{{ input.val }}" class="update-on-change {{ input.e_class }}" autocomplete="off" data-id="{{ input.key }}">
-              {{ input.unit }}
-            </td>
-          {% endif %}
-        </tr>
-        {% endfor %}
-      </table>
+      {% for input in form %}
+      <label>{{ input.label }}:
+        {% if input.unit != "" %}<span class="number-units">({{ input.unit }})</span>{% endif %}
+      </label>
+      <div class="input-row">
+        {% if input.control == 'select' %}
+        <div class="input-select-container">
+          <span class="select-container">
+            <select class="update-on-change {{ input.e_class }}" style="width:98%" autocomplete="off"
+              data-id="{{ input.key }}">
+              {% for opt in input.options %}
+              <option value="{{ loop.index0 }}" {% if loop.index0 == input.val %}selected{% endif %}>
+                {{ opt }}
+              </option>
+              {% endfor %}
+            </select>
+          </span>
+        </div>
+        {% elif input.control == 'range' %}
+        <div class="input-slider-container">
+          <input type="range"
+            min="{{ input.min }}"
+            max="{{ input.max }}"
+            step="{{ input.step }}"
+            value="{{ input.val }}"
+            class="update-on-change {{ input.e_class }}"
+            autocomplete="off"
+            data-id="{{ input.key }}"
+          >
+        </div>
+        <div class="input-number-container">
+          <input
+            type="number"
+            style="width:80px"
+            min="{{ input.min }}"
+            max="{{ input.max }}"
+            step="{{ input.step }}"
+            value="{{ input.val }}"
+            class="update-on-change {{ input.e_class }}"
+            autocomplete="off"
+            data-id="{{ input.key }}"
+          >
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
       <hr>
       {% for color in colors %}
       <h4>Color {{ loop.index }}</h4>
@@ -60,7 +77,9 @@
           </td>
           <td>
             <span class="slider-container">
-              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[0] }}" class="update-color-on-change hue-grad" autocomplete="off" data-idx="{{ loop.index0 }}" data-cmp="{{ 0 }}">
+              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[0] }}"
+                class="update-color-on-change hue-grad" autocomplete="off" data-idx="{{ loop.index0 }}"
+                data-cmp="{{ 0 }}">
             </span>
           </td>
         </tr>
@@ -70,7 +89,9 @@
           </td>
           <td>
             <span class="slider-container">
-              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[1] }}" class="update-color-on-change sat-grad" autocomplete="off" data-idx="{{ loop.index0 }}" data-cmp="{{ 1 }}">
+              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[1] }}"
+                class="update-color-on-change sat-grad" autocomplete="off" data-idx="{{ loop.index0 }}"
+                data-cmp="{{ 1 }}">
             </span>
           </td>
         </tr>
@@ -80,7 +101,9 @@
           </td>
           <td>
             <span class="slider-container">
-              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[2] }}" class="update-color-on-change val-grad" autocomplete="off" data-idx="{{ loop.index0 }}" data-cmp="{{ 2 }}">
+              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[2] }}"
+                class="update-color-on-change val-grad" autocomplete="off" data-idx="{{ loop.index0 }}"
+                data-cmp="{{ 2 }}">
             </span>
           </td>
         </tr>
@@ -88,7 +111,8 @@
       {% endfor %}
     </main>
     <footer>
-      <small><a href="https://github.com/jackw01/ledcontrol">LEDControl Server</a> by <a href="https://github.com/jackw01">jackw01</a>. Released under the MIT License.</small>
+      <small><a href="https://github.com/jackw01/led-control">LEDControl Server</a> by <a
+          href="https://github.com/jackw01">jackw01</a>. Released under the MIT License.</small>
     </footer>
   </div>
   <script src="static/js/jquery-3.3.1.min.js"></script>

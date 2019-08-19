@@ -176,25 +176,28 @@ textarea {
   color: #e6e8ec;
 }
 
-.input-table {
-  width: 100%;
+label {
+  display: block;
 }
 
-.input-table td {
+.number-units {
+  margin-left: 0.35rem;
+  color: #626467;
+}
+
+.input-row {
+  display: flex;
+  align-items: flex-start;
   padding-bottom: 0.25rem;
-  height: 30px;
 }
-.input-table td:not(:last-child) {
+.input-row .input-slider-container {
+  padding-top: 0.3rem;
   padding-right: 1rem;
+  flex-basis: 100%;
 }
-.input-table td.slider-container {
-  width: 100%;
-}
-.input-table td:not(.slider-container) {
+.input-row .input-number-container {
   white-space: nowrap;
-}
-.input-table td .select-container {
-  margin-bottom: 0;
+  flex-basis: content;
 }
 
 .button {
@@ -246,7 +249,6 @@ input[type=range] {
   width: 100%;
   height: 1px;
   margin: 0;
-  margin-bottom: 6px;
   background: #343639;
   border-radius: 3px;
   box-shadow: inset 10px 0 #18191c, inset -10px 0 #18191c;
