@@ -118,6 +118,6 @@ class AnimationController:
     def update_leds(self):
         self.time = self.timer.last_frame - self.start
         self.led_controller.set_led_states(self.get_next_frame())
-        
+
     def end_animation_thread(self):
         self.timer.stop()

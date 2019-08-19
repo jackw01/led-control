@@ -104,4 +104,4 @@ venv.bak/
 .mypy_cache/
 
 notes.md
-.vscode\settings.json
+.vscode/

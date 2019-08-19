@@ -27,11 +27,16 @@ def main():
                         help='LED chipset. Either WS2812 or SK6812. Default: WS2812')
     parser.add_argument('--led_pixel_order', default='GRB',
                         help='LED color channel order. Any combination of RGB with or without a W at the end. Default: GRB')
+    parser.add_argument('--led_color_correction', default='#FFB0F0',
+                        help='LED color correction in RGB hex form. Use #FFB0F0 for 5050 package LEDs on strips and arrays and #FFE08C for through-hole package LEDs or light strings. Default: #FFB0F0')
     args = parser.parse_args()
+
+    color_correction_hex = args.led_color_correction.lstrip('#')
 
     app = create_app(args.strip, args.fps,
                      args.led_pin, args.led_data_rate, args.led_dma_channel,
-                     args.led_strip_type, args.led_pixel_order)
+                     args.led_strip_type, args.led_pixel_order,
+                     [int(color_correction_hex[i:i + 2], 16) for i in (0, 2, 4)])
     run_simple(args.host, args.port, app,
                use_reloader=False,
                use_debugger=True,
