@@ -37,16 +37,25 @@ class LEDController:
             elif led_pixel_order == 'BGRW':
                 px_order = rpi_ws281x.SK6812_STRIP_BGRW
 
+        self.count = led_count
         self.leds = rpi_ws281x.PixelStrip(led_count, led_pin,
                                           led_data_rate, led_dma_channel,
                                           False, # invert?
                                           255, # master brightness
                                           0, # channel
                                           px_order)
-        self.correction = led_color_correction
-        self.count = led_count
+
+        self.correction_original = led_color_correction
+        self.set_color_temp(6500)
+        
         self.leds.begin()
         self.clear()
+
+    def set_color_temp(self, kelvin):
+        temp_rgb = utils.blackbody2rgb_2(kelvin)
+        self.correction = [self.correction_original[0] * temp_rgb[0] // 255,
+                           self.correction_original[1] * temp_rgb[1] // 255,
+                           self.correction_original[2] * temp_rgb[2] // 255]
 
     def clear(self):
         for i in range(self.count):

@@ -1,7 +1,17 @@
 # led-control WS2812B LED Controller Server
 # Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
+import math
 import colorsys
+
+# Constrain value
+def clamp(x, min, max):
+    if x < min:
+        return min
+    elif x > max:
+        return max
+    else:
+        return x
 
 # HSV to RGB transforms
 
@@ -17,7 +27,7 @@ def hsv2rgb_fast(triplet):
         return (val, val, val)
 
     brightness_floor = val * (255 - sat) // 256
-    color_amplitude = val - brightness_floor 
+    color_amplitude = val - brightness_floor
     section = hue // 85
     offset = hue % 85
     rampup_adj_with_floor = offset * color_amplitude // 64 + brightness_floor
@@ -138,4 +148,63 @@ def hsv2rgb_fast_rainbow(triplet):
             g = g * val // 255
             b = b * val // 255
 
-    return (r, g, b)
+    return [r, g, b]
+
+# Color temperature to RGB conversion
+def blackbody2rgb(kelvin):
+    # See http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
+
+    kelvin = clamp(kelvin, 1000, 40000)
+    tmp_internal = kelvin / 100.0
+
+    r = 0
+    g = 0
+    b = 0
+
+    if tmp_internal <= 66:
+        r = 255
+        g = int(clamp(99.47080 * math.log(tmp_internal) - 161.11957, 0, 255))
+    else:
+        r = int(clamp(329.69873 * math.pow(tmp_internal - 60, -0.13320), 0, 255))
+        g = int(clamp(288.12217 * math.pow(tmp_internal - 60, -0.07551), 0, 255))
+
+    if tmp_internal >= 66:
+        b = 255
+    elif tmp_internal <= 19:
+        b = 0
+    else:
+        b = int(clamp(138.51773 * math.log(tmp_internal - 10) - 305.04479, 0, 255))
+    
+    return [r, g, b]
+
+# Color temperature to RGB conversion (more accurate)
+def blackbody2rgb_2(kelvin):
+    # See http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
+    # See http://www.zombieprototypes.com/?p=210
+
+    kelvin = clamp(kelvin, 1000, 40000)
+    tmp_internal = kelvin / 100.0
+
+    r = 0
+    g = 0
+    b = 0
+
+    if tmp_internal <= 66:
+        xg = tmp_internal - 2
+        r = 255
+        g = int(clamp(-155.25485 - 0.44596 * xg + 104.49216 * math.log(xg), 0, 255))
+    else:
+        xr = tmp_internal - 55
+        xg = tmp_internal - 50
+        r = int(clamp(351.97691 + 0.11421 * xr - 40.25366 * math.log(xr), 0, 255))
+        g = int(clamp(325.44941 + 0.07943 * xg - 28.08529 * math.log(xg), 0, 255))
+
+    if tmp_internal >= 66:
+        b = 255
+    elif tmp_internal <= 19:
+        b = 0
+    else:
+        xb = tmp_internal - 10
+        b = int(clamp(-254.76935 + 0.82740 * xb + 115.67994 * math.log(xb), 0, 255))
+    
+    return [r, g, b]

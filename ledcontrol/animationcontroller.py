@@ -108,10 +108,9 @@ class AnimationController:
             color[2] *= (1.0 - (sec_anim_time + sec_anim_scale) % 1) ** 4
             """
 
-            color = [color[0],
-                     color[1] * self.params['master_saturation'],
-                     color[2] * self.params['master_brightness']]
-            led_states.append(color)
+            led_states.append([color[0],
+                               color[1] * self.params['master_saturation'],
+                               color[2] * self.params['master_brightness']])
 
         return led_states
 
