@@ -1,0 +1,100 @@
+// led-control WS2812B LED Controller Server
+// Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
+
+$background-1: #1f2124;
+$foreground-lighter: #e2e8f5;
+$foreground-1: #c4c9d6;
+
+$border-color: #525762;
+
+$color-accent: #06a2ab;
+$color-accent-lighter: lighten($color-accent, 7%);
+$color-accent-darker: darken($color-accent, 7%);
+
+$color-accent-alt: #e2326f;
+$color-accent-alt-lighter: lighten($color-accent-alt, 7%);
+$color-accent-alt-darker: darken($color-accent-alt, 7%);
+
+$color-success: #00ab9a;
+$color-warning: #d08447;
+$color-danger: #f06c6f;
+
+// Bootstrap
+$gray-100: #e6e8ec;
+$gray-200: #caccd0;
+$gray-300: #afb1b4;
+$gray-400: #95979a;
+$gray-500: #7b7d80;
+$gray-600: #626467;
+$gray-700: #4b4d4f;
+$gray-800: #343639;
+$gray-900: #1f2124;
+$gray-darker: #18191c;
+
+$grays: (
+  "100": $gray-100,
+  "200": $gray-200,
+  "300": $gray-300,
+  "400": $gray-400,
+  "500": $gray-500,
+  "600": $gray-600,
+  "700": $gray-700,
+  "800": $gray-800,
+  "900": $gray-900
+);
+
+$theme-colors: (
+  "primary": darken($color-accent, 8%),
+  "secondary": $gray-800,
+  "success": $color-success,
+  "danger": $color-danger,
+  "warning": $color-warning,
+  "info": $color-accent-alt
+);
+
+$body-bg: #18191c; //$gray-900;
+$body-color: $gray-100;
+
+$yiq-contrasted-threshold: 110;
+$yiq-text-light: $foreground-1;
+$yiq-text-dark: $gray-900;
+
+$link-color: $color-accent;
+$link-hover-color: lighten($link-color, 7%);
+$btn-link-hover-color: $link-hover-color;
+
+$border-radius: 3px;
+$border-radius-lg: 3px;
+$border-radius-sm: 3px;
+
+$form-group-margin-bottom: 10px;
+
+$btn-border-width: 0px;
+$btn-input-hover-change: 5%;
+
+$input-bg: $gray-800;
+$input-disabled-bg: $gray-700;
+
+$input-color: $gray-100;
+$input-border-color: $color-accent;
+$input-border-focus: $color-accent-lighter;
+$input-border-width: 1px;
+
+$btn-bg-gray: $gray-800;
+$thumb-bg-gray: $gray-700;
+
+// Defaults
+$btn-box-shadow: 0;// 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+$btn-active-box-shadow: 0;
+$input-box-shadow: 0;// 0 1px 1px rgba(255, 255, 255, 0.2), inset 0 1px 2px rgba(0, 0, 0, 0.2);
+
+$card-bg: lighten($gray-900, 2%);
+
+$modal-content-bg: $gray-900;
+$modal-header-border-color: $gray-800;
+
+$hr-border-color: $gray-800;
+
+@mixin transition {
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}

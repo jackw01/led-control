@@ -1,0 +1,320 @@
+// led-control WS2812B LED Controller Server
+// Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
+
+@import "variables";
+
+// Fonts
+
+body {
+  font-family: "Barlow", sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  overflow: hidden;
+  letter-spacing: 0.25px;
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 22px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Barlow", sans-serif;
+}
+
+code, pre {
+  font-family: "Fira Code", monospace;
+}
+
+// Header styles
+
+.header-light {
+  font-weight: 300;
+}
+
+.header-stylized-text {
+  display: inline-block;
+  background-image: linear-gradient(90deg, #00a3d2 0%, #00ab9a 100%);
+  color: transparent !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+// Make scrollbars match Bootstrap style
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0);
+  border-radius: 16px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $gray-800;
+  border-radius: 16px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $gray-700;
+}
+
+// Content styles
+
+* {
+  box-sizing: border-box;
+}
+
+.clearfix {
+  display: block;
+  zoom: 1;
+
+  &:after {
+    content: " ";
+    display: block;
+    font-size: 0;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+  }
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+main {
+  flex: 1;
+
+  & *:first-child {
+    margin-top: 0;
+  }
+}
+
+footer {
+  margin: 0;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid $gray-700;
+  margin: 1em 0;
+  padding: 0;
+
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.2em;
+}
+
+h1 {
+  font-size: 48px;
+  font-weight: 200;
+}
+
+h2 {
+  font-size: 34px;
+  font-weight: 300;
+}
+
+h3 {
+  font-size: 28px;
+  font-weight: 400;
+}
+
+h4 {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+h5 {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+h6 {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+strong {
+  font-weight: 700;
+}
+
+small {
+  font-size: 0.9rem;
+}
+
+::-moz-selection {
+  background-color: fade($color-accent, 30%);
+}
+
+::selection {
+  background-color: fade($color-accent, 30%);
+}
+
+a {
+  @include transition();
+  cursor: pointer;
+  color: $color-accent;
+  text-decoration: none;
+
+  &:hover, &:active {
+    color: $color-accent-lighter;
+    text-decoration: underline;
+  }
+}
+
+textarea {
+  resize: vertical;
+}
+
+// Main Layout
+
+.wrapper {
+  width: 42rem;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.body-dark {
+  background: $body-bg;
+  color: $body-color;
+}
+
+// UI
+
+.input-table {
+  width: 100%;
+}
+
+.input-table td {
+  padding-bottom: 0.25rem;
+  height: 30px;
+
+  &:not(:last-child) {
+    padding-right: 1rem;
+  }
+
+  &.slider-container {
+    width: 100%;
+  }
+
+  &:not(.slider-container) {
+    white-space: nowrap;
+  }
+
+  & .select-container {
+    margin-bottom: 0;
+  }
+}
+
+@mixin button-dark {
+  background: $btn-bg-gray;
+  color: $foreground-1;
+
+  &:hover {
+    background: $btn-link-hover-color;
+    color: $foreground-1;
+  }
+}
+
+.button {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  display: inline-block;
+  margin: 5px 0;
+  text-decoration: none;
+  @include transition();
+  @include button-dark();
+}
+
+.button-rect {
+  padding: 7px 12px;
+  border-radius: 5px;
+}
+
+textarea, input[type="text"], input[type="password"], input[type="number"] {
+  margin: 5px 0;
+  padding: 8px;
+  border: none;
+  border-radius: $border-radius;
+  outline: none;
+  font-size: 0.9em;
+  @include transition();
+  background: $body-bg; //$input-bg;
+  color: $input-color;
+  border: 1px solid darken($input-border-color, 10%);
+}
+
+textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus {
+  border: 1px solid $input-border-focus;
+}
+
+.text-input-error {
+  border: 1px solid $color-danger !important;
+}
+
+@mixin thumb {
+  background: transparent; //$thumb-bg-gray
+  box-shadow: $btn-box-shadow;
+  border: 1px solid $color-accent;
+  outline: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 10px;
+
+  &:hover {
+    border: 1px solid $color-accent-lighter;
+    //background: lighten($thumb-bg-gray, $btn-input-hover-change);
+  }
+}
+
+input[type="range"] {
+  -webkit-appearance:none !important;
+  display: inline-block;
+  outline: none;
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  margin-bottom: 6px;
+  background: $input-bg;
+  border-radius: $border-radius;
+  box-shadow: inset 10px 0 $body-bg, inset -10px 0 $body-bg;
+  @include transition();
+
+  &:focus {
+    outline: none;
+  }
+
+  &::-moz-range-track {
+    background: transparent;
+    -moz-appearance:none !important;
+  }
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance:none !important;
+    @include thumb();
+    @include transition();
+  }
+
+  &::-moz-range-thumb {
+    -moz-appearance:none !important;
+    @include thumb();
+    @include transition();
+  }
+}

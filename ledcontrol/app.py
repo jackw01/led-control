@@ -19,21 +19,6 @@ def camel_case_to_title(text):
 def snake_case_to_title(text):
     return text.replace('_', ' ').title()
 
-"""class FormItem:
-    def __init__(self, control, key, data_type,
-                 label='', min=0, max=1, step=0.01, options=(), val=0, unit='', e_class=''):
-        self.control = control
-        self.label = label if label != '' else snake_case_to_title(key)
-        self.key = key
-        self.type = data_type
-        self.min = min
-        self.max = max
-        self.step = step
-        self.options = options
-        self.val = data_type(val)
-        self.unit = unit
-        self.e_class = e_class"""
-
 fields =[
     'control',
     'key',
@@ -43,6 +28,7 @@ fields =[
     'step',
     'options',
     'val',
+    'label',
     'unit',
 ]
 
@@ -55,6 +41,7 @@ defaults = [
     0.01,
     [],
     0,
+    '',
     '',
 ]
 
@@ -86,11 +73,14 @@ def create_app(led_count, refresh_rate,
 
     form = [
         FormItem('range', 'master_brightness', float, 0, 1),
-        FormItem('range', 'master_color_temp', float, 1000, 12000),
+        FormItem('range', 'master_color_temp', float, 1000, 12000, 10, unit='K'),
         FormItem('range', 'master_saturation', float, 0, 1),
         FormItem('range', 'primary_speed', float, 0.01, 1, unit='Hz'),
-        FormItem('range', 'primary_scale', float, 1, 100, unit='LEDs'),
+        FormItem('range', 'primary_scale', float, 1, 100),
     ]
+
+    for item in form:
+        item.label = snake_case_to_title(item.key)
 
     @app.route('/')
     def index():
