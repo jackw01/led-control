@@ -15,6 +15,7 @@ setup(
     packages=find_packages(),
     zip_safe=False,
     install_requires=[
+        'recordclass>=0.12.0.1',
         'Flask>=1.0.2',
         'rpi_ws281x>=4.2.2'
     ],

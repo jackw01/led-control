@@ -13,7 +13,7 @@ def clamp(x, min, max):
     else:
         return x
 
-# HSV to RGB transforms
+# HSV to RGB transforms (normalized HSV to 8 bit RGB)
 
 # Using colorsys
 def hsv2rgb_colorsys(triplet):
@@ -120,7 +120,7 @@ def hsv2rgb_fast_rainbow(triplet):
 
     # This is one of the good places to scale the green down,
     # although the client can scale green down as well.
-    #g = g >> 1
+    # g = g >> 1
 
     # Scale down colors if we're desaturated at all
     # and add the brightness_floor to r, g, and b.
@@ -174,7 +174,7 @@ def blackbody2rgb(kelvin):
         b = 0
     else:
         b = int(clamp(138.51773 * math.log(tmp_internal - 10) - 305.04479, 0, 255))
-    
+
     return [r, g, b]
 
 # Color temperature to RGB conversion (more accurate)
@@ -206,5 +206,5 @@ def blackbody2rgb_2(kelvin):
     else:
         xb = tmp_internal - 10
         b = int(clamp(-254.76935 + 0.82740 * xb + 115.67994 * math.log(xb), 0, 255))
-    
+
     return [r, g, b]

@@ -50,7 +50,8 @@ class AnimationController:
         self.mappedPoints = [self.mapping(i) for i in range(self.led_count)]
 
         self.params = {
-            'master_brightness': 0.03125,
+            'master_brightness': 0.05,
+            'master_color_temp': 6500,
             'master_saturation': 1.0,
             'primary_speed': 0.2,
             'primary_scale': 1.0,
@@ -58,6 +59,14 @@ class AnimationController:
 
         self.start = time.time()
         self.time = 0
+
+    def set_param(self, key, value):
+        self.params[key] = value
+        if key == 'master_color_temp':
+            self.led_controller.set_color_temp(value)
+
+    #def set_color(self, index, component, value):
+    #    self.colors[index][component] = value
 
     def begin_animation_thread(self):
         self.timer = RepeatedTimer(1.0 / self.refresh_rate, self.update_leds)
@@ -70,8 +79,8 @@ class AnimationController:
             # scale component = position (max size) * scale (repeats / max size)
             # one cycle is a normalized input value's transition from 0 to 1
             primary_time_component = self.time * self.params['primary_speed']
-            primary_scale_component_x = point[0] * self.params['primary_scale']
-            primary_scale_component_y = point[1] * self.params['primary_scale']
+            primary_scale_component_x = point.x * self.params['primary_scale']
+            primary_scale_component_y = point.y * self.params['primary_scale']
 
             color = self.pattern((primary_time_component + primary_scale_component_x) % 1.0,
                                  (primary_time_component + primary_scale_component_y) % 1.0)

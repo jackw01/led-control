@@ -4,6 +4,7 @@
 import json
 import re
 import atexit
+from recordclass import recordclass
 from pathlib import Path
 from flask import Flask, render_template, request, jsonify
 from ledcontrol.animationcontroller import AnimationController
@@ -18,20 +19,46 @@ def camel_case_to_title(text):
 def snake_case_to_title(text):
     return text.replace('_', ' ').title()
 
-class FormItem:
-    def __init__(self, control, key, type,
+"""class FormItem:
+    def __init__(self, control, key, data_type,
                  label='', min=0, max=1, step=0.01, options=(), val=0, unit='', e_class=''):
         self.control = control
         self.label = label if label != '' else snake_case_to_title(key)
         self.key = key
-        self.type = type
+        self.type = data_type
         self.min = min
         self.max = max
         self.step = step
         self.options = options
-        self.val = type(val)
+        self.val = data_type(val)
         self.unit = unit
-        self.e_class = e_class
+        self.e_class = e_class"""
+
+fields =[
+    'control',
+    'key',
+    'type',
+    'min',
+    'max',
+    'step',
+    'options',
+    'val',
+    'unit',
+]
+
+defaults = [
+    'range',
+    None,
+    None,
+    0,
+    1,
+    0.01,
+    [],
+    0,
+    '',
+]
+
+FormItem = recordclass('FormItem', fields, defaults=defaults)
 
 def create_app(led_count, refresh_rate,
                led_pin, led_data_rate, led_dma_channel,
@@ -56,6 +83,29 @@ def create_app(led_count, refresh_rate,
             print('Loaded saved settings from {}'.format(filename))
         except Exception:
             print('Could not open saved settings at {}, ignoring.'.format(filename))
+
+    form = [
+        FormItem('range', 'master_brightness', float, 0, 1),
+        FormItem('range', 'master_color_temp', float, 1000, 12000),
+        FormItem('range', 'master_saturation', float, 0, 1),
+        FormItem('range', 'primary_speed', float, 0.01, 1, unit='Hz'),
+        FormItem('range', 'primary_scale', float, 1, 100, unit='LEDs'),
+    ]
+
+    @app.route('/')
+    def index():
+        for item in form:
+            item.val = item.type(controller.params[item.key])
+        return render_template('index.html',
+                               form=form,
+                               params=controller.params)
+
+    @app.route('/setparam')
+    def set_param():
+        key = request.args.get('key', type=str)
+        value = request.args.get('value')
+        controller.set_param(key, next(filter(lambda i: i.key == key, form)).type(value))
+        return jsonify(result='')
 
     """
     form = (
@@ -84,13 +134,6 @@ def create_app(led_count, refresh_rate,
         return render_template('index.html', form=form,
                                              params=controller.params,
                                              colors=controller.colors)
-
-    @app.route('/setparam')
-    def set_param():
-        key = request.args.get('key', type=str)
-        value = request.args.get('value')
-        controller.set_param(key, next(filter(lambda i: i.key == key, form)).type(value))
-        return jsonify(result = '')
 
     @app.route('/setcolor')
     def set_color():

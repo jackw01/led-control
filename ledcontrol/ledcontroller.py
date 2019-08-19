@@ -47,7 +47,7 @@ class LEDController:
 
         self.correction_original = led_color_correction
         self.set_color_temp(6500)
-        
+
         self.leds.begin()
         self.clear()
 
