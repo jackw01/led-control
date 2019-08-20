@@ -20,6 +20,7 @@ class RepeatedTimer:
         self.last_frame = time.time()
         self.last_render_start = time.time()
         self.last_render_end = time.time()
+        self.delta_t = 0
         self.event = Event()
         self.thread = Thread(target=self.target, daemon=True)
         self.thread.start()
@@ -27,7 +28,8 @@ class RepeatedTimer:
     def target(self):
         while not self.event.wait(self.wait_time):
             self.last_render_start = time.time()
-            print('FPS: {}'.format(1.0 / (self.last_render_start - self.last_frame))) # fps
+            self.delta_t = self.last_render_start - self.last_frame
+            print('FPS: {}'.format(1.0 / self.delta_t)) # fps
             self.last_frame = self.last_render_start
             self.function(*self.args, **self.kwargs) # call target function
             self.last_render_end = time.time()
@@ -42,22 +44,29 @@ class RepeatedTimer:
         self.thread.join()
 
 class AnimationController:
-    def __init__(self, led_controller, refresh_rate, led_count, mapping, pattern):
+    def __init__(self, led_controller, refresh_rate, led_count, mapping,
+                 primary_pattern, secondary_pattern):
         self.led_controller = led_controller
         self.refresh_rate = refresh_rate
         self.led_count = led_count
         self.mapping = mapping
-        self.pattern = pattern
+        self.primary_pattern = primary_pattern
+        self.secondary_pattern = secondary_pattern
 
         # map led indices to normalized position vectors
-        self.mappedPoints = [self.mapping(i) for i in range(self.led_count)]
+        self.mapped = [self.mapping(i) for i in range(self.led_count)]
+        # initialize prev state arrays
+        self.primary_prev_state = [(0, 0, 0) for i in range(self.led_count)]
+        self.secondary_prev_state = [(0, (0, 0, 0)) for i in range(self.led_count)]
 
         self.params = {
-            'master_brightness': 0.05,
+            'master_brightness': 0.15,
             'master_color_temp': 6500,
             'master_saturation': 1.0,
             'primary_speed': 0.2,
             'primary_scale': 1.0,
+            'secondary_speed': 0.2,
+            'secondary_scale': 1.0,
         }
 
         self.start = time.time()
@@ -75,18 +84,41 @@ class AnimationController:
         self.timer = RepeatedTimer(1.0 / self.refresh_rate, self.update_leds)
 
     def get_next_frame(self):
+        new_primary_prev_state = []
+        new_secondary_prev_state = []
         led_states = []
-        for point in self.mappedPoints:
-            # Calculate time and scale components to determine animation position
-            # time component = time (s) * speed (cycle/s)
+
+        # calculate times
+        # time component = time (s) * speed (cycle/s)
+        primary_time = self.time * self.params['primary_speed']
+        primary_delta_t = self.timer.delta_t * self.params['primary_speed']
+        secondary_time = self.time * self.params['secondary_speed']
+        secondary_delta_t = self.timer.delta_t * self.params['secondary_speed']
+
+        for i in range(len(self.mapped)):
+            # calculate scale components to determine animation position
             # scale component = position (max size) * scale (repeats / max size)
             # one cycle is a normalized input value's transition from 0 to 1
-            primary_time_component = self.time * self.params['primary_speed']
-            primary_scale_component_x = point.x * self.params['primary_scale']
-            primary_scale_component_y = point.y * self.params['primary_scale']
 
-            color, mode = self.pattern((primary_time_component + primary_scale_component_x) % 1.0,
-                                       (primary_time_component + primary_scale_component_y) % 1.0)
+            primary_scale_component_x = self.mapped[i][0] * self.params['primary_scale']
+            primary_scale_component_y = self.mapped[i][1] * self.params['primary_scale']
+            secondary_scale_component_x = self.mapped[i][0] * self.params['secondary_scale']
+            secondary_scale_component_y = self.mapped[i][1] * self.params['secondary_scale']
+
+            color_primary, mode = self.primary_pattern(primary_time,
+                                                       primary_delta_t,
+                                                       primary_scale_component_x,
+                                                       primary_scale_component_y,
+                                                       self.primary_prev_state[i])
+            new_primary_prev_state.append(color_primary)
+
+            secondary_value, color = self.secondary_pattern(secondary_time,
+                                                              secondary_delta_t,
+                                                              secondary_scale_component_x,
+                                                              secondary_scale_component_y,
+                                                              self.secondary_prev_state[i],
+                                                              color_primary)
+            new_secondary_prev_state.append((secondary_value, color))
 
             """
             if self.params['color_animation_mode'] == LEDColorAnimationMode.SolidColor:
@@ -120,18 +152,22 @@ class AnimationController:
             color[2] *= (1.0 - (sec_anim_time + sec_anim_scale) % 1) ** 4
             """
 
-            # Apply master brightness and saturation if using hsv
+            # apply master brightness and saturation if using hsv
+            rgb = [0, 0, 0]
             if (mode == ColorMode.hsv):
-                color = utils.hsv2rgb_fast_rainbow([color[0],
-                                                    color[1] * self.params['master_saturation'],
-                                                    color[2] * self.params['master_brightness']])
+                rgb = utils.hsv2rgb_fast_rainbow(
+                    [color[0],
+                     color[1] * self.params['master_saturation'],
+                     color[2] * secondary_value * self.params['master_brightness']])
             else:
-                color = [int(color[0] * self.params['master_brightness'] * 255),
-                         int(color[1] * self.params['master_brightness'] * 255),
-                         int(color[2] * self.params['master_brightness'] * 255)]
+                rgb = [int(color[0] * secondary_value * self.params['master_brightness'] * 255),
+                       int(color[1] * secondary_value * self.params['master_brightness'] * 255),
+                       int(color[2] * secondary_value * self.params['master_brightness'] * 255)]
 
-            led_states.append(color)
+            led_states.append(rgb)
 
+        self.primary_prev_state = new_primary_prev_state
+        self.secondary_prev_state = new_secondary_prev_state
         return led_states
 
     def update_leds(self):

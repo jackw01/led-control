@@ -57,7 +57,7 @@ def create_app(led_count, refresh_rate,
                          led_color_correction)
     controller = AnimationController(leds, refresh_rate, led_count,
                                      pixelmappings.line(led_count),
-                                     patterns.cycle_hue_1d)
+                                     patterns.cycle_hue_1d, patterns.secondary_solid)
 
     filename = Path.cwd() / 'ledcontrol.json'
     filename.touch(exist_ok=True)
@@ -77,6 +77,8 @@ def create_app(led_count, refresh_rate,
         FormItem('range', 'master_saturation', float, 0, 1),
         FormItem('range', 'primary_speed', float, 0.01, 1, unit='Hz'),
         FormItem('range', 'primary_scale', float, 1, 100),
+        FormItem('range', 'secondary_speed', float, 0.01, 1, unit='Hz'),
+        FormItem('range', 'secondary_scale', float, 1, 100),
     ]
 
     for item in form:

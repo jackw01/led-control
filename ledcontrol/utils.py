@@ -17,11 +17,12 @@ def clamp(x, min, max):
 
 # Using colorsys
 def hsv2rgb_colorsys(triplet):
-    return [int(x * 255) for x in colorsys.hsv_to_rgb(triplet[0], triplet[1], triplet[2])]
+    return [int(x * 255) for x in colorsys.hsv_to_rgb(triplet[0] % 1, triplet[1], triplet[2])]
 
 # Marginally faster than colorsys
 def hsv2rgb_fast(triplet):
     (hue, sat, val) = [int(x * 255) for x in triplet]
+    hue = hue % 255
 
     if sat == 0:
         return (val, val, val)
@@ -44,6 +45,7 @@ def hsv2rgb_fast(triplet):
 # "Rainbow" color transform from FastLED, also marginally faster than colorsys
 def hsv2rgb_fast_rainbow(triplet):
     (hue, sat, val) = [int(x * 255) for x in triplet]
+    hue = hue % 255
 
     offset = hue & 0x1F # 0 to 31
     offset8 = offset << 3
