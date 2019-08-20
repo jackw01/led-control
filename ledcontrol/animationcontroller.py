@@ -97,13 +97,13 @@ class AnimationController:
 
         for i in range(len(self.mapped)):
             # calculate scale components to determine animation position
-            # scale component = position (max size) * scale (repeats / max size)
+            # scale component = position (max size) / scale (pattern length in units)
             # one cycle is a normalized input value's transition from 0 to 1
 
-            primary_scale_component_x = self.mapped[i][0] * self.params['primary_scale']
-            primary_scale_component_y = self.mapped[i][1] * self.params['primary_scale']
-            secondary_scale_component_x = self.mapped[i][0] * self.params['secondary_scale']
-            secondary_scale_component_y = self.mapped[i][1] * self.params['secondary_scale']
+            primary_scale_component_x = self.mapped[i][0] / self.params['primary_scale']
+            primary_scale_component_y = self.mapped[i][1] / self.params['primary_scale']
+            secondary_scale_component_x = self.mapped[i][0] / self.params['secondary_scale']
+            secondary_scale_component_y = self.mapped[i][1] / self.params['secondary_scale']
 
             color_primary, mode = self.primary_pattern(primary_time,
                                                        primary_delta_t,

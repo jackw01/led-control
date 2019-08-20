@@ -8,9 +8,16 @@ function handleParamUpdate() {
   if (!elem.is('select')) {
     var min = parseFloat(elem.attr('min'), 10);
     var max = parseFloat(elem.attr('max'), 10);
+    var power = parseFloat(elem.data('power'), 10);
     if (val < min || val > max) return;
+    if (elem.attr('type') == 'range') {
+      val = Math.min(Math.max(Math.pow(val / max, power) * max, min), max);
+      $('input[type=number][data-id=' + key + ']').val(val);
+    } else {
+      $('input[type=range][data-id=' + key + ']').val(Math.pow(val / max, 1.0 / power) * max);
+    }
   }
-  $('*[data-id=' + key + ']').val(val);
+  //$('*[data-id=' + key + ']').val(val);
   $.getJSON('/setparam', { key: key, value: val, }, function() {});
 }
 
