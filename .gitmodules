@@ -1,3 +1,0 @@
-[submodule "ledcontrol/lib/rpi_ws281x"]
-	path = ledcontrol/lib/rpi_ws281x
-	url = https://github.com/jgarff/rpi_ws281x
