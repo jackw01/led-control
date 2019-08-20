@@ -1,12 +1,6 @@
 // led-control WS2812B LED Controller Server
 // Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
-$background-1: #1f2124;
-$foreground-lighter: #e2e8f5;
-$foreground-1: #c4c9d6;
-
-$border-color: #525762;
-
 $color-accent: #06a2ab;
 $color-accent-lighter: lighten($color-accent, 7%);
 $color-accent-darker: darken($color-accent, 7%);
@@ -20,16 +14,17 @@ $color-warning: #d08447;
 $color-danger: #f06c6f;
 
 // Bootstrap
+// HCL Map 267, 2, 12.7...92
 $gray-100: #e6e8ec;
 $gray-200: #caccd0;
-$gray-300: #afb1b4;
+$gray-300: #afb1b5;
 $gray-400: #95979a;
 $gray-500: #7b7d80;
 $gray-600: #626467;
-$gray-700: #4b4d4f;
+$gray-700: #4b4d50;
 $gray-800: #343639;
 $gray-900: #1f2124;
-$gray-darker: #18191c;
+$gray-darker: #16181a; // l=8
 
 $grays: (
   "100": $gray-100,
@@ -44,7 +39,7 @@ $grays: (
 );
 
 $theme-colors: (
-  "primary": darken($color-accent, 8%),
+  "primary": darken($color-accent, 7%),
   "secondary": $gray-800,
   "success": $color-success,
   "danger": $color-danger,
@@ -52,11 +47,11 @@ $theme-colors: (
   "info": $color-accent-alt
 );
 
-$body-bg: #18191c; //$gray-900;
+$body-bg: $gray-darker;
 $body-color: $gray-100;
 
 $yiq-contrasted-threshold: 110;
-$yiq-text-light: $foreground-1;
+$yiq-text-light: $gray-100;
 $yiq-text-dark: $gray-900;
 
 $link-color: $color-accent;

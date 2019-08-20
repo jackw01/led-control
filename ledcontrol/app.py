@@ -19,7 +19,7 @@ def camel_case_to_title(text):
 def snake_case_to_title(text):
     return text.replace('_', ' ').title()
 
-fields =[
+fields = [
     'control',
     'key',
     'type',
@@ -98,33 +98,6 @@ def create_app(led_count, refresh_rate,
         return jsonify(result='')
 
     """
-    form = (
-        FormItem('range', 'master_brightness', float, min=0, max=1),
-        FormItem('select', 'color_animation_mode', int,
-                 options=[camel_case_to_title(e.name) for e in LEDColorAnimationMode]),
-        FormItem('range', 'color_animation_speed', float, min=0.01, max=1, unit='Hz'),
-        FormItem('range', 'color_animation_scale', float, min=1, max=100, step=1, unit='LEDs'),
-        FormItem('select', 'secondary_animation_mode', int,
-                 options=[camel_case_to_title(e.name) for e in LEDSecondaryAnimationMode]),
-        FormItem('range', 'secondary_animation_speed', float, min=0.01, max=1, unit='Hz', e_class='a2'),
-        FormItem('range', 'secondary_animation_scale', float, min=1, max=100, step=1, unit='LEDs', e_class='a2'),
-        FormItem('range', 'saturation', float, min=0, max=1, e_class='saturation'),
-        FormItem('range', 'red_frequency', float, min=0, max=1, e_class='sine'),
-        FormItem('range', 'green_frequency', float, min=0, max=1, e_class='sine'),
-        FormItem('range', 'blue_frequency', float, min=0, max=1, e_class='sine'),
-        FormItem('range', 'red_phase_offset', float, min=0, max=1, e_class='sine'),
-        FormItem('range', 'green_phase_offset', float, min=0, max=1, e_class='sine'),
-        FormItem('range', 'blue_phase_offset', float, min=0, max=1, e_class='sine'),
-    )
-
-    @app.route('/')
-    def index():
-        for item in form:
-            item.val = item.type(controller.params[item.key])
-        return render_template('index.html', form=form,
-                                             params=controller.params,
-                                             colors=controller.colors)
-
     @app.route('/setcolor')
     def set_color():
         index = request.args.get('index', type=int)

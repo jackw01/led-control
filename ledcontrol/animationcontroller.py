@@ -3,8 +3,11 @@
 
 import math
 import time
+from enum import Enum
 from threading import Event, Thread
-from ledcontrol.ledmodes import LEDColorAnimationMode, LEDSecondaryAnimationMode
+import ledcontrol.utils as utils
+
+ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
 
 class RepeatedTimer:
     """Repeat `function` every `interval` seconds."""
@@ -82,8 +85,8 @@ class AnimationController:
             primary_scale_component_x = point.x * self.params['primary_scale']
             primary_scale_component_y = point.y * self.params['primary_scale']
 
-            color = self.pattern((primary_time_component + primary_scale_component_x) % 1.0,
-                                 (primary_time_component + primary_scale_component_y) % 1.0)
+            color, mode = self.pattern((primary_time_component + primary_scale_component_x) % 1.0,
+                                       (primary_time_component + primary_scale_component_y) % 1.0)
 
             """
             if self.params['color_animation_mode'] == LEDColorAnimationMode.SolidColor:
@@ -117,9 +120,17 @@ class AnimationController:
             color[2] *= (1.0 - (sec_anim_time + sec_anim_scale) % 1) ** 4
             """
 
-            led_states.append([color[0],
-                               color[1] * self.params['master_saturation'],
-                               color[2] * self.params['master_brightness']])
+            # Apply master brightness and saturation if using hsv
+            if (mode == ColorMode.hsv):
+                color = utils.hsv2rgb_fast_rainbow([color[0],
+                                                    color[1] * self.params['master_saturation'],
+                                                    color[2] * self.params['master_brightness']])
+            else:
+                color = [int(color[0] * self.params['master_brightness'] * 255),
+                         int(color[1] * self.params['master_brightness'] * 255),
+                         int(color[2] * self.params['master_brightness'] * 255)]
+
+            led_states.append(color)
 
         return led_states
 

@@ -64,8 +64,7 @@ class LEDController:
 
     def set_led_states(self, states):
         for i in range(len(states)):
-            color = utils.hsv2rgb_fast_rainbow(states[i])
-            self.leds.setPixelColor(i, rpi_ws281x.Color(color[0] * self.correction[0] // 255,
-                                                        color[1] * self.correction[1] // 255,
-                                                        color[2] * self.correction[2] // 255))
+            self.leds.setPixelColor(i, rpi_ws281x.Color(states[i][0] * self.correction[0] // 255,
+                                                        states[i][1] * self.correction[1] // 255,
+                                                        states[i][2] * self.correction[2] // 255))
         self.leds.show()

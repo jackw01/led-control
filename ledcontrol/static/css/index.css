@@ -49,7 +49,7 @@ code, pre {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4b4d4f;
+  background: #4b4d50;
 }
 
 * {
@@ -89,7 +89,7 @@ hr {
   display: block;
   height: 1px;
   border: 0;
-  border-top: 1px solid #4b4d4f;
+  border-top: 1px solid #4b4d50;
   margin: 1em 0;
   padding: 0;
 }
@@ -165,14 +165,14 @@ textarea {
   width: 42rem;
   max-width: 90%;
   margin: 0 auto;
-  padding: 2rem 0;
+  padding: 1rem 0;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
 .body-dark {
-  background: #18191c;
+  background: #16181a;
   color: #e6e8ec;
 }
 
@@ -188,10 +188,10 @@ label {
 .input-row {
   display: flex;
   align-items: flex-start;
-  padding-bottom: 0.25rem;
+  padding-bottom: 0.1rem;
 }
 .input-row .input-slider-container {
-  padding-top: 0.3rem;
+  padding-top: 0.35rem;
   padding-right: 1rem;
   flex-basis: 100%;
 }
@@ -209,11 +209,11 @@ label {
   text-decoration: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
   background: #343639;
-  color: #c4c9d6;
+  color: #e6e8ec;
 }
 .button:hover {
   background: #07c3cd;
-  color: #c4c9d6;
+  color: #e6e8ec;
 }
 
 .button-rect {
@@ -229,7 +229,7 @@ textarea, input[type=text], input[type=password], input[type=number] {
   outline: none;
   font-size: 0.9em;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
-  background: #18191c;
+  background: transparent;
   color: #e6e8ec;
   border: 1px solid #04737a;
 }
@@ -251,7 +251,7 @@ input[type=range] {
   margin: 0;
   background: #343639;
   border-radius: 3px;
-  box-shadow: inset 10px 0 #18191c, inset -10px 0 #18191c;
+  box-shadow: inset 10px 0 #16181a, inset -10px 0 #16181a;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
 }
 input[type=range]:focus {
