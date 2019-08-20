@@ -84,6 +84,7 @@ class AnimationController:
         self.timer = RepeatedTimer(1.0 / self.refresh_rate, self.update_leds)
 
     def get_next_frame(self):
+        begin = time.time()
         new_primary_prev_state = []
         new_secondary_prev_state = []
         led_states = []
@@ -153,18 +154,16 @@ class AnimationController:
             """
 
             # apply master brightness and saturation if using hsv
-            rgb = [0, 0, 0]
             if (mode == ColorMode.hsv):
-                rgb = utils.hsv2rgb_fast_rainbow(
+                led_states.append(utils.hsv2rgb_fast_rainbow(
                     [color[0],
                      color[1] * self.params['master_saturation'],
-                     color[2] * secondary_value * self.params['master_brightness']])
+                     color[2] * secondary_value * self.params['master_brightness']]))
             else:
-                rgb = [int(color[0] * secondary_value * self.params['master_brightness'] * 255),
-                       int(color[1] * secondary_value * self.params['master_brightness'] * 255),
-                       int(color[2] * secondary_value * self.params['master_brightness'] * 255)]
-
-            led_states.append(rgb)
+                led_states.append(
+                    [int(color[0] * secondary_value * self.params['master_brightness'] * 255),
+                     int(color[1] * secondary_value * self.params['master_brightness'] * 255),
+                     int(color[2] * secondary_value * self.params['master_brightness'] * 255)])
 
         self.primary_prev_state = new_primary_prev_state
         self.secondary_prev_state = new_secondary_prev_state

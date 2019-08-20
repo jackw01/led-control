@@ -77,10 +77,10 @@ def create_app(led_count, refresh_rate,
         FormItem('range', 'master_brightness', float, 0, 1),
         FormItem('range', 'master_color_temp', float, 1000, 12000, 10, unit='K'),
         FormItem('range', 'master_saturation', float, 0, 1),
-        FormItem('range', 'primary_speed', float, 0.01, 1, unit='Hz'),
-        FormItem('range', 'primary_scale', float, 1.0 / led_count, 20),
-        FormItem('range', 'secondary_speed', float, 0.01, 1, unit='Hz'),
-        FormItem('range', 'secondary_scale', float, 1.0 / led_count, 20),
+        FormItem('range', 'primary_speed', float, 0.01, 2, unit='Hz'),
+        FormItem('range', 'primary_scale', float, 1.0 / led_count, 10),
+        FormItem('range', 'secondary_speed', float, 0.01, 2, unit='Hz'),
+        FormItem('range', 'secondary_scale', float, 1.0 / led_count, 10),
     ]
 
     for item in form:
