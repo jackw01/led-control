@@ -253,6 +253,10 @@ def ws2811_get_return_t_str(state):
     return _rpi_ws281x.ws2811_get_return_t_str(state)
 ws2811_get_return_t_str = _rpi_ws281x.ws2811_get_return_t_str
 
+def ws2811_channel_get(ws, channelnum):
+    return _rpi_ws281x.ws2811_channel_get(ws, channelnum)
+ws2811_channel_get = _rpi_ws281x.ws2811_channel_get
+
 def ws2811_led_get(channel, lednum):
     return _rpi_ws281x.ws2811_led_get(channel, lednum)
 ws2811_led_get = _rpi_ws281x.ws2811_led_get
@@ -260,10 +264,76 @@ ws2811_led_get = _rpi_ws281x.ws2811_led_get
 def ws2811_led_set(channel, lednum, color):
     return _rpi_ws281x.ws2811_led_set(channel, lednum, color)
 ws2811_led_set = _rpi_ws281x.ws2811_led_set
+class color_hsv(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, color_hsv, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, color_hsv, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["hue"] = _rpi_ws281x.color_hsv_hue_set
+    __swig_getmethods__["hue"] = _rpi_ws281x.color_hsv_hue_get
+    if _newclass:
+        hue = _swig_property(_rpi_ws281x.color_hsv_hue_get, _rpi_ws281x.color_hsv_hue_set)
+    __swig_setmethods__["h"] = _rpi_ws281x.color_hsv_h_set
+    __swig_getmethods__["h"] = _rpi_ws281x.color_hsv_h_get
+    if _newclass:
+        h = _swig_property(_rpi_ws281x.color_hsv_h_get, _rpi_ws281x.color_hsv_h_set)
+    __swig_setmethods__["saturation"] = _rpi_ws281x.color_hsv_saturation_set
+    __swig_getmethods__["saturation"] = _rpi_ws281x.color_hsv_saturation_get
+    if _newclass:
+        saturation = _swig_property(_rpi_ws281x.color_hsv_saturation_get, _rpi_ws281x.color_hsv_saturation_set)
+    __swig_setmethods__["sat"] = _rpi_ws281x.color_hsv_sat_set
+    __swig_getmethods__["sat"] = _rpi_ws281x.color_hsv_sat_get
+    if _newclass:
+        sat = _swig_property(_rpi_ws281x.color_hsv_sat_get, _rpi_ws281x.color_hsv_sat_set)
+    __swig_setmethods__["s"] = _rpi_ws281x.color_hsv_s_set
+    __swig_getmethods__["s"] = _rpi_ws281x.color_hsv_s_get
+    if _newclass:
+        s = _swig_property(_rpi_ws281x.color_hsv_s_get, _rpi_ws281x.color_hsv_s_set)
+    __swig_setmethods__["value"] = _rpi_ws281x.color_hsv_value_set
+    __swig_getmethods__["value"] = _rpi_ws281x.color_hsv_value_get
+    if _newclass:
+        value = _swig_property(_rpi_ws281x.color_hsv_value_get, _rpi_ws281x.color_hsv_value_set)
+    __swig_setmethods__["val"] = _rpi_ws281x.color_hsv_val_set
+    __swig_getmethods__["val"] = _rpi_ws281x.color_hsv_val_get
+    if _newclass:
+        val = _swig_property(_rpi_ws281x.color_hsv_val_get, _rpi_ws281x.color_hsv_val_set)
+    __swig_setmethods__["v"] = _rpi_ws281x.color_hsv_v_set
+    __swig_getmethods__["v"] = _rpi_ws281x.color_hsv_v_get
+    if _newclass:
+        v = _swig_property(_rpi_ws281x.color_hsv_v_get, _rpi_ws281x.color_hsv_v_set)
+    __swig_setmethods__["raw"] = _rpi_ws281x.color_hsv_raw_set
+    __swig_getmethods__["raw"] = _rpi_ws281x.color_hsv_raw_get
+    if _newclass:
+        raw = _swig_property(_rpi_ws281x.color_hsv_raw_get, _rpi_ws281x.color_hsv_raw_set)
 
-def ws2811_channel_get(ws, channelnum):
-    return _rpi_ws281x.ws2811_channel_get(ws, channelnum)
-ws2811_channel_get = _rpi_ws281x.ws2811_channel_get
+    def __init__(self):
+        this = _rpi_ws281x.new_color_hsv()
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _rpi_ws281x.delete_color_hsv
+    __del__ = lambda self: None
+color_hsv_swigregister = _rpi_ws281x.color_hsv_swigregister
+color_hsv_swigregister(color_hsv)
+
+
+def unpack_hsv(arg1):
+    return _rpi_ws281x.unpack_hsv(arg1)
+unpack_hsv = _rpi_ws281x.unpack_hsv
+
+def pack_rgb(r, g, b):
+    return _rpi_ws281x.pack_rgb(r, g, b)
+pack_rgb = _rpi_ws281x.pack_rgb
+
+def hsv2rgb_rainbow(hsv):
+    return _rpi_ws281x.hsv2rgb_rainbow(hsv)
+hsv2rgb_rainbow = _rpi_ws281x.hsv2rgb_rainbow
+
+def ws2811_led_array_hsv_set(ws2811, channel, values, count):
+    return _rpi_ws281x.ws2811_led_array_hsv_set(ws2811, channel, values, count)
+ws2811_led_array_hsv_set = _rpi_ws281x.ws2811_led_array_hsv_set
 # This file is compatible with both classic and new-style classes.
 
 

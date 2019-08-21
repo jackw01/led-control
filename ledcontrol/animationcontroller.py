@@ -153,6 +153,20 @@ class AnimationController:
             color[2] *= (1.0 - (sec_anim_time + sec_anim_scale) % 1) ** 4
             """
 
+            h = int((color[0] % 1) * 255)
+            s = int(color[1] * self.params['master_saturation'] * 255)
+            v = int(color[2] * secondary_value * self.params['master_brightness'] * 255)
+            packed = (h << 16) | (s << 8) | v
+            led_states.append(packed)
+
+            """
+            led_states.append(
+                [int((color[0] % 1) * 255),
+                 int(color[1] * self.params['master_saturation'] * 255),
+                 int(color[2] * secondary_value * self.params['master_brightness'] * 255)]
+            )"""
+
+            """
             # apply master brightness and saturation if using hsv
             if (mode == ColorMode.hsv):
                 led_states.append(utils.hsv2rgb_fast_rainbow(
@@ -164,6 +178,7 @@ class AnimationController:
                     [int(color[0] * secondary_value * self.params['master_brightness'] * 255),
                      int(color[1] * secondary_value * self.params['master_brightness'] * 255),
                      int(color[2] * secondary_value * self.params['master_brightness'] * 255)])
+            """
 
         self.primary_prev_state = new_primary_prev_state
         self.secondary_prev_state = new_secondary_prev_state
@@ -171,7 +186,7 @@ class AnimationController:
 
     def update_leds(self):
         self.time = self.timer.last_frame - self.start
-        self.led_controller.set_led_states(self.get_next_frame())
+        self.led_controller.leds.set_all_pixels_hsv(self.get_next_frame())
 
     def end_animation_thread(self):
         self.timer.stop()

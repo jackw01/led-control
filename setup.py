@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import find_packages, setup
+from setuptools import find_packages, setup, Extension
 
 setup(
     name='led-control',
@@ -16,8 +16,14 @@ setup(
     zip_safe=False,
     install_requires=[
         'recordclass>=0.12.0.1',
-        'Flask>=1.0.2',
-        'rpi_ws281x>=4.2.2'
+        'Flask>=1.0.2'
+    ],
+    ext_modules=[
+        Extension('_rpi_ws281x',
+                  sources=['ledcontrol/rpi_ws281x/lib/rpi_ws281x_wrap.c'],
+                  include_dirs=['ledcontrol/rpi_ws281x/lib'],
+                  library_dirs=['ledcontrol/rpi_ws281x/lib/c/rpi_ws281x/'],
+                  libraries=['ws2811'])
     ],
     include_package_data=True,
     entry_points={

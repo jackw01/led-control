@@ -1,7 +1,9 @@
 # Adafruit NeoPixel library port to the rpi_ws281x library.
 # Author: Tony DiCola (tony@tonydicola.com), Jeremy Garff (jer@jers.net)
-import _rpi_ws281x as ws
+from .lib import rpi_ws281x as ws
 import atexit
+
+print(ws.__file__)
 
 try:
     xrange(0)
@@ -171,6 +173,9 @@ class PixelStrip(object):
     def getPixelColorRGB(self, n):
         c = lambda: None
         setattr(c, 'r', self._led_data[n] >> 16 & 0xff)
-        setattr(c, 'g', self._led_data[n] >> 8  & 0xff)
-        setattr(c, 'b', self._led_data[n]    & 0xff)
+        setattr(c, 'g', self._led_data[n] >> 8 & 0xff)
+        setattr(c, 'b', self._led_data[n] & 0xff)
         return c
+
+    def set_all_pixels_hsv(self, pixels):
+        ws.ws2811_led_array_hsv_set(self._leds, self._channel, pixels, len(pixels))
