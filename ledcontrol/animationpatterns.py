@@ -4,7 +4,7 @@
 from random import random
 from ledcontrol.animationcontroller import ColorMode
 
-# primary animations that generate patterns in HSV or RGB color spaces
+# Primary animations that generate patterns in HSV or RGB color spaces
 # return color, mode
 
 def cycle_hue_1d(t, dt, x, y, prev_state):
@@ -14,7 +14,7 @@ primary = {
   'cycle_hue_1d': cycle_hue_1d,
 }
 
-# secondary animations that transform finalized RGB colors to add brightness-based effects
+# Secondary animations that transform finalized RGB colors to add brightness-based effects
 # return brightness, colorRGB
 
 def secondary_solid(t, dt, x, y, prev_state, in_color):

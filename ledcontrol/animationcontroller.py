@@ -53,9 +53,9 @@ class AnimationController:
         self.primary_pattern = primary_pattern
         self.secondary_pattern = secondary_pattern
 
-        # map led indices to normalized position vectors
+        # Map led indices to normalized position vectors
         self.mapped = [self.mapping(i) for i in range(self.led_count)]
-        # initialize prev state arrays
+        # Initialize prev state arrays
         self.primary_prev_state = [(0, 0, 0) for i in range(self.led_count)]
         self.secondary_prev_state = [(0, (0, 0, 0)) for i in range(self.led_count)]
 
@@ -89,7 +89,7 @@ class AnimationController:
         new_secondary_prev_state = []
         led_states = []
 
-        # calculate times
+        # Calculate times
         # time component = time (s) * speed (cycle/s)
         primary_time = self.time * self.params['primary_speed']
         primary_delta_t = self.timer.delta_t * self.params['primary_speed']
@@ -97,9 +97,9 @@ class AnimationController:
         secondary_delta_t = self.timer.delta_t * self.params['secondary_speed']
 
         for i in range(len(self.mapped)):
-            # calculate scale components to determine animation position
+            # Calculate scale components to determine animation position
             # scale component = position (max size) / scale (pattern length in units)
-            # one cycle is a normalized input value's transition from 0 to 1
+            # One cycle is a normalized input value's transition from 0 to 1
 
             primary_scale_component_x = self.mapped[i][0] / self.params['primary_scale']
             primary_scale_component_y = self.mapped[i][1] / self.params['primary_scale']

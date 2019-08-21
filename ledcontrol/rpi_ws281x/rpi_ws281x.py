@@ -1,5 +1,8 @@
 # Adafruit NeoPixel library port to the rpi_ws281x library.
 # Author: Tony DiCola (tony@tonydicola.com), Jeremy Garff (jer@jers.net)
+# led-control WS2812B LED Controller Server
+# Modifications copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
+
 from .lib import rpi_ws281x as ws
 import atexit
 
@@ -178,4 +181,4 @@ class PixelStrip(object):
         return c
 
     def set_all_pixels_hsv(self, pixels):
-        ws.ws2811_led_array_hsv_set(self._leds, self._channel, pixels, len(pixels))
+        ws.ws2811_hsv_render(self._leds, self._channel, pixels, len(pixels))

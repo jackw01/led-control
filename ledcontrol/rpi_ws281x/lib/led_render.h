@@ -1,3 +1,6 @@
+// led-control WS2812B LED Controller Server
+// Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
+
 #ifndef __LED_RENDER_H__
 #define __LED_RENDER_H__
 
@@ -16,6 +19,9 @@ int ws2811_led_set(ws2811_channel_t *channel, int lednum, uint32_t color) {
   return 0;
 }
 
+// Important stuff starts here
+
+// HSV type based on FastLED
 typedef struct color_hsv {
   union {
     struct {
@@ -38,13 +44,15 @@ typedef struct color_hsv {
   };
 } color_hsv;
 
+// Unpack 24 bit hsv from int
 color_hsv unpack_hsv(uint32_t in) {
   uint8_t h = in >> 16 & 0xff;
   uint8_t s = in >> 8 & 0xff;
   uint8_t v = in & 0xff;
-  return (color_hsv) { h, s, v };
+  return (color_hsv){ h, s, v };
 }
 
+// Pack 24 bit rgb to int
 uint32_t pack_rgb(uint8_t r, uint8_t g, uint8_t b) {
   return (r << 16) | (g << 8) | b;
 }
@@ -165,14 +173,14 @@ uint32_t hsv2rgb_rainbow(color_hsv hsv) {
   return pack_rgb(r, g, b);
 }
 
-int ws2811_led_array_hsv_set(ws2811_t *ws2811, ws2811_channel_t *channel, uint32_t values[], int count)
-{
+// Render array of hsv pixels and display
+int ws2811_hsv_render(ws2811_t *ws, ws2811_channel_t *channel, uint32_t values[], int count){
   if (count > channel->count) return -1;
   for (int i = 0; i < count; i++) {
     channel->leds[i] = hsv2rgb_rainbow(unpack_hsv(values[i]));
   }
-  ws2811_render(ws2811);
-  return count;
+  ws2811_render(ws);
+  return 1;
 }
 
 #endif
