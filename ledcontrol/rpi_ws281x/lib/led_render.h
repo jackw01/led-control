@@ -21,7 +21,7 @@ int ws2811_led_set(ws2811_channel_t *channel, int lednum, uint32_t color) {
 
 // Important stuff starts here
 
-// HSV type based on FastLED
+// HSV/RGB types based on FastLED
 typedef struct color_hsv {
   union {
     struct {
@@ -44,12 +44,39 @@ typedef struct color_hsv {
   };
 } color_hsv;
 
-// Unpack 24 bit hsv from int
+typedef struct color_rgb {
+  union {
+    struct {
+      union {
+        uint8_t red;
+        uint8_t r;
+      };
+      union {
+        uint8_t green;
+        uint8_t g;
+      };
+      union {
+        uint8_t blue;
+        uint8_t b;
+      };
+    };
+    uint8_t raw[3];
+  };
+} color_rgb;
+
+// Unpack 24 bit colors from int
 color_hsv unpack_hsv(uint32_t in) {
   uint8_t h = in >> 16 & 0xff;
   uint8_t s = in >> 8 & 0xff;
   uint8_t v = in & 0xff;
   return (color_hsv){ h, s, v };
+}
+
+color_rgb unpack_rgb(uint32_t in) {
+  uint8_t r = in >> 16 & 0xff;
+  uint8_t g = in >> 8 & 0xff;
+  uint8_t b = in & 0xff;
+  return (color_rgb){ r, g, b };
 }
 
 // Pack 24 bit rgb to int
@@ -58,7 +85,7 @@ uint32_t pack_rgb(uint8_t r, uint8_t g, uint8_t b) {
 }
 
 // "Rainbow" color transform from FastLED
-uint32_t hsv2rgb_rainbow(color_hsv hsv) {
+uint32_t render_hsv2rgb_rainbow(color_hsv hsv, color_rgb corr_rgb) {
   uint8_t hue = hsv.hue;
   uint8_t sat = hsv.sat;
   uint8_t val = hsv.val;
@@ -66,38 +93,30 @@ uint32_t hsv2rgb_rainbow(color_hsv hsv) {
 
   uint8_t offset = hue & 0x1F; // 0..31
   uint8_t offset8 = offset << 3;
-
   uint8_t third = offset8 / 3;
 
   if (!(hue & 0x80)) {
-    // 0XX
     if (!(hue & 0x40)) {
-      // 00X
       // section 0-1
       if (!(hue & 0x20)) {
-        // 000
         // case 0: // R -> O
         r = 255 - third;
         g = third;
         b = 0;
       } else {
-        // 001
         // case 1: // O -> Y
         r = 171;
         g = 85 + third;
         b = 0;
       }
     } else {
-      // 01X
       // section 2-3
       if (!(hue & 0x20)) {
-        // 010
         // case 2: // Y -> G
         r = 171 - third * 2;
         g = 170 + third;
         b = 0;
       } else {
-        // 011
         // case 3: // G -> A
         r = 0;
         g = 255 - third;
@@ -106,18 +125,14 @@ uint32_t hsv2rgb_rainbow(color_hsv hsv) {
     }
   } else {
     // section 4-7
-    // 1XX
     if (!(hue & 0x40))  {
-      // 10X
       if (!(hue & 0x20)) {
-        // 100
         // case 4: // A -> B
         r = 0;
         uint8_t twothirds = third * 2;
         g = 171 - twothirds; // K170?
         b = 85 + twothirds;
       } else {
-        // 101
         // case 5: // B -> P
         r = third;
         g = 0;
@@ -125,13 +140,11 @@ uint32_t hsv2rgb_rainbow(color_hsv hsv) {
       }
     } else {
       if (!(hue & 0x20)) {
-        // 110
         // case 6: // P -- K
         r = 85 + third;
         g = 0;
         b = 171 - third;
       } else {
-        // 111
         // case 7: // K -> R
         r = 170 + third;
         g = 0;
@@ -170,14 +183,32 @@ uint32_t hsv2rgb_rainbow(color_hsv hsv) {
     }
   }
 
+  r = r * corr_rgb.r / 255;
+  g = g * corr_rgb.g / 255;
+  b = b * corr_rgb.b / 255;
+
   return pack_rgb(r, g, b);
 }
 
 // Render array of hsv pixels and display
-int ws2811_hsv_render(ws2811_t *ws, ws2811_channel_t *channel, uint32_t values[], int count){
+int ws2811_hsv_render(ws2811_t *ws, ws2811_channel_t *channel,
+                      uint32_t values[], int count, uint32_t correction){
   if (count > channel->count) return -1;
+  color_rgb corr_rgb = unpack_rgb(correction);
   for (int i = 0; i < count; i++) {
-    channel->leds[i] = hsv2rgb_rainbow(unpack_hsv(values[i]));
+    channel->leds[i] = render_hsv2rgb_rainbow(unpack_hsv(values[i]), corr_rgb);
+  }
+  ws2811_render(ws);
+  return 1;
+}
+
+// Render array of hsv pixels and display
+int ws2811_hsv_render_array(ws2811_t *ws, ws2811_channel_t *channel,
+                            color_hsv values[], int count, uint32_t correction){
+  if (count > channel->count) return -1;
+  color_rgb corr_rgb = unpack_rgb(correction);
+  for (int i = 0; i < count; i++) {
+    channel->leds[i] = render_hsv2rgb_rainbow(values[i], corr_rgb);
   }
   ws2811_render(ws);
   return 1;

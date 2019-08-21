@@ -58,6 +58,36 @@
 */
 
 %{
+static int convert_color_array(PyObject *input, color_hsv *ptr, int size) {
+  int i;
+  if (!PySequence_Check(input)) {
+    PyErr_SetString(PyExc_TypeError, "Expecting a sequence");
+    return 0;
+  }
+  for (i =0; i < size; i++) {
+    PyObject *o = PySequence_GetItem(input,i);
+    if (!PyInt_Check(o)) {
+     Py_XDECREF(o);
+     PyErr_SetString(PyExc_ValueError, "Expecting a sequence of floats");
+     return 0;
+    }
+    ptr[i] = PyInt_AsLong(o);
+    Py_DECREF(o);
+  }
+  return 1;
+}
+%}
+
+%typemap(in) color_hsv values[ANY] {
+  int len = PyObject_Length($input);
+  $1 = malloc(sizeof(uint32_t) * len);
+  if (!convert_color_array($input, $1, len))
+  {
+    return NULL;
+  }
+}
+
+%{
 static int convert_iarray_32(PyObject *input, uint32_t *ptr, int size) {
   int i;
   if (!PySequence_Check(input)) {

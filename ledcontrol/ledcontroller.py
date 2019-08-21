@@ -6,8 +6,7 @@ import ledcontrol.utils as utils
 
 class LEDController:
     def __init__(self, led_count, led_pin,
-                 led_data_rate, led_dma_channel, led_strip_type, led_pixel_order,
-                 led_color_correction):
+                 led_data_rate, led_dma_channel, led_strip_type, led_pixel_order):
         # This is bad but it's the only way
         px_order = rpi_ws281x.rpi_ws281x.WS2811_STRIP_GRB
         if led_strip_type == 'WS2812':
@@ -45,26 +44,10 @@ class LEDController:
                                           0, # channel
                                           px_order)
 
-        self.correction_original = led_color_correction
-        self.set_color_temp(6500)
-
         self.leds.begin()
         self.clear()
-
-    def set_color_temp(self, kelvin):
-        temp_rgb = utils.blackbody2rgb_2(kelvin)
-        self.correction = [self.correction_original[0] * temp_rgb[0] // 255,
-                           self.correction_original[1] * temp_rgb[1] // 255,
-                           self.correction_original[2] * temp_rgb[2] // 255]
 
     def clear(self):
         for i in range(self.count):
             self.leds.setPixelColor(i, rpi_ws281x.Color(0, 0, 0))
-        self.leds.show()
-
-    def set_led_states(self, states):
-        for i in range(len(states)):
-            self.leds.setPixelColor(i, rpi_ws281x.Color(states[i][0] * self.correction[0] // 255,
-                                                        states[i][1] * self.correction[1] // 255,
-                                                        states[i][2] * self.correction[2] // 255))
         self.leds.show()

@@ -45,7 +45,7 @@ class RepeatedTimer:
 
 class AnimationController:
     def __init__(self, led_controller, refresh_rate, led_count, mapping,
-                 primary_pattern, secondary_pattern):
+                 primary_pattern, secondary_pattern, led_color_correction):
         self.led_controller = led_controller
         self.refresh_rate = refresh_rate
         self.led_count = led_count
@@ -58,6 +58,9 @@ class AnimationController:
         # Initialize prev state arrays
         self.primary_prev_state = [(0, 0, 0) for i in range(self.led_count)]
         self.secondary_prev_state = [(0, (0, 0, 0)) for i in range(self.led_count)]
+
+        self.correction_original = led_color_correction
+        self.set_color_correction(6500)
 
         self.params = {
             'master_brightness': 0.15,
@@ -72,10 +75,18 @@ class AnimationController:
         self.start = time.time()
         self.time = 0
 
+    def set_color_correction(self, kelvin):
+        temp_rgb = utils.blackbody2rgb_2(kelvin)
+        c = [self.correction_original[0] * temp_rgb[0] // 255,
+             self.correction_original[1] * temp_rgb[1] // 255,
+             self.correction_original[2] * temp_rgb[2] // 255]
+        self.correction = c
+        self.correction_packed = (c[0] << 16) | (c[1] << 8) | c[2]
+
     def set_param(self, key, value):
         self.params[key] = value
         if key == 'master_color_temp':
-            self.led_controller.set_color_temp(value)
+            self.set_color_correction(value)
 
     #def set_color(self, index, component, value):
     #    self.colors[index][component] = value
@@ -157,7 +168,8 @@ class AnimationController:
             s = int(color[1] * self.params['master_saturation'] * 255)
             v = int(color[2] * secondary_value * self.params['master_brightness'] * 255)
             packed = (h << 16) | (s << 8) | v
-            led_states.append(packed)
+            #led_states.append(packed)
+            led_states.append((h, s, v))
 
             """
             led_states.append(
@@ -186,7 +198,7 @@ class AnimationController:
 
     def update_leds(self):
         self.time = self.timer.last_frame - self.start
-        self.led_controller.leds.set_all_pixels_hsv(self.get_next_frame())
+        self.led_controller.leds.set_all_pixels_hsv2(self.get_next_frame(), self.correction_packed)
 
     def end_animation_thread(self):
         self.timer.stop()

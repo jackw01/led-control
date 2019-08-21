@@ -55,11 +55,11 @@ def create_app(led_count, refresh_rate,
                led_color_correction):
     app = Flask(__name__)
     leds = LEDController(led_count, led_pin,
-                         led_data_rate, led_dma_channel, led_strip_type, led_pixel_order,
-                         led_color_correction)
+                         led_data_rate, led_dma_channel, led_strip_type, led_pixel_order)
     controller = AnimationController(leds, refresh_rate, led_count,
                                      pixelmappings.line(led_count),
-                                     patterns.cycle_hue_1d, patterns.secondary_solid)
+                                     patterns.cycle_hue_1d, patterns.twinkle_pulse_1d,
+                                     led_color_correction)
 
     filename = Path.cwd() / 'ledcontrol.json'
     filename.touch(exist_ok=True)

@@ -318,22 +318,76 @@ class color_hsv(_object):
 color_hsv_swigregister = _rpi_ws281x.color_hsv_swigregister
 color_hsv_swigregister(color_hsv)
 
+class color_rgb(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, color_rgb, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, color_rgb, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["red"] = _rpi_ws281x.color_rgb_red_set
+    __swig_getmethods__["red"] = _rpi_ws281x.color_rgb_red_get
+    if _newclass:
+        red = _swig_property(_rpi_ws281x.color_rgb_red_get, _rpi_ws281x.color_rgb_red_set)
+    __swig_setmethods__["r"] = _rpi_ws281x.color_rgb_r_set
+    __swig_getmethods__["r"] = _rpi_ws281x.color_rgb_r_get
+    if _newclass:
+        r = _swig_property(_rpi_ws281x.color_rgb_r_get, _rpi_ws281x.color_rgb_r_set)
+    __swig_setmethods__["green"] = _rpi_ws281x.color_rgb_green_set
+    __swig_getmethods__["green"] = _rpi_ws281x.color_rgb_green_get
+    if _newclass:
+        green = _swig_property(_rpi_ws281x.color_rgb_green_get, _rpi_ws281x.color_rgb_green_set)
+    __swig_setmethods__["g"] = _rpi_ws281x.color_rgb_g_set
+    __swig_getmethods__["g"] = _rpi_ws281x.color_rgb_g_get
+    if _newclass:
+        g = _swig_property(_rpi_ws281x.color_rgb_g_get, _rpi_ws281x.color_rgb_g_set)
+    __swig_setmethods__["blue"] = _rpi_ws281x.color_rgb_blue_set
+    __swig_getmethods__["blue"] = _rpi_ws281x.color_rgb_blue_get
+    if _newclass:
+        blue = _swig_property(_rpi_ws281x.color_rgb_blue_get, _rpi_ws281x.color_rgb_blue_set)
+    __swig_setmethods__["b"] = _rpi_ws281x.color_rgb_b_set
+    __swig_getmethods__["b"] = _rpi_ws281x.color_rgb_b_get
+    if _newclass:
+        b = _swig_property(_rpi_ws281x.color_rgb_b_get, _rpi_ws281x.color_rgb_b_set)
+    __swig_setmethods__["raw"] = _rpi_ws281x.color_rgb_raw_set
+    __swig_getmethods__["raw"] = _rpi_ws281x.color_rgb_raw_get
+    if _newclass:
+        raw = _swig_property(_rpi_ws281x.color_rgb_raw_get, _rpi_ws281x.color_rgb_raw_set)
+
+    def __init__(self):
+        this = _rpi_ws281x.new_color_rgb()
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _rpi_ws281x.delete_color_rgb
+    __del__ = lambda self: None
+color_rgb_swigregister = _rpi_ws281x.color_rgb_swigregister
+color_rgb_swigregister(color_rgb)
+
 
 def unpack_hsv(arg1):
     return _rpi_ws281x.unpack_hsv(arg1)
 unpack_hsv = _rpi_ws281x.unpack_hsv
 
+def unpack_rgb(arg1):
+    return _rpi_ws281x.unpack_rgb(arg1)
+unpack_rgb = _rpi_ws281x.unpack_rgb
+
 def pack_rgb(r, g, b):
     return _rpi_ws281x.pack_rgb(r, g, b)
 pack_rgb = _rpi_ws281x.pack_rgb
 
-def hsv2rgb_rainbow(hsv):
-    return _rpi_ws281x.hsv2rgb_rainbow(hsv)
-hsv2rgb_rainbow = _rpi_ws281x.hsv2rgb_rainbow
+def render_hsv2rgb_rainbow(hsv, corr_rgb):
+    return _rpi_ws281x.render_hsv2rgb_rainbow(hsv, corr_rgb)
+render_hsv2rgb_rainbow = _rpi_ws281x.render_hsv2rgb_rainbow
 
-def ws2811_led_array_hsv_set(ws2811, channel, values, count):
-    return _rpi_ws281x.ws2811_led_array_hsv_set(ws2811, channel, values, count)
-ws2811_led_array_hsv_set = _rpi_ws281x.ws2811_led_array_hsv_set
+def ws2811_hsv_render(ws, channel, values, count, correction):
+    return _rpi_ws281x.ws2811_hsv_render(ws, channel, values, count, correction)
+ws2811_hsv_render = _rpi_ws281x.ws2811_hsv_render
+
+def ws2811_hsv_render_array(ws, channel, values, count, correction):
+    return _rpi_ws281x.ws2811_hsv_render_array(ws, channel, values, count, correction)
+ws2811_hsv_render_array = _rpi_ws281x.ws2811_hsv_render_array
 # This file is compatible with both classic and new-style classes.
 
 

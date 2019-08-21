@@ -14,7 +14,7 @@ primary = {
   'cycle_hue_1d': cycle_hue_1d,
 }
 
-# Secondary animations that transform finalized RGB colors to add brightness-based effects
+# Secondary animations that transform finalized colors to add brightness-based effects
 # return brightness, colorRGB
 
 def secondary_solid(t, dt, x, y, prev_state, in_color):
