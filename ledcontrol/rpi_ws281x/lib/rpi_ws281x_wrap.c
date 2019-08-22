@@ -3059,7 +3059,7 @@ static int convert_iarray_32(PyObject *input, uint32_t *ptr, int size) {
     PyObject *o = PySequence_GetItem(input,i);
     if (!PyInt_Check(o)) {
      Py_XDECREF(o);
-     PyErr_SetString(PyExc_ValueError, "Expecting a sequence of floats");
+     PyErr_SetString(PyExc_ValueError, "Expecting a sequence of uint_32s");
      return 0;
     }
     ptr[i] = PyInt_AsLong(o);
@@ -5747,8 +5747,7 @@ SWIGINTERN PyObject *_wrap_ws2811_hsv_render(PyObject *SWIGUNUSEDPARM(self), PyO
   {
     int len = PyObject_Length(obj2);
     arg3 = malloc(sizeof(uint32_t) * len);
-    if (!convert_iarray_32(obj2, arg3, len))
-    {
+    if (!convert_iarray_32(obj2, arg3, len)) {
       return NULL;
     }
   }
@@ -5764,8 +5763,14 @@ SWIGINTERN PyObject *_wrap_ws2811_hsv_render(PyObject *SWIGUNUSEDPARM(self), PyO
   arg5 = (uint32_t)(val5);
   result = (int)ws2811_hsv_render(arg1,arg2,arg3,arg4,arg5);
   resultobj = SWIG_From_int((int)(result));
+  {
+    if (arg3) free(arg3);
+  }
   return resultobj;
 fail:
+  {
+    if (arg3) free(arg3);
+  }
   return NULL;
 }
 
@@ -5781,8 +5786,6 @@ SWIGINTERN PyObject *_wrap_ws2811_hsv_render_array(PyObject *SWIGUNUSEDPARM(self
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  void *argp3 = 0 ;
-  int res3 = 0 ;
   int val4 ;
   int ecode4 = 0 ;
   unsigned int val5 ;
@@ -5805,11 +5808,20 @@ SWIGINTERN PyObject *_wrap_ws2811_hsv_render_array(PyObject *SWIGUNUSEDPARM(self
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ws2811_hsv_render_array" "', argument " "2"" of type '" "ws2811_channel_t *""'"); 
   }
   arg2 = (ws2811_channel_t *)(argp2);
-  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_color_hsv, 0 |  0 );
-  if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "ws2811_hsv_render_array" "', argument " "3"" of type '" "color_hsv []""'"); 
-  } 
-  arg3 = (color_hsv *)(argp3);
+  {
+    int len = PyObject_Length(obj2);
+    arg3 = malloc(sizeof(color_hsv) * len);
+    int i, j;
+    for (i = 0; i < len; i++) {
+      PyObject *o = PySequence_GetItem(obj2, i);
+      for (j = 0; j < 3; j++) {
+        PyObject *o2 = PySequence_GetItem(o, j);
+        arg3[i].raw[j] = PyInt_AsLong(o2);
+        Py_DECREF(o2);
+      }
+      Py_DECREF(o);
+    }
+  }
   ecode4 = SWIG_AsVal_int(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
     SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ws2811_hsv_render_array" "', argument " "4"" of type '" "int""'");
@@ -5822,8 +5834,14 @@ SWIGINTERN PyObject *_wrap_ws2811_hsv_render_array(PyObject *SWIGUNUSEDPARM(self
   arg5 = (uint32_t)(val5);
   result = (int)ws2811_hsv_render_array(arg1,arg2,arg3,arg4,arg5);
   resultobj = SWIG_From_int((int)(result));
+  {
+    if (arg3) free(arg3);
+  }
   return resultobj;
 fail:
+  {
+    if (arg3) free(arg3);
+  }
   return NULL;
 }
 

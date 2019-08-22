@@ -2,89 +2,58 @@
 // Original author: Tony DiCola (tony@tonydicola.com), Jeremy Garff (jer@jers.net)
 // Modified by jackw01 (github.com/jackw01) - 2019
 
-// Define module name rpi_ws281x.  This will actually be imported under
+// Define module name rpi_ws281x. This will actually be imported under
 // the name _rpi_ws281x following the SWIG & Python conventions.
 %module rpi_ws281x
 
-// Include standard SWIG types & array support for support of uint32_t
-// parameters and arrays.
+// Include standard SWIG types & array support for support of uint32_tparameters and arrays.
 %include "stdint.i"
 %include "carrays.i"
 
 /*
-%typemap(in) uint8_t value[ANY] (uint8_t temp[$1_dim0]) {
-  int i;
+%typemap(in) color_hsv values[ANY] {
+  int len = PyObject_Length($input);
+  $1 = malloc(sizeof(color_hsv) * len);
+  int i, j;
   if (!PySequence_Check($input)) {
-    PyErr_SetString(PyExc_ValueError,"Expected a sequence");
+    PyErr_SetString(PyExc_TypeError, "Expecting a sequence");
     return NULL;
   }
-  if (PySequence_Length($input) != $1_dim0) {
-    PyErr_SetString(PyExc_ValueError,"Size mismatch. Expected $1_dim0 elements");
-    return NULL;
-  }
-  for (i = 0; i < $1_dim0; i++) {
-    PyObject *o = PySequence_GetItem($input,i);
-    if (PyInt_Check(o)) {
-      temp[i] = (uint8_t)PyInt_AsLong(o);
-    } else {
-      PyErr_SetString(PyExc_ValueError,"Sequence elements must be numbers");
-      return NULL;
+  for (i = 0; i < len; i++) {
+    PyObject *o = PySequence_GetItem($input, i);
+    for (j = 0; j < 3; j++) {
+      PyObject *o2 = PySequence_GetItem(o, j);
+      if (!PyInt_Check(o2)) {
+        Py_XDECREF(o2);
+        PyErr_SetString(PyExc_ValueError, "Expecting a sequence of colors");
+        return NULL;
+      }
+      $1[i].raw[j] = PyInt_AsLong(o2);
+      Py_DECREF(o2);
     }
+    Py_DECREF(o);
   }
-  $1 = temp;
-}*/
-/*
-%typemap(in) uint32_t values[ANY] (uint32_t temp[$1_dim0]) {
-  int i;
-  if (!PySequence_Check($input)) {
-    PyErr_SetString(PyExc_ValueError,"Expected a sequence");
-    return NULL;
-  }
-  if (PySequence_Length($input) != $1_dim0) {
-    PyErr_SetString(PyExc_ValueError,"Size mismatch. Expected $1_dim0 elements");
-    return NULL;
-  }
-  for (i = 0; i < $1_dim0; i++) {
-    PyObject *o = PySequence_GetItem($input,i);
-    if (PyInt_Check(o)) {
-      temp[i] = (uint32_t)PyInt_AsLong(o);
-    } else {
-      PyErr_SetString(PyExc_ValueError,"Sequence elements must be numbers");
-      return NULL;
-    }
-  }
-  $1 = temp;
 }
 */
 
-%{
-static int convert_color_array(PyObject *input, color_hsv *ptr, int size) {
-  int i;
-  if (!PySequence_Check(input)) {
-    PyErr_SetString(PyExc_TypeError, "Expecting a sequence");
-    return 0;
-  }
-  for (i =0; i < size; i++) {
-    PyObject *o = PySequence_GetItem(input,i);
-    if (!PyInt_Check(o)) {
-     Py_XDECREF(o);
-     PyErr_SetString(PyExc_ValueError, "Expecting a sequence of floats");
-     return 0;
-    }
-    ptr[i] = PyInt_AsLong(o);
-    Py_DECREF(o);
-  }
-  return 1;
-}
-%}
-
+// Unsafe, but ok in this case since inputs are hopefully consistent
 %typemap(in) color_hsv values[ANY] {
   int len = PyObject_Length($input);
-  $1 = malloc(sizeof(uint32_t) * len);
-  if (!convert_color_array($input, $1, len))
-  {
-    return NULL;
+  $1 = malloc(sizeof(color_hsv) * len);
+  int i, j;
+  for (i = 0; i < len; i++) {
+    PyObject *o = PySequence_GetItem($input, i);
+    for (j = 0; j < 3; j++) {
+      PyObject *o2 = PySequence_GetItem(o, j);
+      $1[i].raw[j] = PyInt_AsLong(o2);
+      Py_DECREF(o2);
+    }
+    Py_DECREF(o);
   }
+}
+
+%typemap(freearg) color_hsv values[ANY] {
+   if ($1) free($1);
 }
 
 %{
@@ -98,7 +67,7 @@ static int convert_iarray_32(PyObject *input, uint32_t *ptr, int size) {
     PyObject *o = PySequence_GetItem(input,i);
     if (!PyInt_Check(o)) {
      Py_XDECREF(o);
-     PyErr_SetString(PyExc_ValueError, "Expecting a sequence of floats");
+     PyErr_SetString(PyExc_ValueError, "Expecting a sequence of uint_32s");
      return 0;
     }
     ptr[i] = PyInt_AsLong(o);
@@ -111,10 +80,13 @@ static int convert_iarray_32(PyObject *input, uint32_t *ptr, int size) {
 %typemap(in) uint32_t values[ANY] {
   int len = PyObject_Length($input);
   $1 = malloc(sizeof(uint32_t) * len);
-  if (!convert_iarray_32($input, $1, len))
-  {
+  if (!convert_iarray_32($input, $1, len)) {
     return NULL;
   }
+}
+
+%typemap(freearg) uint32_t values[ANY] {
+   if ($1) free($1);
 }
 
 %{
@@ -169,24 +141,3 @@ static int convert_iarray_8(PyObject *input, uint8_t *ptr, int size) {
 
 // Include render utils
 %include "led_render.h"
-
-/*
-%inline %{
-  uint32_t ws2811_led_get(ws2811_channel_t *channel, int lednum) {
-    if (lednum >= channel->count) return -1;
-
-    return channel->leds[lednum];
-  }
-
-  int ws2811_led_set(ws2811_channel_t *channel, int lednum, uint32_t color) {
-    if (lednum >= channel->count) return -1;
-    channel->leds[lednum] = color;
-
-    return 0;
-  }
-
-  ws2811_channel_t *ws2811_channel_get(ws2811_t *ws, int channelnum) {
-    return &ws->channel[channelnum];
-  }
-%}
-*/

@@ -58,7 +58,7 @@ def create_app(led_count, refresh_rate,
                          led_data_rate, led_dma_channel, led_strip_type, led_pixel_order)
     controller = AnimationController(leds, refresh_rate, led_count,
                                      pixelmappings.line(led_count),
-                                     patterns.cycle_hue_1d, patterns.twinkle_pulse_1d,
+                                     patterns.cycle_hue_1d, patterns.secondary_solid,
                                      led_color_correction)
 
     filename = Path.cwd() / 'ledcontrol.json'

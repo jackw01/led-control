@@ -80,8 +80,7 @@ class AnimationController:
         c = [self.correction_original[0] * temp_rgb[0] // 255,
              self.correction_original[1] * temp_rgb[1] // 255,
              self.correction_original[2] * temp_rgb[2] // 255]
-        self.correction = c
-        self.correction_packed = (c[0] << 16) | (c[1] << 8) | c[2]
+        self.correction = (c[0] << 16) | (c[1] << 8) | c[2]
 
     def set_param(self, key, value):
         self.params[key] = value
@@ -111,7 +110,7 @@ class AnimationController:
             # Calculate scale components to determine animation position
             # scale component = position (max size) / scale (pattern length in units)
             # One cycle is a normalized input value's transition from 0 to 1
-
+            """
             primary_scale_component_x = self.mapped[i][0] / self.params['primary_scale']
             primary_scale_component_y = self.mapped[i][1] / self.params['primary_scale']
             secondary_scale_component_x = self.mapped[i][0] / self.params['secondary_scale']
@@ -132,65 +131,15 @@ class AnimationController:
                                                               color_primary)
             new_secondary_prev_state.append((secondary_value, color))
 
-            """
-            if self.params['color_animation_mode'] == LEDColorAnimationMode.SolidColor:
-            color = self.colors[0]
-
-            elif self.params['color_animation_mode'] == LEDColorAnimationMode.CycleHue:
-            color = ((color_anim_time + color_anim_scale) % 1.0,
-                self.params['saturation'], 1.0)
-
-            elif self.params['color_animation_mode'] == LEDColorAnimationMode.Sines:
-            rgb = hsv_to_rgb_norm(self.colors[0])
-            r_half, g_half, b_half = [x / 2 for x in rgb]
-            r = r_half * math.sin(math.pi * color_anim_time * 10 * self.params['red_frequency'] +
-                        self.params['red_phase_offset'] + color_anim_scale) + r_half
-            g = g_half * math.sin(math.pi * color_anim_time * 10 * self.params['green_frequency'] +
-                        self.params['green_phase_offset'] + color_anim_scale) + g_half
-            b = b_half * math.sin(math.pi * color_anim_time * 10 * self.params['blue_frequency'] +
-                        self.params['blue_phase_offset'] + color_anim_scale) + b_half
-            color = colorsys.rgb_to_hsv(r, g, b)
-
-            color = [color[0], color[1], color[2]]
-
-            if self.params['secondary_animation_mode'] == LEDSecondaryAnimationMode.Static:
-            pass
-
-            elif self.params['secondary_animation_mode'] == LEDSecondaryAnimationMode.Wave:
-            color[2] *= (0.5 * math.sin(2 * math.pi * sec_anim_time +
-                            2 * math.pi * sec_anim_scale) + 0.5) ** 1.7
-
-            elif self.params['secondary_animation_mode'] == LEDSecondaryAnimationMode.Trail:
-            color[2] *= (1.0 - (sec_anim_time + sec_anim_scale) % 1) ** 4
-            """
-
             h = int((color[0] % 1) * 255)
             s = int(color[1] * self.params['master_saturation'] * 255)
             v = int(color[2] * secondary_value * self.params['master_brightness'] * 255)
-            packed = (h << 16) | (s << 8) | v
-            #led_states.append(packed)
             led_states.append((h, s, v))
-
             """
-            led_states.append(
-                [int((color[0] % 1) * 255),
-                 int(color[1] * self.params['master_saturation'] * 255),
-                 int(color[2] * secondary_value * self.params['master_brightness'] * 255)]
-            )"""
-
-            """
-            # apply master brightness and saturation if using hsv
-            if (mode == ColorMode.hsv):
-                led_states.append(utils.hsv2rgb_fast_rainbow(
-                    [color[0],
-                     color[1] * self.params['master_saturation'],
-                     color[2] * secondary_value * self.params['master_brightness']]))
-            else:
-                led_states.append(
-                    [int(color[0] * secondary_value * self.params['master_brightness'] * 255),
-                     int(color[1] * secondary_value * self.params['master_brightness'] * 255),
-                     int(color[2] * secondary_value * self.params['master_brightness'] * 255)])
-            """
+            h = int(0.5 * 255)
+            s = int(1.0 * self.params['master_saturation'] * 255)
+            v = int(1.0 * self.params['master_brightness'] * 255)
+            led_states.append((h, s, v))
 
         self.primary_prev_state = new_primary_prev_state
         self.secondary_prev_state = new_secondary_prev_state
@@ -198,7 +147,7 @@ class AnimationController:
 
     def update_leds(self):
         self.time = self.timer.last_frame - self.start
-        self.led_controller.leds.set_all_pixels_hsv2(self.get_next_frame(), self.correction_packed)
+        self.led_controller.leds.set_all_pixels_hsv2(self.get_next_frame(), self.correction)
 
     def end_animation_thread(self):
         self.timer.stop()
