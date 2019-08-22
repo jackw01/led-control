@@ -17,27 +17,32 @@ class RepeatedTimer:
         self.function = function
         self.args = args
         self.kwargs = kwargs
-        self.last_frame = time.time()
-        self.last_render_start = time.time()
-        self.last_render_end = time.time()
-        self.delta_t = 0
+        self.count = 0
+        self.wait_time = 0
+        self.last_frame = time.perf_counter()
+        self.last_render_start = time.perf_counter()
+        self.last_render_end = time.perf_counter()
+        self.delta_t = interval
         self.event = Event()
         self.thread = Thread(target=self.target, daemon=True)
         self.thread.start()
 
+    # Main event timer loop
     def target(self):
         while not self.event.wait(self.wait_time):
-            self.last_render_start = time.time()
-            self.delta_t = self.last_render_start - self.last_frame
-            print('FPS: {}'.format(1.0 / self.delta_t)) # fps
+            self.last_render_start = time.perf_counter() # get start time
+            if self.count % 100 == 0:
+                print('FPS: {}'.format(1.0 / self.delta_t)) # print fps
+            self.delta_t = self.last_render_start - self.last_frame # recalculate frame delta_t
             self.last_frame = self.last_render_start
             self.function(*self.args, **self.kwargs) # call target function
-            self.last_render_end = time.time()
+            self.count += 1
+            self.last_render_end = time.perf_counter() # get end time
 
-    @property
-    def wait_time(self): # calculate wait time based on last frame duration
-        wait = max(0, self.interval - (self.last_render_end - self.last_render_start))
-        return wait
+            # Calculate wait for next iteration
+            self.wait_time = self.interval - (self.last_render_end - self.last_render_start)
+            if (self.wait_time < 0):
+                self.wait_time = 0
 
     def stop(self):
         self.event.set()
@@ -72,7 +77,7 @@ class AnimationController:
             'secondary_scale': 1.0,
         }
 
-        self.start = time.time()
+        self.start = time.perf_counter()
         self.time = 0
 
     def set_color_correction(self, kelvin):
@@ -94,7 +99,7 @@ class AnimationController:
         self.timer = RepeatedTimer(1.0 / self.refresh_rate, self.update_leds)
 
     def get_next_frame(self):
-        begin = time.time()
+        begin = time.perf_counter()
         new_primary_prev_state = []
         new_secondary_prev_state = []
         led_states = []
@@ -110,7 +115,7 @@ class AnimationController:
             # Calculate scale components to determine animation position
             # scale component = position (max size) / scale (pattern length in units)
             # One cycle is a normalized input value's transition from 0 to 1
-            """
+
             primary_scale_component_x = self.mapped[i][0] / self.params['primary_scale']
             primary_scale_component_y = self.mapped[i][1] / self.params['primary_scale']
             secondary_scale_component_x = self.mapped[i][0] / self.params['secondary_scale']
@@ -140,6 +145,7 @@ class AnimationController:
             s = int(1.0 * self.params['master_saturation'] * 255)
             v = int(1.0 * self.params['master_brightness'] * 255)
             led_states.append((h, s, v))
+            """
 
         self.primary_prev_state = new_primary_prev_state
         self.secondary_prev_state = new_secondary_prev_state

@@ -1,3 +1,7 @@
 ledcontrol/rpi_ws281x/lib/rpi_ws281x_wrap.c linguist-generated=true
 ledcontrol/rpi_ws281x/lib/rpi_ws281x.py linguist-generated=true
 ledcontrol/static/css/index.css linguist-generated=true
+ledcontrol/static/css/fonts.css linguist-generated=true
+ledcontrol/static/css/normalize.min.css linguist-vendored=true
+ledcontrol/static/js/jquery-3.3.1.min.js linguist-vendored=true
+*.i linguist-language=C
