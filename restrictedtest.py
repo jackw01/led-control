@@ -22,7 +22,7 @@ restricted_locals = {
 
 source_code = """
 def pattern(t, dt, x, y, prev_state):
-    return (t + x, i, prev_state[0])
+    return (t + x, 0, prev_state[0])
 """
 
 byte_code = RestrictedPython.compile_restricted_exec(

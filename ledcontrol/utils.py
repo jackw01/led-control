@@ -13,6 +13,21 @@ def clamp(x, min, max):
     else:
         return x
 
+# Waveforms for pattern generation. All have a period of 2 time units and range from 0-1.
+# Sawtooth wave is just (t % 1)
+
+# Square wave - this should run pretty fast?
+def wave_square(t, duty_cycle=0.5):
+    return math.ceil(duty_cycle - ((t / 2) % 1))
+
+# Triangle wave
+def wave_triangle(t):
+    return math.fabs((t % 2) - 1)
+
+# Sine wave - should test speed of approximation methods
+def wave_sine(t):
+    return math.sin(t)
+
 # HSV to RGB transforms (normalized HSV to 8 bit RGB)
 
 # Using colorsys
