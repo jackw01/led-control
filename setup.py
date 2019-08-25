@@ -16,7 +16,8 @@ setup(
     zip_safe=False,
     install_requires=[
         'recordclass>=0.12.0.1',
-        'Flask>=1.0.2'
+        'Flask>=1.0.2',
+        'RestrictedPython>=4.0',
     ],
     ext_modules=[
         Extension('_rpi_ws281x',

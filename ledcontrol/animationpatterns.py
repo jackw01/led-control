@@ -2,17 +2,15 @@
 # Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
 from random import random
-from ledcontrol.animationcontroller import ColorMode
+from enum import Enum
+
+ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
 
 # Primary animations that generate patterns in HSV or RGB color spaces
 # return color, mode
 
 def cycle_hue_1d(t, dt, x, y, prev_state):
     return (t + x, 1, 1), ColorMode.hsv
-
-primary = {
-  'cycle_hue_1d': cycle_hue_1d,
-}
 
 # Secondary animations that transform finalized colors to add brightness-based effects
 # return brightness, colorRGB
@@ -26,7 +24,3 @@ def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
       return random(), in_color
     else:
       return v, prev_state[1]
-
-secondary = {
-  'twinkle_pulse_1d': twinkle_pulse_1d,
-}

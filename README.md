@@ -31,3 +31,8 @@ optional arguments:
   --led_pixel_order LED_PIXEL_ORDER
                         LED color channel order. Either RGB or GRB. Default: GRB
 ```
+
+## Features
+
+* Supports cheap and readily available WS281x and SK6812 LED strips, strings, and arrays
+* Capable of achieving up to 120 FPS on 60 LEDs and 60 FPS on 150 LEDs with low-end hardware (Raspberry Pi Zero)

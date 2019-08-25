@@ -7,3 +7,5 @@ Point = collections.namedtuple('Point', ['x', 'y'])
 
 def line(count):
     return lambda i: Point(i / count, 0)
+
+# needs arrays and serpentine order modes

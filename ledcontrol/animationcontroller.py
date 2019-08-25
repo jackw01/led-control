@@ -2,12 +2,13 @@
 # Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
 import math
+import random
 import time
-from enum import Enum
+import RestrictedPython
 from threading import Event, Thread
-import ledcontrol.utils as utils
 
-ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
+import ledcontrol.animationpatterns as patterns
+import ledcontrol.utils as utils
 
 class RepeatedTimer:
     """Repeat `function` every `interval` seconds."""
@@ -49,14 +50,11 @@ class RepeatedTimer:
         self.thread.join()
 
 class AnimationController:
-    def __init__(self, led_controller, refresh_rate, led_count, mapping,
-                 primary_pattern, secondary_pattern, led_color_correction):
+    def __init__(self, led_controller, refresh_rate, led_count, mapping, led_color_correction):
         self.led_controller = led_controller
         self.refresh_rate = refresh_rate
         self.led_count = led_count
         self.mapping = mapping
-        self.primary_pattern = primary_pattern
-        self.secondary_pattern = secondary_pattern
 
         # Map led indices to normalized position vectors
         self.mapped = [self.mapping(i) for i in range(self.led_count)]
@@ -64,21 +62,64 @@ class AnimationController:
         self.primary_prev_state = [(0, 0, 0) for i in range(self.led_count)]
         self.secondary_prev_state = [(0, (0, 0, 0)) for i in range(self.led_count)]
 
-        self.correction_original = led_color_correction
-        self.set_color_correction(6500)
-
+        # Used to render main slider/select list
         self.params = {
             'master_brightness': 0.15,
             'master_color_temp': 6500,
             'master_saturation': 1.0,
+            'primary_pattern': 'cycle_hue_1d',
             'primary_speed': 0.2,
             'primary_scale': 1.0,
+            'secondary_pattern': 'none',
             'secondary_speed': 0.2,
             'secondary_scale': 1.0,
         }
 
+        # Lookup dictionary for pattern functions - keys are used to generate select menu
+        self.primary_pattern_functions = {
+            'cycle_hue_1d': patterns.cycle_hue_1d,
+        }
+
+        # Source code for user-created patterns
+        self.pattern_sources = {}
+
+        # Builtin secondary patterns
+        self.secondary_pattern_functions = {
+            'none': None,
+        }
+
+        self.pattern_1 = self.primary_pattern_functions[self.params['primary_pattern']]
+        self.pattern_2 = self.secondary_pattern_functions[self.params['secondary_pattern']]
+
+        # Set default color temp
+        self.correction_original = led_color_correction
+        self.set_color_correction(self.params['master_color_temp'])
+        # Prepare to start
         self.start = time.perf_counter()
         self.time = 0
+
+    def compile_pattern(self, source):
+        def getitem(obj, index):
+            if obj is not None and type(obj) in (list, tuple, dict):
+                return obj[index]
+            raise Exception()
+
+        restricted_globals = {
+            '__builtins__': RestrictedPython.Guards.safe_builtins,
+            '_print_': RestrictedPython.PrintCollector,
+            '_getattr_': RestrictedPython.Guards.safer_getattr,
+            '_getitem_': getitem,
+            '_write_': RestrictedPython.Guards.full_write_guard,
+            'math': math,
+            'random': random,
+        }
+
+        restricted_locals = {}
+
+        byte_code = RestrictedPython.compile_restricted_exec(source, filename='<inline code>')
+        print(byte_code)
+        exec(byte_code[0], restricted_globals, restricted_locals)
+        return restricted_locals['pattern']
 
     def set_color_correction(self, kelvin):
         temp_rgb = utils.blackbody2rgb_2(kelvin)
@@ -91,6 +132,10 @@ class AnimationController:
         self.params[key] = value
         if key == 'master_color_temp':
             self.set_color_correction(value)
+
+    def set_pattern_function(self, key, source):
+        self.pattern_sources[key] = source
+        self.pattern_functions[key] = self.compile_pattern(source)
 
     #def set_color(self, index, component, value):
     #    self.colors[index][component] = value
@@ -121,31 +166,29 @@ class AnimationController:
             secondary_scale_component_x = self.mapped[i][0] / self.params['secondary_scale']
             secondary_scale_component_y = self.mapped[i][1] / self.params['secondary_scale']
 
-            color_primary, mode = self.primary_pattern(primary_time,
-                                                       primary_delta_t,
-                                                       primary_scale_component_x,
-                                                       primary_scale_component_y,
-                                                       self.primary_prev_state[i])
-            new_primary_prev_state.append(color_primary)
+            # Run primary pattern to determine initial color
+            color, mode = self.pattern_1(primary_time,
+                                                 primary_delta_t,
+                                                 primary_scale_component_x,
+                                                 primary_scale_component_y,
+                                                 self.primary_prev_state[i])
+            new_primary_prev_state.append(color)
 
-            secondary_value, color = self.secondary_pattern(secondary_time,
-                                                              secondary_delta_t,
-                                                              secondary_scale_component_x,
-                                                              secondary_scale_component_y,
-                                                              self.secondary_prev_state[i],
-                                                              color_primary)
-            new_secondary_prev_state.append((secondary_value, color))
+            # Run secondary pattern to determine new brightness and possibly modify color
+            secondary_value = 1.0
+            if self.pattern_2 is not None:
+                secondary_value, color = self.pattern_2(secondary_time,
+                                                        secondary_delta_t,
+                                                        secondary_scale_component_x,
+                                                        secondary_scale_component_y,
+                                                        self.secondary_prev_state[i],
+                                                        color)
+                new_secondary_prev_state.append((secondary_value, color))
 
             h = int((color[0] % 1) * 255)
             s = int(color[1] * self.params['master_saturation'] * 255)
             v = int(color[2] * secondary_value * self.params['master_brightness'] * 255)
             led_states.append((h, s, v))
-            """
-            h = int(0.5 * 255)
-            s = int(1.0 * self.params['master_saturation'] * 255)
-            v = int(1.0 * self.params['master_brightness'] * 255)
-            led_states.append((h, s, v))
-            """
 
         self.primary_prev_state = new_primary_prev_state
         self.secondary_prev_state = new_secondary_prev_state
