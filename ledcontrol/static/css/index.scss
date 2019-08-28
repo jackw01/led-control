@@ -86,6 +86,7 @@ code, pre {
 body {
   padding: 0;
   margin: 0;
+  overflow-y: scroll;
 }
 
 main {
@@ -97,7 +98,7 @@ main {
 }
 
 footer {
-  margin: 0;
+  margin-top: 1rem;
 }
 
 hr {

@@ -32,7 +32,16 @@ function handleColorUpdate() {
   $.getJSON('/setcolor', { index: idx, component: cmp, value: val, }, function() {});
 }
 
+var codeMirror;
+
 $('.update-on-change').on('change', handleParamUpdate);
 $('.update-color-on-change').on('change mousemove touchmove', handleColorUpdate);
 
-window.onload = updateControls;
+window.onload = function() {
+  codeMirror = CodeMirror(document.getElementById('main'), {
+    value: 'def pattern(t, dt, x, y, prev_state):\n    return(t + x, 0, prev_state[0])',
+    mode: 'python',
+    indentUnit: 4,
+    lineNumbers: true,
+  });
+};

@@ -13,11 +13,12 @@
   <meta name="theme-color" content="#1f2124">
   <link rel="stylesheet" href="static/css/normalize.min.css">
   <link rel="stylesheet" href="static/css/fonts.css">
+  <link rel="stylesheet" href="static/css/codemirror.css">
   <link rel="stylesheet" href="static/css/index.css">
 </head>
 <body class="body-dark">
   <div class="wrapper clearfix">
-    <main>
+    <main id="main">
       <h2 class="header-stylized-text">LED Control Center</h2>
       {% for input in form %}
       <label>{{ input.label }}:
@@ -111,11 +112,14 @@
       {% endfor %}
     </main>
     <footer>
-      <small><a href="https://github.com/jackw01/led-control">LEDControl Server</a> by <a
-          href="https://github.com/jackw01">jackw01</a>. Released under the MIT License.</small>
+      <small>
+        <a href="https://github.com/jackw01/led-control">LEDControl Server</a> by <a href="https://github.com/jackw01">jackw01</a>. Released under the MIT License.
+      </small>
     </footer>
   </div>
   <script src="static/js/jquery-3.3.1.min.js"></script>
+  <script src="static/js/codemirror-5.48.4.js"></script>
+  <script src="static/js/codemirror-5.48.4-python.js"></script>
   <script src="static/js/main.js"></script>
 </body>
 </html>
