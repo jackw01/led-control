@@ -43,5 +43,6 @@ window.onload = function() {
     mode: 'python',
     indentUnit: 4,
     lineNumbers: true,
+    theme: 'summer-night',
   });
 };

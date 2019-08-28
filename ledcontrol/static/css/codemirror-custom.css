@@ -1,0 +1,45 @@
+.CodeMirror {
+  font: 15px "Iosevka", monospace;
+  line-height: 1.4rem;
+}
+
+.cm-s-summer-night.CodeMirror {
+  background: #1a1c1e;
+  color: #a6abb8;
+  border-radius: 3px;
+  border: 1px solid #06a2ab;
+}
+
+.cm-s-summer-night div.CodeMirror-selected {
+  background: #003035;
+}
+
+.cm-s-summer-night .CodeMirror-gutters { background: #1a1c1e; border-right: 0px; }
+.cm-s-summer-night .CodeMirror-guttermarker { color: #f06c6f; }
+.cm-s-summer-night .CodeMirror-guttermarker-subtle { color: #525762; }
+.cm-s-summer-night .CodeMirror-linenumber { color: #525762; }
+.cm-s-summer-night .CodeMirror-cursor { border-left: 2px solid #00a9b9; }
+
+.cm-s-summer-night span.cm-comment { color: #898e9a; }
+.cm-s-summer-night span.cm-atom { color: #e17954; }
+.cm-s-summer-night span.cm-number { color: #e17954; }
+
+.cm-s-summer-night span.cm-property, .cm-s-summer-night span.cm-attribute {
+  color: #d08447;
+}
+.cm-s-summer-night span.cm-keyword { color: #fa5f8b; }
+.cm-s-summer-night span.cm-string { color: #d3ab58; }
+
+.cm-s-summer-night span.cm-builtin { color: #00a3d2; }
+.cm-s-summer-night span.cm-variable { color: #d08447; }
+.cm-s-summer-night span.cm-variable-2 { color: #d08447; }
+.cm-s-summer-night span.cm-def { color: #00a9b9; }
+.cm-s-summer-night span.cm-bracket { color: #a6abb8; }
+.cm-s-summer-night span.cm-tag { color: #fa5f8b; }
+.cm-s-summer-night span.cm-link { color: #00a3d2; }
+.cm-s-summer-night span.cm-error { background: #f06c6f; color: #898e9a; }
+
+.cm-s-summer-night .CodeMirror-matchingbracket {
+  text-decoration: underline;
+  color: #a6abb8 !important;
+}
