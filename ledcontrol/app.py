@@ -75,7 +75,7 @@ def create_app(led_count, refresh_rate,
         FormItem('range', 'master_color_temp', float, 1000, 12000, 10, unit='K'),
         FormItem('range', 'master_saturation', float, 0, 1),
         FormItem('select', 'primary_pattern', str,
-                 options=[snake_case_to_title(e) for e in controller.primary_pattern_functions]),
+                 options=[snake_case_to_title(e) for e in controller.primary_pattern_sources]),
         FormItem('range', 'primary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'primary_scale', float, 1.0 / led_count, 10),
         FormItem('code', 'primary_pattern_source', str),
@@ -108,6 +108,10 @@ def create_app(led_count, refresh_rate,
         source = request.args.get('source', type=str)
         controller.set_pattern_function(key, source)
         return jsonify(result='')
+
+    @app.route('/getpatternsources')
+    def get_pattern_sources():
+        return jsonify(sources=controller.primary_pattern_sources)
 
     """
     @app.route('/setcolor')

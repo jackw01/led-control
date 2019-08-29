@@ -38,11 +38,17 @@ $('.update-on-change').on('change', handleParamUpdate);
 $('.update-color-on-change').on('change mousemove touchmove', handleColorUpdate);
 
 window.onload = function() {
-  codeMirror = CodeMirror(document.getElementById('code'), {
-    value: 'def pattern(t, dt, x, y, prev_state):\n    return(t + x, 0, prev_state[0])',
-    mode: 'python',
-    indentUnit: 4,
-    lineNumbers: true,
-    theme: 'summer-night',
+  $.getJSON('/getpatternsources', {}, function (result) {
+    console.log(result.sources);
+    var currentPattern = parseInt($('select[data-id="primary_pattern"]').val(), 10);
+    var currentPatternKey = Object.keys(result.sources)[currentPattern];
+
+    codeMirror = CodeMirror(document.getElementById('code'), {
+      value: result.sources[currentPatternKey].trim(),
+      mode: 'python',
+      indentUnit: 4,
+      lineNumbers: true,
+      theme: 'summer-night',
+    });
   });
 };

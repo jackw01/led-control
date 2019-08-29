@@ -11,7 +11,9 @@ import ledcontrol.animationpatterns as patterns
 import ledcontrol.utils as utils
 
 class RepeatedTimer:
-    """Repeat `function` every `interval` seconds."""
+    """
+    Repeat function call at a regular interval.
+    """
 
     def __init__(self, interval, function, *args, **kwargs):
         self.interval = interval
@@ -28,8 +30,10 @@ class RepeatedTimer:
         self.thread = Thread(target=self.target, daemon=True)
         self.thread.start()
 
-    # Main event timer loop
     def target(self):
+        """
+        Waits until ready and executes target function.
+        """
         while not self.event.wait(self.wait_time):
             self.last_render_start = time.perf_counter() # get start time
             if self.count % 100 == 0:
@@ -46,6 +50,9 @@ class RepeatedTimer:
                 self.wait_time = 0
 
     def stop(self):
+        """
+        Stops the timer thread.
+        """
         self.event.set()
         self.thread.join()
 
@@ -75,15 +82,15 @@ class AnimationController:
             'secondary_scale': 1.0,
         }
 
+        # Source code for patterns
+        self.primary_pattern_sources = {}
         # Lookup dictionary for pattern functions - keys are used to generate select menu
-        self.primary_pattern_functions = {
-            'cycle_hue_1d': patterns.cycle_hue_1d,
-        }
+        self.primary_pattern_functions = {}
 
-        # Source code for user-created patterns
-        self.pattern_sources = {}
+        # Initialize primary patterns
+        self.set_pattern_function('cycle_hue_1d', patterns.cycle_hue_1d)
 
-        # Builtin secondary patterns
+        # Lookup dictionary for secondary pattern functions
         self.secondary_pattern_functions = {
             'none': None,
         }
@@ -99,6 +106,10 @@ class AnimationController:
         self.time = 0
 
     def compile_pattern(self, source):
+        """
+        Compiles source string to a pattern function using restricted globals.
+        """
+
         def getitem(obj, index):
             if obj is not None and type(obj) in (list, tuple, dict):
                 return obj[index]
@@ -112,6 +123,7 @@ class AnimationController:
             '_write_': RestrictedPython.Guards.full_write_guard,
             'math': math,
             'random': random,
+            'ColorMode': patterns.ColorMode,
         }
 
         restricted_locals = {}
@@ -122,6 +134,9 @@ class AnimationController:
         return restricted_locals['pattern']
 
     def set_color_correction(self, kelvin):
+        """
+        Set blackbody color temperature correction.
+        """
         temp_rgb = utils.blackbody2rgb_2(kelvin)
         c = [self.correction_original[0] * temp_rgb[0] // 255,
              self.correction_original[1] * temp_rgb[1] // 255,
@@ -129,21 +144,33 @@ class AnimationController:
         self.correction = (c[0] << 16) | (c[1] << 8) | c[2]
 
     def set_param(self, key, value):
+        """
+        Set an animation parameter.
+        """
         self.params[key] = value
         if key == 'master_color_temp':
             self.set_color_correction(value)
 
     def set_pattern_function(self, key, source):
-        self.pattern_sources[key] = source
-        self.pattern_functions[key] = self.compile_pattern(source)
+        """
+        Update the source code and recompile a pattern function.
+        """
+        self.primary_pattern_sources[key] = source
+        self.primary_pattern_functions[key] = self.compile_pattern(source)
 
     #def set_color(self, index, component, value):
     #    self.colors[index][component] = value
 
     def begin_animation_thread(self):
+        """
+        Start animating.
+        """
         self.timer = RepeatedTimer(1.0 / self.refresh_rate, self.update_leds)
 
     def get_next_frame(self):
+        """
+        Render the next frame based on current time.
+        """
         begin = time.perf_counter()
         new_primary_prev_state = []
         new_secondary_prev_state = []
@@ -195,8 +222,14 @@ class AnimationController:
         return led_states
 
     def update_leds(self):
+        """
+        Determine time, render frame, and display.
+        """
         self.time = self.timer.last_frame - self.start
         self.led_controller.leds.set_all_pixels_hsv2(self.get_next_frame(), self.correction)
 
     def end_animation_thread(self):
+        """
+        Stop rendering in the animation thread.
+        """
         self.timer.stop()

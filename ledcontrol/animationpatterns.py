@@ -9,8 +9,10 @@ ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
 # Primary animations that generate patterns in HSV or RGB color spaces
 # return color, mode
 
-def cycle_hue_1d(t, dt, x, y, prev_state):
+cycle_hue_1d = '''
+def pattern(t, dt, x, y, prev_state):
     return (t + x, 1, 1), ColorMode.hsv
+'''
 
 # Secondary animations that transform finalized colors to add brightness-based effects
 # return brightness, colorRGB
