@@ -18,10 +18,6 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Barlow", sans-serif;
 }
 
-code, pre {
-  font-family: "Fira Code", monospace;
-}
-
 .header-light {
   font-weight: 300;
 }
@@ -177,8 +173,8 @@ textarea {
   color: #e6e8ec;
 }
 
-label {
-  display: block;
+.label {
+  display: inline-block;
 }
 
 .number-units {
@@ -196,9 +192,17 @@ label {
   padding-right: 1rem;
   flex-basis: 100%;
 }
-.input-row .input-number-container {
+.input-row .input-number-container, .input-row .label {
   white-space: nowrap;
   flex-basis: content;
+}
+.input-row .select-container {
+  margin-left: 1rem;
+  flex-basis: 100%;
+}
+
+.input-row-top-margin {
+  margin-top: 0.4rem;
 }
 
 .button {
@@ -213,7 +217,7 @@ label {
   color: #e6e8ec;
 }
 .button:hover {
-  background: #07c3cd;
+  background: #45484c;
   color: #e6e8ec;
 }
 
@@ -289,6 +293,86 @@ input[type=range]::-moz-range-thumb {
 }
 input[type=range]::-moz-range-thumb:hover {
   border: 1px solid #07c3cd;
+}
+
+.select-label {
+  line-height: 34px;
+}
+
+.select-container {
+  display: inline-block;
+  position: relative;
+  vertical-align: top;
+  height: 34px;
+  margin-top: 0px;
+  padding-left: 0px;
+  border-radius: 5px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  margin-bottom: 0.75rem;
+  text-decoration: none;
+  background: transparent;
+  color: #e6e8ec;
+  border: 1px solid #04737a;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+.select-container:hover {
+  color: #e6e8ec;
+  border: 1px solid #07c3cd;
+}
+.select-container select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: absolute;
+  display: inline-block;
+  width: 98%;
+  height: 32px;
+  margin-top: 0px;
+  padding-left: 6px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-weight: 400;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+.select-container:after {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: block;
+  float: right;
+  width: 30px;
+  height: 32px;
+  line-height: 32px;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "liga";
+  content: "arrow_drop_down";
+  pointer-events: none;
+  color: 1px solid #04737a;
+}
+
+option {
+  font-family: "Barlow", sans-serif;
+  color: #e6e8ec;
+  background: #343639;
+  border: none;
+}
+option:hover, option:active {
+  background: #058189;
+}
+
+#code {
+  margin: 1em 0;
 }
 
 /*# sourceMappingURL=index.css.map */

@@ -21,27 +21,33 @@
   <div class="wrapper clearfix">
     <main id="main">
       <h2 class="header-stylized-text">LED Control Center</h2>
+    <br/>
       {% for input in form %}
-      <label>{{ input.label }}:
+      {% if input.control == 'select' %}
+      <div class="input-row input-row-top-margin">
+        <span class="label select-label">{{ input.label }}:</span>
+        <span class="select-container">
+          <select
+            class="update-on-change {{ input.e_class }}"
+            autocomplete="off"
+            data-id="{{ input.key }}"
+          >
+            {% for opt in input.options %}
+            <option value="{{ loop.index0 }}" {% if loop.index0 == input.val %}selected{% endif %}>
+              {{ opt }}
+            </option>
+            {% endfor %}
+          </select>
+        </span>
+      </div>
+      {% elif input.control == 'range' %}
+      <span class="label">{{ input.label }}:
         {% if input.unit != "" %}<span class="number-units">({{ input.unit }})</span>{% endif %}
-      </label>
+      </span>
       <div class="input-row">
-        {% if input.control == 'select' %}
-        <div class="input-select-container">
-          <span class="select-container">
-            <select class="update-on-change {{ input.e_class }}" style="width:98%" autocomplete="off"
-              data-id="{{ input.key }}">
-              {% for opt in input.options %}
-              <option value="{{ loop.index0 }}" {% if loop.index0 == input.val %}selected{% endif %}>
-                {{ opt }}
-              </option>
-              {% endfor %}
-            </select>
-          </span>
-        </div>
-        {% elif input.control == 'range' %}
         <div class="input-slider-container">
-          <input type="range"
+          <input
+            type="range"
             min="{{ input.min }}"
             max="{{ input.max }}"
             step="{{ input.step }}"
@@ -66,8 +72,10 @@
             data-power="{{ input.power }}"
           >
         </div>
-        {% endif %}
       </div>
+      {% elif input.control == 'code' %}
+      <div id="code"></div>
+      {% endif %}
       {% endfor %}
       <hr>
       {% for color in colors %}

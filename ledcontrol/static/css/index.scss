@@ -194,8 +194,8 @@ textarea {
 
 // UI
 
-label {
-  display: block;
+.label {
+  display: inline-block;
 }
 
 .number-units {
@@ -214,10 +214,19 @@ label {
     flex-basis: 100%;
   }
 
-  & .input-number-container {
+  & .input-number-container, & .label {
     white-space: nowrap;
     flex-basis: content;
   }
+
+  & .select-container {
+    margin-left: 1rem;
+    flex-basis: 100%;
+  }
+}
+
+.input-row-top-margin {
+  margin-top: 0.4rem;
 }
 
 @mixin button-dark {
@@ -225,7 +234,7 @@ label {
   color: $body-color;
 
   &:hover {
-    background: $btn-link-hover-color;
+    background: lighten($btn-bg-gray, 7%);
     color: $body-color;
   }
 }
@@ -314,4 +323,89 @@ input[type="range"] {
     @include thumb();
     @include transition();
   }
+}
+
+.select-label {
+  line-height: 34px;
+}
+
+.select-container {
+  display: inline-block;
+  position: relative;
+  vertical-align: top;
+  height: 34px;
+  margin-top: 0px;
+  padding-left: 0px;
+  border-radius: 5px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  margin-bottom: 0.75rem;
+  text-decoration: none;
+  background: transparent;
+  color: $body-color;
+  border: 1px solid darken($input-border-color, 10%);
+  @include transition();
+
+  &:hover {
+    //background: lighten($body-bg, 7%);
+    color: $body-color;
+    border: 1px solid $input-border-focus;
+  }
+
+  & select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    position: absolute;
+    display: inline-block;
+    width: 98%;
+    height: 32px;
+    margin-top: 0px;
+    padding-left: 6px;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-weight: 400;
+    @include transition();
+  }
+
+  &:after {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: block;
+    float: right;
+    width: 30px;
+    height: 32px;
+    line-height: 32px;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
+    content: 'arrow_drop_down';
+    pointer-events: none;
+    color: 1px solid darken($input-border-color, 10%);
+  }
+}
+
+option {
+  font-family: "Barlow", sans-serif;
+  color: $body-color;
+  background: $btn-bg-gray;
+  border: none;
+
+  &:hover, &:active {
+    background: $color-accent-darker;
+  }
+}
+
+#code {
+  margin: 1em 0;
 }

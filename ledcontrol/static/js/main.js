@@ -38,7 +38,7 @@ $('.update-on-change').on('change', handleParamUpdate);
 $('.update-color-on-change').on('change mousemove touchmove', handleColorUpdate);
 
 window.onload = function() {
-  codeMirror = CodeMirror(document.getElementById('main'), {
+  codeMirror = CodeMirror(document.getElementById('code'), {
     value: 'def pattern(t, dt, x, y, prev_state):\n    return(t + x, 0, prev_state[0])',
     mode: 'python',
     indentUnit: 4,

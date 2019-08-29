@@ -12,7 +12,7 @@ from ledcontrol.ledcontroller import LEDController
 
 import ledcontrol.pixelmappings as pixelmappings
 
-def camel_case_to_title(text):
+def camel_to_title(text):
     return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', text)
 
 def snake_case_to_title(text):
@@ -74,8 +74,11 @@ def create_app(led_count, refresh_rate,
         FormItem('range', 'master_brightness', float, 0, 1),
         FormItem('range', 'master_color_temp', float, 1000, 12000, 10, unit='K'),
         FormItem('range', 'master_saturation', float, 0, 1),
+        FormItem('select', 'primary_pattern', str,
+                 options=[snake_case_to_title(e) for e in controller.primary_pattern_functions]),
         FormItem('range', 'primary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'primary_scale', float, 1.0 / led_count, 10),
+        FormItem('code', 'primary_pattern_source', str),
         FormItem('range', 'secondary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'secondary_scale', float, 1.0 / led_count, 10),
     ]
@@ -86,7 +89,8 @@ def create_app(led_count, refresh_rate,
     @app.route('/')
     def index():
         for item in form:
-            item.val = item.type(controller.params[item.key])
+            if (item.key in controller.params):
+                item.val = item.type(controller.params[item.key])
         return render_template('index.html',
                                form=form,
                                params=controller.params)
