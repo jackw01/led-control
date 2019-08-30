@@ -33,12 +33,10 @@ optional arguments:
 ```
 
 ## Features
-
 * Supports cheap and readily available WS281x and SK6812 LED strips, strings, and arrays
 * Capable of achieving up to 120 FPS on 60 LEDs and 60 FPS on 150 LEDs with low-end hardware (Raspberry Pi Zero)
 
 ## Animation Scripting
-
 Animation patterns are defined as Python functions. The LEDControl web interface allows editing and creation of patterns using a subset of Python. Scripts are compiled using [RestrictedPython](https://github.com/zopefoundation/RestrictedPython) and run with a restricted set of builtin functions and global variables. This should prevent filesystem access and code execution, but the scripting system **should not be considered completely secure** and the web interface **should not be exposed to untrusted users**.
 
 ### Supported Python Globals
@@ -60,3 +58,28 @@ Returns the instantaneous value of a 1Hz triangle wave at time `t`
 
 #### `wave_sine(t)`
 Returns the instantaneous value of a 1Hz sine wave at time `t`
+
+### Pattern Function Guide
+Each animation frame, the pattern function is called once per LED/pixel with time, position, and previous state as inputs to determine the next color of that pixel.
+
+```python
+# cycle_hue_1d
+def pattern(t, dt, x, y, prev_state):
+    return (t + x, 1, 1), ColorMode.hsv
+```
+
+#### Arguments
+##### `t`
+Time in cycles (an arbitary unit that represents one animation cycle as a floating point number). Calculated by multiplying real time in seconds by animation speed in Hz (cycles/second).
+
+##### `dt`
+Delta time in cycles
+
+##### `x`, `y`
+Normalized (0 to 1) value representing the position of the current LED in arbitrary units (after mapping LED indices to positions and scaling). Straight LED strips are mapped to the x axis only. One position unit represents the scale factor multiplied by the length of the axis. At a scale of less than 1, one position unit represents a fraction of the axis length and the animation is repeated to fill all the LEDs.
+
+##### `prev_state`
+Previous color state of the current LED as an HSV or RGB tuple. Initialized to (0, 0, 0) on the first animation frame.
+
+#### Return Values
+Pattern functions must return a color in tuple form and either `ColorMode.hsv` or `ColorMode.rgb` depending on the format of the color.

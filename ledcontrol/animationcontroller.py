@@ -66,8 +66,13 @@ class AnimationController:
         # Map led indices to normalized position vectors
         self.mapped = [self.mapping(i) for i in range(self.led_count)]
         # Initialize prev state arrays
-        self.primary_prev_state = [(0, 0, 0) for i in range(self.led_count)]
-        self.secondary_prev_state = [(0, (0, 0, 0)) for i in range(self.led_count)]
+        self.reset_prev_states()
+
+        # Check mapping dimensions to simplify loop if possible
+        self.mapping_uses_x_only = True
+        for point in self.mapped:
+            if point.y != 0:
+                self.mapping_uses_x_only = False
 
         # Used to render main slider/select list
         self.params = {
@@ -125,7 +130,7 @@ class AnimationController:
             'random': random,
             'ColorMode': patterns.ColorMode,
             'clamp': utils.clamp,
-            'wave_square': utils.wave_square,
+            'wave_pulse': utils.wave_pulse,
             'wave_triangle': utils.wave_triangle,
             'wave_sine': utils.wave_sine,
         }
@@ -136,6 +141,13 @@ class AnimationController:
         print(byte_code)
         exec(byte_code[0], restricted_globals, restricted_locals)
         return restricted_locals['pattern']
+
+    def reset_prev_states(self):
+        """
+        Reset previous animation state lists.
+        """
+        self.primary_prev_state = [(0, 0, 0) for i in range(self.led_count)]
+        self.secondary_prev_state = [(0, (0, 0, 0)) for i in range(self.led_count)]
 
     def set_color_correction(self, kelvin):
         """
@@ -187,31 +199,37 @@ class AnimationController:
         secondary_time = self.time * self.params['secondary_speed']
         secondary_delta_t = self.timer.delta_t * self.params['secondary_speed']
 
+        primary_scale_y = 0
+        secondary_scale_y = 0
+        secondary_value = 1
+
         for i in range(len(self.mapped)):
             # Calculate scale components to determine animation position
             # scale component = position (max size) / scale (pattern length in units)
             # One cycle is a normalized input value's transition from 0 to 1
 
-            primary_scale_component_x = self.mapped[i][0] / self.params['primary_scale']
-            primary_scale_component_y = self.mapped[i][1] / self.params['primary_scale']
-            secondary_scale_component_x = self.mapped[i][0] / self.params['secondary_scale']
-            secondary_scale_component_y = self.mapped[i][1] / self.params['secondary_scale']
+            primary_scale_x = (self.mapped[i][0] / self.params['primary_scale']) % 1
+            if not self.mapping_uses_x_only:
+                primary_scale_y =(self.mapped[i][1] / self.params['primary_scale']) % 1
 
             # Run primary pattern to determine initial color
             color, mode = self.pattern_1(primary_time,
-                                                 primary_delta_t,
-                                                 primary_scale_component_x,
-                                                 primary_scale_component_y,
-                                                 self.primary_prev_state[i])
+                                         primary_delta_t,
+                                         primary_scale_x,
+                                         primary_scale_y,
+                                         self.primary_prev_state[i])
             new_primary_prev_state.append(color)
 
             # Run secondary pattern to determine new brightness and possibly modify color
-            secondary_value = 1.0
             if self.pattern_2 is not None:
+                secondary_scale_x = (self.mapped[i][0] / self.params['secondary_scale']) % 1
+                if not self.mapping_uses_x_only:
+                    secondary_scale_y = (self.mapped[i][1] / self.params['secondary_scale']) % 1
+
                 secondary_value, color = self.pattern_2(secondary_time,
                                                         secondary_delta_t,
-                                                        secondary_scale_component_x,
-                                                        secondary_scale_component_y,
+                                                        secondary_scale_x,
+                                                        secondary_scale_y,
                                                         self.secondary_prev_state[i],
                                                         color)
                 new_secondary_prev_state.append((secondary_value, color))
