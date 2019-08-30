@@ -32,19 +32,30 @@ function handleColorUpdate() {
   $.getJSON('/setcolor', { index: idx, component: cmp, value: val, }, function() {});
 }
 
-var codeMirror;
+function handleCompile() {
+  $.getJSON('/setpatternsource', {
+    key: getCurrentPatternKey(),
+    source: codeMirror.getValue()
+  }, function() {});
+}
 
-$('.update-on-change').on('change', handleParamUpdate);
-$('.update-color-on-change').on('change mousemove touchmove', handleColorUpdate);
+function getCurrentPatternKey() {
+  var currentPattern = parseInt($('select[data-id="primary_pattern"]').val(), 10);
+  return keys[currentPattern];
+}
+
+var codeMirror, keys;
 
 window.onload = function() {
+  $('.update-on-change').on('change', handleParamUpdate);
+  $('.update-color-on-change').on('change mousemove touchmove', handleColorUpdate);
+  $('#compile').on('click', handleCompile);
+
   $.getJSON('/getpatternsources', {}, function (result) {
     console.log(result.sources);
-    var currentPattern = parseInt($('select[data-id="primary_pattern"]').val(), 10);
-    var currentPatternKey = Object.keys(result.sources)[currentPattern];
-
+    keys = Object.keys(result.sources);
     codeMirror = CodeMirror(document.getElementById('code'), {
-      value: result.sources[currentPatternKey].trim(),
+      value: result.sources[getCurrentPatternKey()].trim(),
       mode: 'python',
       indentUnit: 4,
       lineNumbers: true,

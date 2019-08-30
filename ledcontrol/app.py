@@ -113,6 +113,10 @@ def create_app(led_count, refresh_rate,
     def get_pattern_sources():
         return jsonify(sources=controller.primary_pattern_sources)
 
+    @app.route('/setpatternsource')
+    def set_pattern_source():
+        return jsonify(result='')
+
     """
     @app.route('/setcolor')
     def set_color():

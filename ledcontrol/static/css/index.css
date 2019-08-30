@@ -212,18 +212,16 @@ textarea {
   display: inline-block;
   margin: 5px 0;
   text-decoration: none;
+  padding: 3px 6px 6px;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
-  background: #343639;
+  background: rgba(6, 162, 171, 0.05);
   color: #e6e8ec;
+  border-radius: 3px;
+  border: 1px solid #034548;
 }
 .button:hover {
-  background: #45484c;
-  color: #e6e8ec;
-}
-
-.button-rect {
-  padding: 7px 12px;
-  border-radius: 5px;
+  background: rgba(6, 162, 171, 0.15);
+  border: 1px solid #07c3cd;
 }
 
 textarea, input[type=text], input[type=password], input[type=number] {
@@ -372,7 +370,17 @@ option:hover, option:active {
 }
 
 #code {
+  display: flex;
+  justify-content: right;
   margin: 1em 0;
+}
+#code .button {
+  position: absolute;
+  z-index: 1000;
+  margin: 0.35rem;
+}
+#code .CodeMirror {
+  flex-basis: 100%;
 }
 
 /*# sourceMappingURL=index.css.map */

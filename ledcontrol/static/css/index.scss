@@ -246,13 +246,17 @@ textarea {
   display: inline-block;
   margin: 5px 0;
   text-decoration: none;
+  padding: 3px 6px 6px;
   @include transition();
-  @include button-dark();
-}
+  background: rgba($input-border-color, 0.05);
+  color: $body-color;
+  border-radius: $border-radius;
+  border: 1px solid darken($input-border-color, 20%);
 
-.button-rect {
-  padding: 7px 12px;
-  border-radius: 5px;
+  &:hover {
+    background: rgba($input-border-color, 0.15);
+    border: 1px solid $input-border-focus;
+  }
 }
 
 textarea, input[type="text"], input[type="password"], input[type="number"] {
@@ -407,5 +411,17 @@ option {
 }
 
 #code {
+  display: flex;
+  justify-content: right;
   margin: 1em 0;
+
+  & .button {
+    position: absolute;
+    z-index: 1000;
+    margin: 0.35rem;
+  }
+
+  & .CodeMirror {
+    flex-basis: 100%;
+  }
 }
