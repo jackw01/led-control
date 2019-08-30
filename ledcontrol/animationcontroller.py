@@ -124,6 +124,10 @@ class AnimationController:
             'math': math,
             'random': random,
             'ColorMode': patterns.ColorMode,
+            'clamp': utils.clamp,
+            'wave_square': utils.wave_square,
+            'wave_triangle': utils.wave_triangle,
+            'wave_sine': utils.wave_sine,
         }
 
         restricted_locals = {}

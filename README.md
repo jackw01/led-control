@@ -36,3 +36,27 @@ optional arguments:
 
 * Supports cheap and readily available WS281x and SK6812 LED strips, strings, and arrays
 * Capable of achieving up to 120 FPS on 60 LEDs and 60 FPS on 150 LEDs with low-end hardware (Raspberry Pi Zero)
+
+## Animation Scripting
+
+Animation patterns are defined as Python functions. The LEDControl web interface allows editing and creation of patterns using a subset of Python. Scripts are compiled using [RestrictedPython](https://github.com/zopefoundation/RestrictedPython) and run with a restricted set of builtin functions and global variables. This should prevent filesystem access and code execution, but the scripting system **should not be considered completely secure** and the web interface **should not be exposed to untrusted users**.
+
+### Supported Python Globals
+
+* Builtins: `None`, `False`, `True`, `abs`, `bool`, `callable`, `chr`, `complex`, `divmod`, `float`, `hash`, `hex`, `id`, `int`, `isinstance`, `issubclass`, `len`, `oct`, `ord`, `pow`, `range`, `repr`, `round`, `slice`, `str`, `tuple`, `zip`
+* All functions and constants from the [`math` module](https://docs.python.org/3/library/math.html)
+* All functions from the [`random` module](https://docs.python.org/3/library/random.html)
+
+### Additional Utility Functions
+
+#### `clamp(x, min, max)`
+Returns min if x < min and max if x > max, otherwise returns x
+
+#### `wave_pulse(t, duty_cycle=0.5)`
+Returns the instantaneous value of a 1Hz pulse wave of the specified duty cycle at time `t`
+
+#### `wave_triangle(t)`
+Returns the instantaneous value of a 1Hz triangle wave at time `t`
+
+#### `wave_sine(t)`
+Returns the instantaneous value of a 1Hz sine wave at time `t`
