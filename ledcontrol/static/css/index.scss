@@ -223,35 +223,46 @@ textarea {
     margin-left: 1rem;
     flex-basis: 100%;
   }
+
+  & .infotext {
+    flex-basis: 100%;
+    margin-right: 0.5rem;
+  }
+
+  & .button {
+    white-space: nowrap;
+    flex-basis: content;
+  }
 }
 
 .input-row-top-margin {
   margin-top: 0.4rem;
 }
 
-@mixin button-dark {
-  background: $btn-bg-gray;
+@mixin button {
   color: $body-color;
-
-  &:hover {
-    background: lighten($btn-bg-gray, 7%);
-    color: $body-color;
-  }
-}
-
-.button {
+  border-radius: $border-radius;
+  text-decoration: none;
+  padding: 3px 6px 6px;
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
   display: inline-block;
-  margin: 5px 0;
-  text-decoration: none;
-  padding: 3px 6px 6px;
+}
+
+.infotext {
+  background: rgba($color-success, 0.05);
+  border: 1px solid rgba($color-success, 0.25);
+  @include button();
   @include transition();
+  color: rgba($color-success, 1);
+}
+
+.button {
   background: rgba($input-border-color, 0.05);
-  color: $body-color;
-  border-radius: $border-radius;
-  border: 1px solid darken($input-border-color, 20%);
+  border: 1px solid darken($input-border-color, 10%);
+  @include button();
+  @include transition();
 
   &:hover {
     background: rgba($input-border-color, 0.15);
@@ -411,17 +422,8 @@ option {
 }
 
 #code {
-  display: flex;
-  justify-content: right;
-  margin: 1em 0;
-
-  & .button {
-    position: absolute;
-    z-index: 1000;
-    margin: 0.35rem;
-  }
-
-  & .CodeMirror {
-    flex-basis: 100%;
+  & .input-row {
+    margin-top: 0.4rem;
+    margin-bottom: 0.5rem;
   }
 }

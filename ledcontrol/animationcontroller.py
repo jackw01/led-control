@@ -114,7 +114,6 @@ class AnimationController:
         """
         Compiles source string to a pattern function using restricted globals.
         """
-
         def getitem(obj, index):
             if obj is not None and type(obj) in (list, tuple, dict):
                 return obj[index]
@@ -137,10 +136,12 @@ class AnimationController:
 
         restricted_locals = {}
 
-        byte_code = RestrictedPython.compile_restricted_exec(source, filename='<inline code>')
-        print(byte_code)
-        exec(byte_code[0], restricted_globals, restricted_locals)
-        return restricted_locals['pattern']
+        results = RestrictedPython.compile_restricted_exec(source, filename='<inline code>')
+        if results.code:
+            exec(results.code, restricted_globals, restricted_locals)
+            return results, restricted_locals['pattern']
+        else:
+            return results, patterns.default
 
     def reset_prev_states(self):
         """
@@ -171,8 +172,12 @@ class AnimationController:
         """
         Update the source code and recompile a pattern function.
         """
-        self.primary_pattern_sources[key] = source
-        self.primary_pattern_functions[key] = self.compile_pattern(source)
+        compile_result, pattern = self.compile_pattern(source)
+        if len(compile_result.errors) == 0:
+            self.primary_pattern_sources[key] = source
+            self.primary_pattern_functions[key] = pattern
+            self.pattern_1 = self.primary_pattern_functions[self.params['primary_pattern']]
+        return compile_result
 
     #def set_color(self, index, component, value):
     #    self.colors[index][component] = value

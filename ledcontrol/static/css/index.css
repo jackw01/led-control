@@ -200,24 +200,46 @@ textarea {
   margin-left: 1rem;
   flex-basis: 100%;
 }
+.input-row .infotext {
+  flex-basis: 100%;
+  margin-right: 0.5rem;
+}
+.input-row .button {
+  white-space: nowrap;
+  flex-basis: content;
+}
 
 .input-row-top-margin {
   margin-top: 0.4rem;
 }
 
-.button {
+.infotext {
+  background: rgba(0, 171, 154, 0.05);
+  border: 1px solid rgba(0, 171, 154, 0.4);
+  color: #e6e8ec;
+  border-radius: 3px;
+  text-decoration: none;
+  padding: 3px 6px 6px;
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
   display: inline-block;
-  margin: 5px 0;
-  text-decoration: none;
-  padding: 3px 6px 6px;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+  color: #00ab9a;
+}
+
+.button {
   background: rgba(6, 162, 171, 0.05);
+  border: 1px solid #04737a;
   color: #e6e8ec;
   border-radius: 3px;
-  border: 1px solid #034548;
+  text-decoration: none;
+  padding: 3px 6px 6px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  display: inline-block;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
 }
 .button:hover {
   background: rgba(6, 162, 171, 0.15);
@@ -369,18 +391,9 @@ option:hover, option:active {
   background: #058189;
 }
 
-#code {
-  display: flex;
-  justify-content: right;
-  margin: 1em 0;
-}
-#code .button {
-  position: absolute;
-  z-index: 1000;
-  margin: 0.35rem;
-}
-#code .CodeMirror {
-  flex-basis: 100%;
+#code .input-row {
+  margin-top: 0.4rem;
+  margin-bottom: 0.5rem;
 }
 
 /*# sourceMappingURL=index.css.map */

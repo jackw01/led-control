@@ -33,10 +33,12 @@ function handleColorUpdate() {
 }
 
 function handleCompile() {
-  $.getJSON('/setpatternsource', {
+  $.getJSON('/compilepattern', {
     key: getCurrentPatternKey(),
     source: codeMirror.getValue()
-  }, function() {});
+  }, function(result) {
+      console.log('Compile errors/warnings:', result.errors, result.warnings);
+  });
 }
 
 function getCurrentPatternKey() {
@@ -52,7 +54,7 @@ window.onload = function() {
   $('#compile').on('click', handleCompile);
 
   $.getJSON('/getpatternsources', {}, function (result) {
-    console.log(result.sources);
+    console.log('Sources:', result.sources);
     keys = Object.keys(result.sources);
     codeMirror = CodeMirror(document.getElementById('code'), {
       value: result.sources[getCurrentPatternKey()].trim(),

@@ -5,9 +5,9 @@
   <title>LED Control Center</title>
   <meta name="viewport"
     content="width=device-width, initial-scale=1, user-scalable=1.0,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
-  <link rel="icon" href="static/favicon.ico" type="image/x-icon">
-  <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
-  <link rel="apple-touch-icon" href="static/img/Apple Home Screen Icon.png">
+  <!--<link rel="icon" href="static/favicon.ico" type="image/x-icon">-->
+  <!--<link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">-->
+  <!--<link rel="apple-touch-icon" href="static/img/Apple Home Screen Icon.png">-->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#1f2124">
@@ -75,7 +75,10 @@
       </div>
       {% elif input.control == 'code' %}
       <div id="code">
-        <a class="button" id="compile">Compile Pattern</a>
+        <div class="input-row input-row-top-margin">
+          <span class="infotext" id="source-info">{{ input.label }}</span>
+          <a class="button" id="compile">Compile Pattern</a>
+        </div>
       </div>
       {% endif %}
       {% endfor %}

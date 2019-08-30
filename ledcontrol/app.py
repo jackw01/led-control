@@ -102,20 +102,16 @@ def create_app(led_count, refresh_rate,
         controller.set_param(key, next(filter(lambda i: i.key == key, form)).type(value))
         return jsonify(result='')
 
-    @app.route('/compilepattern')
-    def compile_pattern():
-        key = request.args.get('key', type=str)
-        source = request.args.get('source', type=str)
-        controller.set_pattern_function(key, source)
-        return jsonify(result='')
-
     @app.route('/getpatternsources')
     def get_pattern_sources():
         return jsonify(sources=controller.primary_pattern_sources)
 
-    @app.route('/setpatternsource')
-    def set_pattern_source():
-        return jsonify(result='')
+    @app.route('/compilepattern')
+    def compile_pattern():
+        key = request.args.get('key', type=str)
+        source = request.args.get('source', type=str)
+        result = controller.set_pattern_function(key, source)
+        return jsonify(errors=result.errors, warnings=result.warnings)
 
     """
     @app.route('/setcolor')
