@@ -133,15 +133,23 @@ class AnimationController:
             'wave_triangle': utils.wave_triangle,
             'wave_sine': utils.wave_sine,
         }
-
         restricted_locals = {}
+        arg_names = ['t', 'dt', 'x', 'y', 'prev_state']
 
+        name_error = False
         results = RestrictedPython.compile_restricted_exec(source, filename='<inline code>')
-        if results.code:
+        errors = list(results.errors)
+        for name in results.used_names:
+            print(name)
+            if name not in restricted_globals and name not in arg_names:
+                name_error = True
+                errors.append('NameError: name \'{}\' is not defined'.format(name))
+
+        if results.code and not name_error:
             exec(results.code, restricted_globals, restricted_locals)
-            return results, restricted_locals['pattern']
+            return errors, results.warnings, restricted_locals['pattern']
         else:
-            return results, patterns.default
+            return errors, results.warnings, None
 
     def reset_prev_states(self):
         """
@@ -172,12 +180,12 @@ class AnimationController:
         """
         Update the source code and recompile a pattern function.
         """
-        compile_result, pattern = self.compile_pattern(source)
-        if len(compile_result.errors) == 0:
+        errors, warnings, pattern = self.compile_pattern(source)
+        if len(errors) == 0 and len(warnings) == 0:
             self.primary_pattern_sources[key] = source
             self.primary_pattern_functions[key] = pattern
             self.pattern_1 = self.primary_pattern_functions[self.params['primary_pattern']]
-        return compile_result
+        return errors, warnings
 
     #def set_color(self, index, component, value):
     #    self.colors[index][component] = value

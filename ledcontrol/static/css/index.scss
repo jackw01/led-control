@@ -251,11 +251,32 @@ textarea {
 }
 
 .infotext {
-  background: rgba($color-success, 0.05);
-  border: 1px solid rgba($color-success, 0.25);
   @include button();
   @include transition();
-  color: rgba($color-success, 1);
+
+  &.status-none {
+    color: rgba($gray-400, 1);
+    background: rgba($gray-400, 0.05);
+    border: 1px solid rgba($gray-400, 0.25);
+  }
+
+  &.status-success {
+    color: rgba($color-success, 1);
+    background: rgba($color-success, 0.05);
+    border: 1px solid rgba($color-success, 0.25);
+  }
+
+  &.status-warning {
+    color: rgba($color-warning, 1);
+    background: rgba($color-warning, 0.05);
+    border: 1px solid rgba($color-warning, 0.25);
+  }
+
+  &.status-error {
+    color: rgba($color-danger, 1);
+    background: rgba($color-danger, 0.05);
+    border: 1px solid rgba($color-danger, 0.25);
+  }
 }
 
 .button {

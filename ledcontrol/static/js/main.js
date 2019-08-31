@@ -32,12 +32,31 @@ function handleColorUpdate() {
   $.getJSON('/setcolor', { index: idx, component: cmp, value: val, }, function() {});
 }
 
+function updateSourceStatus() {
+  $('#source-status').text(status);
+  statusClasses.forEach(function (c) {
+    if (statusClass === c) $('#source-status').addClass('status-' + c);
+    else $('#source-status').removeClass('status-' + c);
+  });
+}
+
 function handleCompile() {
   $.getJSON('/compilepattern', {
     key: getCurrentPatternKey(),
-    source: codeMirror.getValue()
+    source: codeMirror.getValue(),
   }, function(result) {
       console.log('Compile errors/warnings:', result.errors, result.warnings);
+      if (result.errors.length === 0 && result.warnings.length === 0) {
+        statusClass = 'success';
+        status = 'Pattern compiled successfully';
+      } else if (result.errors.length === 0 && result.warnings.length > 0) {
+        statusClass = 'warning';
+        status = 'Pattern generated warning(s): ' + result.warnings.join(', ');
+      } else if (result.errors.length > 0) {
+        statusClass = 'error';
+        status = 'Pattern generated error(s): ' + result.errors.join(', ');
+      }
+      updateSourceStatus();
   });
 }
 
@@ -47,11 +66,16 @@ function getCurrentPatternKey() {
 }
 
 var codeMirror, keys;
+var statusClasses = ['none', 'success', 'warning', 'error'];
+var statusClass = 'none';
+var status = 'Pattern not compiled yet';
 
 window.onload = function() {
   $('.update-on-change').on('change', handleParamUpdate);
   $('.update-color-on-change').on('change mousemove touchmove', handleColorUpdate);
   $('#compile').on('click', handleCompile);
+
+  updateSourceStatus();
 
   $.getJSON('/getpatternsources', {}, function (result) {
     console.log('Sources:', result.sources);

@@ -214,8 +214,6 @@ textarea {
 }
 
 .infotext {
-  background: rgba(0, 171, 154, 0.05);
-  border: 1px solid rgba(0, 171, 154, 0.4);
   color: #e6e8ec;
   border-radius: 3px;
   text-decoration: none;
@@ -225,7 +223,26 @@ textarea {
   -ms-user-select: none;
   display: inline-block;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+.infotext.status-none {
+  color: #95979a;
+  background: rgba(149, 151, 154, 0.05);
+  border: 1px solid rgba(149, 151, 154, 0.25);
+}
+.infotext.status-success {
   color: #00ab9a;
+  background: rgba(0, 171, 154, 0.05);
+  border: 1px solid rgba(0, 171, 154, 0.25);
+}
+.infotext.status-warning {
+  color: #d08447;
+  background: rgba(208, 132, 71, 0.05);
+  border: 1px solid rgba(208, 132, 71, 0.25);
+}
+.infotext.status-error {
+  color: #f06c6f;
+  background: rgba(240, 108, 111, 0.05);
+  border: 1px solid rgba(240, 108, 111, 0.25);
 }
 
 .button {

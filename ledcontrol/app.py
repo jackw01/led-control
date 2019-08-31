@@ -110,8 +110,8 @@ def create_app(led_count, refresh_rate,
     def compile_pattern():
         key = request.args.get('key', type=str)
         source = request.args.get('source', type=str)
-        result = controller.set_pattern_function(key, source)
-        return jsonify(errors=result.errors, warnings=result.warnings)
+        errors, warnings = controller.set_pattern_function(key, source)
+        return jsonify(errors=errors, warnings=warnings)
 
     """
     @app.route('/setcolor')
