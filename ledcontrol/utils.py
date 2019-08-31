@@ -26,7 +26,18 @@ def wave_triangle(t):
 
 # Sine wave - should test speed of approximation methods
 def wave_sine(t):
-    return math.sin(2 * math.pi * t) / 2 + 0.5 # x + 0.5pi?
+    return math.sin(2 * math.pi * t) / 2 + 0.5 # 2 * math.pi * t + 0.5 * math.pi
+
+# Misc shaping functions
+
+# Exponential asymmetric impulse function - peaks at t=1
+# See http://www.iquilezles.org/www/articles/functions/functions.htm
+def impulse_exp(t):
+    return t * math.exp(1 - t)
+
+# Equivalent to GLSL fract - returns the floating point component of a number
+def fract(x):
+    return x - math.floor(x)
 
 # HSV to RGB transforms (normalized HSV to 8 bit RGB)
 

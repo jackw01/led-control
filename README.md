@@ -39,26 +39,6 @@ optional arguments:
 ## Animation Scripting
 Animation patterns are defined as Python functions. The LEDControl web interface allows editing and creation of patterns using a subset of Python. Scripts are compiled using [RestrictedPython](https://github.com/zopefoundation/RestrictedPython) and run with a restricted set of builtin functions and global variables. This should prevent filesystem access and code execution, but the scripting system **should not be considered completely secure** and the web interface **should not be exposed to untrusted users**.
 
-### Supported Python Globals
-
-* Builtins: `None`, `False`, `True`, `abs`, `bool`, `callable`, `chr`, `complex`, `divmod`, `float`, `hash`, `hex`, `id`, `int`, `isinstance`, `issubclass`, `len`, `oct`, `ord`, `pow`, `range`, `repr`, `round`, `slice`, `str`, `tuple`, `zip`
-* All functions and constants from the [`math` module](https://docs.python.org/3/library/math.html)
-* All functions from the [`random` module](https://docs.python.org/3/library/random.html)
-
-### Additional Utility Functions
-
-#### `clamp(x, min, max)`
-Returns min if x < min and max if x > max, otherwise returns x
-
-#### `wave_pulse(t, duty_cycle=0.5)`
-Returns the instantaneous value of a 1Hz pulse wave of the specified duty cycle at time `t`
-
-#### `wave_triangle(t)`
-Returns the instantaneous value of a 1Hz triangle wave at time `t`
-
-#### `wave_sine(t)`
-Returns the instantaneous value of a 1Hz sine wave at time `t`
-
 ### Pattern Function Guide
 Each animation frame, the pattern function is called once per LED/pixel with time, position, and previous state as inputs to determine the next color of that pixel.
 
@@ -82,4 +62,30 @@ Normalized (0 to 1) value representing the position of the current LED in arbitr
 Previous color state of the current LED as an HSV or RGB tuple. Initialized to (0, 0, 0) on the first animation frame.
 
 #### Return Values
-Pattern functions must return a color in tuple form and either `hsv` or `rgb` depending on the format of the color.
+Pattern functions must return a color in tuple form and either `hsv` or `rgb` depending on the format of the color. All values must be in the 0 to 1 range. Hue values less than 0 or greater than 1 will wrap.
+
+### Supported Python Globals
+* Builtins: `None`, `False`, `True`, `abs`, `bool`, `callable`, `chr`, `complex`, `divmod`, `float`, `hash`, `hex`, `id`, `int`, `isinstance`, `issubclass`, `len`, `oct`, `ord`, `pow`, `range`, `repr`, `round`, `slice`, `str`, `tuple`, `zip`
+* All functions and constants from the [`math` module](https://docs.python.org/3/library/math.html)
+* All functions from the [`random` module](https://docs.python.org/3/library/random.html)
+
+### Additional Utility Functions
+#### `clamp(x, min, max)`
+Returns min if x < min and max if x > max, otherwise returns x
+
+#### `wave_pulse(t, duty_cycle=0.5)`
+Returns the instantaneous value of a 1Hz pulse wave of the specified duty cycle at time `t`
+
+#### `wave_triangle(t)`
+Returns the instantaneous value of a 1Hz triangle wave at time `t`
+
+#### `wave_sine(t)`
+Returns the instantaneous value of a 1Hz sine wave at time `t`
+
+#### `impulse_exp(t)`
+Asymmetrical exponential "impulse". Peaks at `t=1`
+
+#### `fract(x)`
+Returns the floating point component of `x` (`x - floor(x)`)
+
+

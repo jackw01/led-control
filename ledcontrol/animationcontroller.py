@@ -133,6 +133,8 @@ class AnimationController:
             'wave_pulse': utils.wave_pulse,
             'wave_triangle': utils.wave_triangle,
             'wave_sine': utils.wave_sine,
+            'impulse_exp': utils.impulse_exp,
+            'fract': utils.fract,
         }
         restricted_locals = {}
         arg_names = ['t', 'dt', 'x', 'y', 'prev_state']
