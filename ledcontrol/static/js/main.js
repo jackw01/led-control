@@ -51,10 +51,10 @@ function handleCompile() {
         status = 'Pattern compiled successfully';
       } else if (result.errors.length === 0 && result.warnings.length > 0) {
         statusClass = 'warning';
-        status = 'Pattern generated warning(s): ' + result.warnings.join(', ');
+        status = 'Pattern generated warnings: ' + result.warnings.join(', ');
       } else if (result.errors.length > 0) {
         statusClass = 'error';
-        status = 'Pattern generated error(s): ' + result.errors.join(', ');
+        status = result.errors.join(', ');
       }
       updateSourceStatus();
   });

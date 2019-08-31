@@ -14,7 +14,7 @@ def default(t, dt, x, y, prev_state):
 
 cycle_hue_1d = '''
 def pattern(t, dt, x, y, prev_state):
-    return (t + x, 1, 1), ColorMode.hsv
+    return (t + x, 1, 1), hsv
 '''
 
 # Secondary animations that transform finalized colors to add brightness-based effects

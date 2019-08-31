@@ -65,7 +65,7 @@ Each animation frame, the pattern function is called once per LED/pixel with tim
 ```python
 # cycle_hue_1d
 def pattern(t, dt, x, y, prev_state):
-    return (t + x, 1, 1), ColorMode.hsv
+    return (t + x, 1, 1), hsv
 ```
 
 #### Arguments
@@ -82,4 +82,4 @@ Normalized (0 to 1) value representing the position of the current LED in arbitr
 Previous color state of the current LED as an HSV or RGB tuple. Initialized to (0, 0, 0) on the first animation frame.
 
 #### Return Values
-Pattern functions must return a color in tuple form and either `ColorMode.hsv` or `ColorMode.rgb` depending on the format of the color.
+Pattern functions must return a color in tuple form and either `hsv` or `rgb` depending on the format of the color.

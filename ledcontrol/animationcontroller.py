@@ -127,7 +127,8 @@ class AnimationController:
             '_write_': RestrictedPython.Guards.full_write_guard,
             'math': math,
             'random': random,
-            'ColorMode': patterns.ColorMode,
+            'hsv': patterns.ColorMode.hsv,
+            'rgb': patterns.ColorMode.rgb,
             'clamp': utils.clamp,
             'wave_pulse': utils.wave_pulse,
             'wave_triangle': utils.wave_triangle,
@@ -212,49 +213,54 @@ class AnimationController:
         secondary_time = self.time * self.params['secondary_speed']
         secondary_delta_t = self.timer.delta_t * self.params['secondary_speed']
 
-        primary_scale_y = 0
-        secondary_scale_y = 0
+        primary_y = 0
+        secondary_y = 0
         secondary_value = 1
 
-        for i in range(len(self.mapped)):
-            # Calculate scale components to determine animation position
-            # scale component = position (max size) / scale (pattern length in units)
-            # One cycle is a normalized input value's transition from 0 to 1
+        try:
+            for i in range(len(self.mapped)):
+                # Calculate scale components to determine animation position
+                # scale component = position (max size) / scale (pattern length in units)
+                # One cycle is a normalized input value's transition from 0 to 1
 
-            primary_scale_x = (self.mapped[i][0] / self.params['primary_scale']) % 1
-            if not self.mapping_uses_x_only:
-                primary_scale_y =(self.mapped[i][1] / self.params['primary_scale']) % 1
-
-            # Run primary pattern to determine initial color
-            color, mode = self.pattern_1(primary_time,
-                                         primary_delta_t,
-                                         primary_scale_x,
-                                         primary_scale_y,
-                                         self.primary_prev_state[i])
-            new_primary_prev_state.append(color)
-
-            # Run secondary pattern to determine new brightness and possibly modify color
-            if self.pattern_2 is not None:
-                secondary_scale_x = (self.mapped[i][0] / self.params['secondary_scale']) % 1
+                primary_x = (self.mapped[i][0] / self.params['primary_scale']) % 1
                 if not self.mapping_uses_x_only:
-                    secondary_scale_y = (self.mapped[i][1] / self.params['secondary_scale']) % 1
+                    primary_y =(self.mapped[i][1] / self.params['primary_scale']) % 1
 
-                secondary_value, color = self.pattern_2(secondary_time,
-                                                        secondary_delta_t,
-                                                        secondary_scale_x,
-                                                        secondary_scale_y,
-                                                        self.secondary_prev_state[i],
-                                                        color)
-                new_secondary_prev_state.append((secondary_value, color))
+                # Run primary pattern to determine initial color
+                color, mode = self.pattern_1(primary_time,
+                                            primary_delta_t,
+                                            primary_x,
+                                            primary_y,
+                                            self.primary_prev_state[i])
+                new_primary_prev_state.append(color)
 
-            h = int((color[0] % 1) * 255)
-            s = int(color[1] * self.params['master_saturation'] * 255)
-            v = int(color[2] * secondary_value * self.params['master_brightness'] * 255)
-            led_states.append((h, s, v))
+                # Run secondary pattern to determine new brightness and possibly modify color
+                if self.pattern_2 is not None:
+                    secondary_x = (self.mapped[i][0] / self.params['secondary_scale']) % 1
+                    if not self.mapping_uses_x_only:
+                        secondary_y = (self.mapped[i][1] / self.params['secondary_scale']) % 1
 
-        self.primary_prev_state = new_primary_prev_state
-        self.secondary_prev_state = new_secondary_prev_state
-        return led_states
+                    secondary_value, color = self.pattern_2(secondary_time,
+                                                            secondary_delta_t,
+                                                            secondary_x,
+                                                            secondary_y,
+                                                            self.secondary_prev_state[i],
+                                                            color)
+                    new_secondary_prev_state.append((secondary_value, color))
+
+                h = int((color[0] % 1) * 255)
+                s = int(color[1] * self.params['master_saturation'] * 255)
+                v = int(color[2] * secondary_value * self.params['master_brightness'] * 255)
+                led_states.append((h, s, v))
+
+            self.primary_prev_state = new_primary_prev_state
+            self.secondary_prev_state = new_secondary_prev_state
+            return led_states
+
+        except Exception as e:
+            print('Pattern execution: {}: {}'.format(type(e).__name__, e))
+            return [(0, 0, 0) for i in range(self.led_count)]
 
     def update_leds(self):
         """
