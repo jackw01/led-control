@@ -1,24 +1,27 @@
 // led-control WS2812B LED Controller Server
 // Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
-function handleParamUpdate() {
-  var elem = $(this);
+function handleNumberInputChange(elem) {
   var key = elem.data('id');
   var val = parseFloat(elem.val(), 10);
   if (!elem.is('select')) {
     var min = parseFloat(elem.attr('min'), 10);
     var max = parseFloat(elem.attr('max'), 10);
-    var power = parseFloat(elem.data('power'), 10);
-    if (val < min || val > max) return;
-    if (elem.attr('type') == 'range') {
-      val = Math.min(Math.max(Math.pow(val / max, power) * max, min), max);
-      $('input[type=number][data-id=' + key + ']').val(val);
-    } else {
-      $('input[type=range][data-id=' + key + ']').val(Math.pow(val / max, 1.0 / power) * max);
-    }
+    if (val < min) val = min;
+    if (val > max) val = max;
+    if (elem.attr('type') == 'range') $('input[type=number][data-id=' + key + ']').val(val);
+    else $('input[type=range][data-id=' + key + ']').val(val);
   }
-  //$('*[data-id=' + key + ']').val(val);
-  $.getJSON('/setparam', { key: key, value: val, }, function() {});
+  return { key: key, value: val };
+}
+
+function handleParamAdjust() {
+  handleNumberInputChange($(this));
+}
+
+function handleParamUpdate() {
+  var newVal = handleNumberInputChange($(this));
+  $.getJSON('/setparam', newVal, function() {});
 }
 
 function handleColorUpdate() {
@@ -71,6 +74,7 @@ var statusClass = 'none';
 var status = 'Pattern not compiled yet';
 
 window.onload = function() {
+  $('input[type=range].update-on-change').on('mousemove touchmove', handleParamAdjust);
   $('.update-on-change').on('change', handleParamUpdate);
   $('.update-color-on-change').on('change mousemove touchmove', handleColorUpdate);
   $('#compile').on('click', handleCompile);

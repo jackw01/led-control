@@ -215,7 +215,9 @@ class AnimationController:
         secondary_time = self.time * self.params['secondary_speed']
         secondary_delta_t = self.timer.delta_t * self.params['secondary_speed']
 
+        primary_x = 0
         primary_y = 0
+        secondary_x = 0
         secondary_y = 0
         secondary_value = 1
 
@@ -225,9 +227,10 @@ class AnimationController:
                 # scale component = position (max size) / scale (pattern length in units)
                 # One cycle is a normalized input value's transition from 0 to 1
 
-                primary_x = (self.mapped[i][0] / self.params['primary_scale']) % 1
-                if not self.mapping_uses_x_only:
-                    primary_y =(self.mapped[i][1] / self.params['primary_scale']) % 1
+                if self.params['primary_scale'] != 0:
+                    primary_x = (self.mapped[i][0] / self.params['primary_scale']) % 1
+                    if not self.mapping_uses_x_only:
+                        primary_y =(self.mapped[i][1] / self.params['primary_scale']) % 1
 
                 # Run primary pattern to determine initial color
                 color, mode = self.pattern_1(primary_time,
@@ -239,9 +242,10 @@ class AnimationController:
 
                 # Run secondary pattern to determine new brightness and possibly modify color
                 if self.pattern_2 is not None:
-                    secondary_x = (self.mapped[i][0] / self.params['secondary_scale']) % 1
-                    if not self.mapping_uses_x_only:
-                        secondary_y = (self.mapped[i][1] / self.params['secondary_scale']) % 1
+                    if self.params['primary_scale'] != 0:
+                        secondary_x = (self.mapped[i][0] / self.params['secondary_scale']) % 1
+                        if not self.mapping_uses_x_only:
+                            secondary_y = (self.mapped[i][1] / self.params['secondary_scale']) % 1
 
                     secondary_value, color = self.pattern_2(secondary_time,
                                                             secondary_delta_t,

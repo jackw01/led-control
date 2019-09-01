@@ -25,7 +25,6 @@ fields = [
     'min',
     'max',
     'step',
-    'power',
     'options',
     'val',
     'label',
@@ -39,7 +38,6 @@ defaults = [
     0,
     1,
     0.01,
-    1,
     [],
     0,
     '',
@@ -77,10 +75,10 @@ def create_app(led_count, refresh_rate,
         FormItem('select', 'primary_pattern', str,
                  options=[snake_case_to_title(e) for e in controller.primary_pattern_sources]),
         FormItem('range', 'primary_speed', float, 0.01, 2, unit='Hz'),
-        FormItem('range', 'primary_scale', float, 1.0 / led_count, 10),
+        FormItem('range', 'primary_scale', float, -10, 10),
         FormItem('code', 'primary_pattern_source', str),
         FormItem('range', 'secondary_speed', float, 0.01, 2, unit='Hz'),
-        FormItem('range', 'secondary_scale', float, 1.0 / led_count, 10),
+        FormItem('range', 'secondary_scale', float, -10, 10),
     ]
 
     for item in form:
