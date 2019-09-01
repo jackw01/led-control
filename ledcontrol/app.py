@@ -18,6 +18,7 @@ def camel_to_title(text):
 def snake_case_to_title(text):
     return text.replace('_', ' ').title()
 
+# Record class for form items
 fields = [
     'control',
     'key',
@@ -56,27 +57,32 @@ def create_app(led_count, refresh_rate,
     controller = AnimationController(leds, refresh_rate, led_count,
                                      pixelmappings.line(led_count), led_color_correction)
 
+    # Create file if it doesn't exist already
     filename = Path.cwd() / 'ledcontrol.json'
     filename.touch(exist_ok=True)
 
+    # Init controller params and custom patterns from settings file
     with open(str(filename), mode='r') as data_file:
         try:
             settings = json.load(data_file)
             controller.params = settings['params']
-            controller.colors = settings['colors']
+            for k, v in settings['patterns'].items():
+                controller.set_pattern_function(k, v)
+            #controller.colors = settings['colors']
             print('Loaded saved settings from {}'.format(filename))
         except Exception:
             print('Could not open saved settings at {}, ignoring.'.format(filename))
 
+    # Define form and create user-facing labels based on keys
     form = [
         FormItem('range', 'master_brightness', float, 0, 1),
         FormItem('range', 'master_color_temp', float, 1000, 12000, 10, unit='K'),
         FormItem('range', 'master_saturation', float, 0, 1),
         FormItem('select', 'primary_pattern', str,
-                 options=[snake_case_to_title(e) for e in controller.primary_pattern_sources]),
+                 options=[snake_case_to_title(e) for e in controller.pattern_sources]),
         FormItem('range', 'primary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'primary_scale', float, -10, 10),
-        FormItem('code', 'primary_pattern_source', str),
+        FormItem('code', 'pattern_source', str),
         FormItem('range', 'secondary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'secondary_scale', float, -10, 10),
     ]
@@ -86,6 +92,9 @@ def create_app(led_count, refresh_rate,
 
     @app.route('/')
     def index():
+        """
+        Returns web app page.
+        """
         for item in form:
             if (item.key in controller.params):
                 item.val = item.type(controller.params[item.key])
@@ -95,6 +104,9 @@ def create_app(led_count, refresh_rate,
 
     @app.route('/setparam')
     def set_param():
+        """
+        Set a key/value pair in controller parameters.
+        """
         key = request.args.get('key', type=str)
         value = request.args.get('value')
         controller.set_param(key, next(filter(lambda i: i.key == key, form)).type(value))
@@ -102,10 +114,16 @@ def create_app(led_count, refresh_rate,
 
     @app.route('/getpatternsources')
     def get_pattern_sources():
-        return jsonify(sources=controller.primary_pattern_sources)
+        """
+        Returns pattern sources in JSON dict form.
+        """
+        return jsonify(sources=controller.pattern_sources)
 
     @app.route('/compilepattern')
     def compile_pattern():
+        """
+        Compiles a pattern, returns errors and warnings in JSON array form.
+        """
         key = request.args.get('key', type=str)
         source = request.args.get('source', type=str)
         errors, warnings = controller.set_pattern_function(key, source)
@@ -122,7 +140,10 @@ def create_app(led_count, refresh_rate,
     """
 
     def save_settings():
-        data = {'params': controller.params, 'colors': controller.colors}
+        """
+        Save controller settings on shutdown.
+        """
+        data = {'params': controller.params, 'patterns': controller.get_edited_patterns() }
         with open(str(filename), 'w') as data_file:
             try:
                 json.dump(data, data_file, sort_keys=True, indent=4, separators=(',', ': '))

@@ -10,7 +10,7 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     author='jackw01',
-    python_requires='>=3.3.0',
+    python_requires='>=3.6.0',
     url='https://github.com/jackw01/led-control',
     packages=find_packages(),
     zip_safe=False,

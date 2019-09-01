@@ -8,7 +8,7 @@ Version 2.0 is currently in development in the master branch. Version 1.0 is con
 1. Read this Adafruit guide and follow the directions to connect an LED strip to your Raspberry Pi, install the Python library, and test the strip: https://learn.adafruit.com/neopixels-on-raspberry-pi
 2. `git clone https://github.com/jackw01/led-control.git`
 3. `cd led-control`
-4. `python3 setup.py install`
+4. `python3 setup.py install`. Python 3.6 or newer is required.
 5. `sudo ledcontrol --port 8080 --strip 150 --fps 30`
 
 ## Arguments

@@ -88,19 +88,20 @@ class AnimationController:
         }
 
         # Source code for patterns
-        self.primary_pattern_sources = {}
+        self.pattern_sources = {}
         # Lookup dictionary for pattern functions - keys are used to generate select menu
-        self.primary_pattern_functions = {}
+        self.pattern_functions = {}
 
         # Initialize primary patterns
-        self.set_pattern_function('cycle_hue_1d', patterns.cycle_hue_1d)
+        for k, v in patterns.defaults.items():
+            self.set_pattern_function(k, v)
 
         # Lookup dictionary for secondary pattern functions
         self.secondary_pattern_functions = {
             'none': None,
         }
 
-        self.pattern_1 = self.primary_pattern_functions[self.params['primary_pattern']]
+        self.pattern_1 = self.pattern_functions[self.params['primary_pattern']]
         self.pattern_2 = self.secondary_pattern_functions[self.params['secondary_pattern']]
 
         # Set default color temp
@@ -143,7 +144,6 @@ class AnimationController:
         results = RestrictedPython.compile_restricted_exec(source, filename='<inline code>')
         errors = list(results.errors)
         for name in results.used_names:
-            print(name)
             if name not in restricted_globals and name not in arg_names:
                 name_error = True
                 errors.append('NameError: name \'{}\' is not defined'.format(name))
@@ -185,10 +185,13 @@ class AnimationController:
         """
         errors, warnings, pattern = self.compile_pattern(source)
         if len(errors) == 0 and len(warnings) == 0:
-            self.primary_pattern_sources[key] = source
-            self.primary_pattern_functions[key] = pattern
-            self.pattern_1 = self.primary_pattern_functions[self.params['primary_pattern']]
+            self.pattern_sources[key] = source
+            self.pattern_functions[key] = pattern
+            self.pattern_1 = self.pattern_functions[self.params['primary_pattern']]
         return errors, warnings
+
+    def get_edited_patterns(self):
+        return {k: v for k, v in self.pattern_sources.items() if k not in patterns.defaults}
 
     #def set_color(self, index, component, value):
     #    self.colors[index][component] = value
