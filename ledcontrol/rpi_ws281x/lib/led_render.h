@@ -209,10 +209,10 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
       g = 255;
     } else {
       uint8_t desat = 255 - sat;
-      desat = desat * desat / 255;
-      r = r * sat / 255 + desat;
-      g = g * sat / 255 + desat;
-      b = b * sat / 255 + desat;
+      desat = scale_8(desat, desat);
+      r = scale_8(r, sat) + desat;
+      g = scale_8(g, sat) + desat;
+      b = scale_8(b, sat) + desat;
     }
   }
 
@@ -244,36 +244,22 @@ uint32_t render_rgb_float(color_rgb_float rgb,
   uint8_t g = clamp(rgb.g, 0, 1) * brightness * 255.0;
   uint8_t b = clamp(rgb.b, 0, 1) * brightness * 255.0;
 
-  /*
-  // Scale down colors if we're desaturated at all
-  // and add the brightness_floor to r, g, and b.
-  if (sat != 255) {
-    if (sat == 0) {
-      r = 255;
-      b = 255;
-      g = 255;
+  // If saturation is not 1, desaturate the color
+  // Moves r/g/b values closer to their average
+  // Not sure if this is the technically correct way
+  if (saturation < 1) {
+    uint8_t v = ((uint16_t)r + (uint16_t)g + (uint16_t)b) / 3;
+    int16_t s = saturation * 255.0;
+    if (s == 0) {
+      r = v;
+      b = v;
+      g = v;
     } else {
-      uint8_t desat = 255 - sat;
-      desat = desat * desat / 255;
-      r = r * sat / 255 + desat;
-      g = g * sat / 255 + desat;
-      b = b * sat / 255 + desat;
+      r = ((int16_t)r - (int16_t)v) * s / 255 + v;
+      g = ((int16_t)g - (int16_t)v) * s / 255 + v;
+      b = ((int16_t)b - (int16_t)v) * s / 255 + v;
     }
   }
-
-  // Now scale everything down if we're at value < 255.
-  if (val != 255) {
-    val = val * val / 255;
-    if (val == 0) {
-      r = 0;
-      g = 0;
-      b = 0;
-    } else {
-      r = scale_8(r, val);
-      g = scale_8(g, val);
-      b = scale_8(b, val);
-    }
-  }*/
 
   r = scale_8(r, corr_rgb.r);
   g = scale_8(g, corr_rgb.g);
