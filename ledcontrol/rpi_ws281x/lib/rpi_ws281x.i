@@ -10,32 +10,6 @@
 %include "stdint.i"
 %include "carrays.i"
 
-/*
-%typemap(in) color_hsv values[ANY] {
-  int len = PyObject_Length($input);
-  $1 = malloc(sizeof(color_hsv) * len);
-  int i, j;
-  if (!PySequence_Check($input)) {
-    PyErr_SetString(PyExc_TypeError, "Expecting a sequence");
-    return NULL;
-  }
-  for (i = 0; i < len; i++) {
-    PyObject *o = PySequence_GetItem($input, i);
-    for (j = 0; j < 3; j++) {
-      PyObject *o2 = PySequence_GetItem(o, j);
-      if (!PyInt_Check(o2)) {
-        Py_XDECREF(o2);
-        PyErr_SetString(PyExc_ValueError, "Expecting a sequence of colors");
-        return NULL;
-      }
-      $1[i].raw[j] = PyInt_AsLong(o2);
-      Py_DECREF(o2);
-    }
-    Py_DECREF(o);
-  }
-}
-*/
-
 // Unsafe, but ok in this case since inputs are hopefully consistent
 %typemap(in) color_hsv values[ANY] {
   int len = PyObject_Length($input);
@@ -72,6 +46,25 @@
 }
 
 %typemap(freearg) color_hsv_float values[ANY] {
+   if ($1) free($1);
+}
+
+%typemap(in) color_rgb_float values[ANY] {
+  int len = PyObject_Length($input);
+  $1 = malloc(sizeof(color_rgb_float) * len);
+  int i, j;
+  for (i = 0; i < len; i++) {
+    PyObject *o = PySequence_GetItem($input, i);
+    for (j = 0; j < 3; j++) {
+      PyObject *o2 = PySequence_GetItem(o, j);
+      $1[i].raw[j] = (float)PyFloat_AsDouble(o2);
+      Py_DECREF(o2);
+    }
+    Py_DECREF(o);
+  }
+}
+
+%typemap(freearg) color_rgb_float values[ANY] {
    if ($1) free($1);
 }
 

@@ -418,10 +418,52 @@ class color_rgb(_object):
 color_rgb_swigregister = _rpi_ws281x.color_rgb_swigregister
 color_rgb_swigregister(color_rgb)
 
+class color_rgb_float(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, color_rgb_float, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, color_rgb_float, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["red"] = _rpi_ws281x.color_rgb_float_red_set
+    __swig_getmethods__["red"] = _rpi_ws281x.color_rgb_float_red_get
+    if _newclass:
+        red = _swig_property(_rpi_ws281x.color_rgb_float_red_get, _rpi_ws281x.color_rgb_float_red_set)
+    __swig_setmethods__["r"] = _rpi_ws281x.color_rgb_float_r_set
+    __swig_getmethods__["r"] = _rpi_ws281x.color_rgb_float_r_get
+    if _newclass:
+        r = _swig_property(_rpi_ws281x.color_rgb_float_r_get, _rpi_ws281x.color_rgb_float_r_set)
+    __swig_setmethods__["green"] = _rpi_ws281x.color_rgb_float_green_set
+    __swig_getmethods__["green"] = _rpi_ws281x.color_rgb_float_green_get
+    if _newclass:
+        green = _swig_property(_rpi_ws281x.color_rgb_float_green_get, _rpi_ws281x.color_rgb_float_green_set)
+    __swig_setmethods__["g"] = _rpi_ws281x.color_rgb_float_g_set
+    __swig_getmethods__["g"] = _rpi_ws281x.color_rgb_float_g_get
+    if _newclass:
+        g = _swig_property(_rpi_ws281x.color_rgb_float_g_get, _rpi_ws281x.color_rgb_float_g_set)
+    __swig_setmethods__["blue"] = _rpi_ws281x.color_rgb_float_blue_set
+    __swig_getmethods__["blue"] = _rpi_ws281x.color_rgb_float_blue_get
+    if _newclass:
+        blue = _swig_property(_rpi_ws281x.color_rgb_float_blue_get, _rpi_ws281x.color_rgb_float_blue_set)
+    __swig_setmethods__["b"] = _rpi_ws281x.color_rgb_float_b_set
+    __swig_getmethods__["b"] = _rpi_ws281x.color_rgb_float_b_get
+    if _newclass:
+        b = _swig_property(_rpi_ws281x.color_rgb_float_b_get, _rpi_ws281x.color_rgb_float_b_set)
+    __swig_setmethods__["raw"] = _rpi_ws281x.color_rgb_float_raw_set
+    __swig_getmethods__["raw"] = _rpi_ws281x.color_rgb_float_raw_get
+    if _newclass:
+        raw = _swig_property(_rpi_ws281x.color_rgb_float_raw_get, _rpi_ws281x.color_rgb_float_raw_set)
 
-def unpack_hsv(arg1):
-    return _rpi_ws281x.unpack_hsv(arg1)
-unpack_hsv = _rpi_ws281x.unpack_hsv
+    def __init__(self):
+        this = _rpi_ws281x.new_color_rgb_float()
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _rpi_ws281x.delete_color_rgb_float
+    __del__ = lambda self: None
+color_rgb_float_swigregister = _rpi_ws281x.color_rgb_float_swigregister
+color_rgb_float_swigregister(color_rgb_float)
+
 
 def unpack_rgb(arg1):
     return _rpi_ws281x.unpack_rgb(arg1)
@@ -435,21 +477,25 @@ def scale_8(a, b):
     return _rpi_ws281x.scale_8(a, b)
 scale_8 = _rpi_ws281x.scale_8
 
-def render_hsv2rgb_rainbow(hsv, corr_rgb, saturation, brightness):
-    return _rpi_ws281x.render_hsv2rgb_rainbow(hsv, corr_rgb, saturation, brightness)
-render_hsv2rgb_rainbow = _rpi_ws281x.render_hsv2rgb_rainbow
+def clamp(d, min, max):
+    return _rpi_ws281x.clamp(d, min, max)
+clamp = _rpi_ws281x.clamp
 
 def render_hsv2rgb_rainbow_float(hsv, corr_rgb, saturation, brightness):
     return _rpi_ws281x.render_hsv2rgb_rainbow_float(hsv, corr_rgb, saturation, brightness)
 render_hsv2rgb_rainbow_float = _rpi_ws281x.render_hsv2rgb_rainbow_float
 
-def ws2811_hsv_render_array(ws, channel, values, count, correction, saturation, brightness):
-    return _rpi_ws281x.ws2811_hsv_render_array(ws, channel, values, count, correction, saturation, brightness)
-ws2811_hsv_render_array = _rpi_ws281x.ws2811_hsv_render_array
+def render_rgb_float(rgb, corr_rgb, saturation, brightness):
+    return _rpi_ws281x.render_rgb_float(rgb, corr_rgb, saturation, brightness)
+render_rgb_float = _rpi_ws281x.render_rgb_float
 
 def ws2811_hsv_render_array_float(ws, channel, values, count, correction, saturation, brightness):
     return _rpi_ws281x.ws2811_hsv_render_array_float(ws, channel, values, count, correction, saturation, brightness)
 ws2811_hsv_render_array_float = _rpi_ws281x.ws2811_hsv_render_array_float
+
+def ws2811_rgb_render_array_float(ws, channel, values, count, correction, saturation, brightness):
+    return _rpi_ws281x.ws2811_rgb_render_array_float(ws, channel, values, count, correction, saturation, brightness)
+ws2811_rgb_render_array_float = _rpi_ws281x.ws2811_rgb_render_array_float
 # This file is compatible with both classic and new-style classes.
 
 

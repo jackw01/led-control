@@ -180,10 +180,10 @@ class PixelStrip(object):
         setattr(c, 'b', self._led_data[n] & 0xff)
         return c
 
-    def set_all_pixels_hsv(self, pixels, correction, saturation, brightness):
-        ws.ws2811_hsv_render_array(self._leds, self._channel, pixels, len(pixels),
-                                   correction, saturation, brightness)
-
     def set_all_pixels_hsv_float(self, pixels, correction, saturation, brightness):
         ws.ws2811_hsv_render_array_float(self._leds, self._channel, pixels, len(pixels),
-                                   correction, saturation, brightness)
+                                         correction, saturation, brightness)
+
+    def set_all_pixels_rgb_float(self, pixels, correction, saturation, brightness):
+        ws.ws2811_rgb_render_array_float(self._leds, self._channel, pixels, len(pixels),
+                                         correction, saturation, brightness)

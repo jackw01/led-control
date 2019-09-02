@@ -261,6 +261,10 @@ class AnimationController:
 
                 if mode == patterns.ColorMode.hsv:
                     led_states.append((color[0], color[1], color[2] * secondary_value))
+                elif mode == patterns.ColorMode.rgb:
+                    led_states.append((color[0] * secondary_value,
+                                       color[1] * secondary_value,
+                                       color[2] * secondary_value))
 
             self.primary_prev_state = new_primary_prev_state
             self.secondary_prev_state = new_secondary_prev_state
@@ -275,10 +279,15 @@ class AnimationController:
         Determine time, render frame, and display.
         """
         self.time = self.timer.last_frame - self.start
-        led_states, color_mode = self.get_next_frame()
-        self.led_controller.leds.set_all_pixels_hsv_float(led_states, self.correction,
-                                                          self.params['master_saturation'],
-                                                          self.params['master_brightness'])
+        led_states, mode = self.get_next_frame()
+        if mode == patterns.ColorMode.hsv:
+            self.led_controller.leds.set_all_pixels_hsv_float(led_states, self.correction,
+                                                              self.params['master_saturation'],
+                                                              self.params['master_brightness'])
+        elif mode == patterns.ColorMode.rgb:
+            self.led_controller.leds.set_all_pixels_rgb_float(led_states, self.correction,
+                                                              self.params['master_saturation'],
+                                                              self.params['master_brightness'])
 
     def end_animation_thread(self):
         """

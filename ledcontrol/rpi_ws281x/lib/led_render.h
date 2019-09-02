@@ -86,14 +86,27 @@ typedef struct color_rgb {
   };
 } color_rgb;
 
-// Unpack 24 bit colors from int
-color_hsv unpack_hsv(uint32_t in) {
-  uint8_t h = in >> 16 & 0xff;
-  uint8_t s = in >> 8 & 0xff;
-  uint8_t v = in & 0xff;
-  return (color_hsv){ h, s, v };
-}
+typedef struct color_rgb_float {
+  union {
+    struct {
+      union {
+        float red;
+        float r;
+      };
+      union {
+        float green;
+        float g;
+      };
+      union {
+        float blue;
+        float b;
+      };
+    };
+    float raw[3];
+  };
+} color_rgb_float;
 
+// Unpack 24 bit rgb from int
 color_rgb unpack_rgb(uint32_t in) {
   uint8_t r = in >> 16 & 0xff;
   uint8_t g = in >> 8 & 0xff;
@@ -106,119 +119,18 @@ uint32_t pack_rgb(uint8_t r, uint8_t g, uint8_t b) {
   return (r << 16) | (g << 8) | b;
 }
 
-// = a * b / 255
+// Scale one 8 bit int by another (a * b / 255)
 uint8_t scale_8(uint8_t a, uint8_t b) {
   return ((uint16_t)a * (uint16_t)b) >> 8;
 }
 
-// "Rainbow" color transform from FastLED
-uint32_t render_hsv2rgb_rainbow(color_hsv hsv,
-                                color_rgb corr_rgb, uint8_t saturation, uint8_t brightness) {
-  uint8_t hue = hsv.hue;
-  uint8_t sat = scale_8(hsv.sat, saturation);
-  uint8_t val = scale_8(hsv.val, brightness);
-  uint8_t r, g, b;
-
-  uint8_t offset = hue & 0x1F; // 0..31
-  uint8_t offset8 = offset << 3;
-  uint8_t third = offset8 / 3;
-
-  if (!(hue & 0x80)) {
-    if (!(hue & 0x40)) {
-      // section 0-1
-      if (!(hue & 0x20)) {
-        // case 0: // R -> O
-        r = 255 - third;
-        g = third;
-        b = 0;
-      } else {
-        // case 1: // O -> Y
-        r = 171;
-        g = 85 + third;
-        b = 0;
-      }
-    } else {
-      // section 2-3
-      if (!(hue & 0x20)) {
-        // case 2: // Y -> G
-        r = 171 - third * 2;
-        g = 170 + third;
-        b = 0;
-      } else {
-        // case 3: // G -> A
-        r = 0;
-        g = 255 - third;
-        b = third;
-      }
-    }
-  } else {
-    // section 4-7
-    if (!(hue & 0x40))  {
-      if (!(hue & 0x20)) {
-        // case 4: // A -> B
-        r = 0;
-        uint8_t twothirds = third * 2;
-        g = 171 - twothirds; // K170?
-        b = 85 + twothirds;
-      } else {
-        // case 5: // B -> P
-        r = third;
-        g = 0;
-        b = 255 - third;
-      }
-    } else {
-      if (!(hue & 0x20)) {
-        // case 6: // P -- K
-        r = 85 + third;
-        g = 0;
-        b = 171 - third;
-      } else {
-        // case 7: // K -> R
-        r = 170 + third;
-        g = 0;
-        b = 85 - third;
-      }
-    }
-  }
-
-  // Scale down colors if we're desaturated at all
-  // and add the brightness_floor to r, g, and b.
-  if (sat != 255) {
-    if (sat == 0) {
-      r = 255;
-      b = 255;
-      g = 255;
-    } else {
-      uint8_t desat = 255 - sat;
-      desat = desat * desat / 255;
-      r = r * sat / 255 + desat;
-      g = g * sat / 255 + desat;
-      b = b * sat / 255 + desat;
-    }
-  }
-
-  // Now scale everything down if we're at value < 255.
-  if (val != 255) {
-    val = val * val / 255;
-    if (val == 0) {
-      r = 0;
-      g = 0;
-      b = 0;
-    } else {
-      r = scale_8(r, val);
-      g = scale_8(g, val);
-      b = scale_8(b, val);
-    }
-  }
-
-  r = scale_8(r, corr_rgb.r);
-  g = scale_8(g, corr_rgb.g);
-  b = scale_8(b, corr_rgb.b);
-
-  return pack_rgb(r, g, b);
+// Float clamp
+float clamp(float d, float min, float max) {
+  const float t = d < min ? min : d;
+  return t > max ? max : t;
 }
 
-// "Rainbow" color transform from FastLED
+// Render float HSV to LEDs with "Rainbow" color transform from FastLED
 uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
                                       color_rgb corr_rgb, float saturation, float brightness) {
   uint8_t hue = hsv.hue * 255.0;
@@ -325,19 +237,52 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
   return pack_rgb(r, g, b);
 }
 
-// Render array of hsv pixels and display
-int ws2811_hsv_render_array(ws2811_t *ws, ws2811_channel_t *channel,
-                            color_hsv values[], int count,
-                            uint32_t correction, uint8_t saturation, uint8_t brightness){
-  if (count > channel->count) return -1;
-  color_rgb corr_rgb = unpack_rgb(correction);
-  for (int i = 0; i < count; i++) {
-    channel->leds[i] = render_hsv2rgb_rainbow(values[i], corr_rgb, saturation, brightness);
+// Render float RGB to LEDs
+uint32_t render_rgb_float(color_rgb_float rgb,
+                          color_rgb corr_rgb, float saturation, float brightness) {
+  uint8_t r = clamp(rgb.r, 0, 1) * brightness * 255.0;
+  uint8_t g = clamp(rgb.g, 0, 1) * brightness * 255.0;
+  uint8_t b = clamp(rgb.b, 0, 1) * brightness * 255.0;
+
+  /*
+  // Scale down colors if we're desaturated at all
+  // and add the brightness_floor to r, g, and b.
+  if (sat != 255) {
+    if (sat == 0) {
+      r = 255;
+      b = 255;
+      g = 255;
+    } else {
+      uint8_t desat = 255 - sat;
+      desat = desat * desat / 255;
+      r = r * sat / 255 + desat;
+      g = g * sat / 255 + desat;
+      b = b * sat / 255 + desat;
+    }
   }
-  ws2811_render(ws);
-  return 1;
+
+  // Now scale everything down if we're at value < 255.
+  if (val != 255) {
+    val = val * val / 255;
+    if (val == 0) {
+      r = 0;
+      g = 0;
+      b = 0;
+    } else {
+      r = scale_8(r, val);
+      g = scale_8(g, val);
+      b = scale_8(b, val);
+    }
+  }*/
+
+  r = scale_8(r, corr_rgb.r);
+  g = scale_8(g, corr_rgb.g);
+  b = scale_8(b, corr_rgb.b);
+
+  return pack_rgb(r, g, b);
 }
 
+// Render array of hsv pixels and display
 int ws2811_hsv_render_array_float(ws2811_t *ws, ws2811_channel_t *channel,
                                   color_hsv_float values[], int count,
                                   uint32_t correction, float saturation, float brightness){
@@ -345,6 +290,19 @@ int ws2811_hsv_render_array_float(ws2811_t *ws, ws2811_channel_t *channel,
   color_rgb corr_rgb = unpack_rgb(correction);
   for (int i = 0; i < count; i++) {
     channel->leds[i] = render_hsv2rgb_rainbow_float(values[i], corr_rgb, saturation, brightness);
+  }
+  ws2811_render(ws);
+  return 1;
+}
+
+// Render array of rgb pixels and display
+int ws2811_rgb_render_array_float(ws2811_t *ws, ws2811_channel_t *channel,
+                                  color_rgb_float values[], int count,
+                                  uint32_t correction, float saturation, float brightness){
+  if (count > channel->count) return -1;
+  color_rgb corr_rgb = unpack_rgb(correction);
+  for (int i = 0; i < count; i++) {
+    channel->leds[i] = render_rgb_float(values[i], corr_rgb, saturation, brightness);
   }
   ws2811_render(ws);
   return 1;
