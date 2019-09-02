@@ -2999,22 +2999,24 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 
 #define SWIGTYPE_p_char swig_types[0]
 #define SWIGTYPE_p_color_hsv swig_types[1]
-#define SWIGTYPE_p_color_rgb swig_types[2]
-#define SWIGTYPE_p_int swig_types[3]
-#define SWIGTYPE_p_long_long swig_types[4]
-#define SWIGTYPE_p_rpi_hw_t swig_types[5]
-#define SWIGTYPE_p_short swig_types[6]
-#define SWIGTYPE_p_signed_char swig_types[7]
-#define SWIGTYPE_p_unsigned_char swig_types[8]
-#define SWIGTYPE_p_unsigned_int swig_types[9]
-#define SWIGTYPE_p_unsigned_long_long swig_types[10]
-#define SWIGTYPE_p_unsigned_short swig_types[11]
-#define SWIGTYPE_p_ws2811_channel_t swig_types[12]
-#define SWIGTYPE_p_ws2811_device swig_types[13]
-#define SWIGTYPE_p_ws2811_return_t swig_types[14]
-#define SWIGTYPE_p_ws2811_t swig_types[15]
-static swig_type_info *swig_types[17];
-static swig_module_info swig_module = {swig_types, 16, 0, 0, 0, 0};
+#define SWIGTYPE_p_color_hsv_float swig_types[2]
+#define SWIGTYPE_p_color_rgb swig_types[3]
+#define SWIGTYPE_p_float swig_types[4]
+#define SWIGTYPE_p_int swig_types[5]
+#define SWIGTYPE_p_long_long swig_types[6]
+#define SWIGTYPE_p_rpi_hw_t swig_types[7]
+#define SWIGTYPE_p_short swig_types[8]
+#define SWIGTYPE_p_signed_char swig_types[9]
+#define SWIGTYPE_p_unsigned_char swig_types[10]
+#define SWIGTYPE_p_unsigned_int swig_types[11]
+#define SWIGTYPE_p_unsigned_long_long swig_types[12]
+#define SWIGTYPE_p_unsigned_short swig_types[13]
+#define SWIGTYPE_p_ws2811_channel_t swig_types[14]
+#define SWIGTYPE_p_ws2811_device swig_types[15]
+#define SWIGTYPE_p_ws2811_return_t swig_types[16]
+#define SWIGTYPE_p_ws2811_t swig_types[17]
+static swig_type_info *swig_types[19];
+static swig_module_info swig_module = {swig_types, 18, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -3462,6 +3464,70 @@ SWIGINTERNINLINE PyObject *
 SWIG_FromCharPtr(const char *cptr)
 { 
   return SWIG_FromCharPtrAndSize(cptr, (cptr ? strlen(cptr) : 0));
+}
+
+
+/* Getting isfinite working pre C99 across multiple platforms is non-trivial. Users can provide SWIG_isfinite on older platforms. */
+#ifndef SWIG_isfinite
+/* isfinite() is a macro for C99 */
+# if defined(isfinite)
+#  define SWIG_isfinite(X) (isfinite(X))
+# elif defined __cplusplus && __cplusplus >= 201103L
+/* Use a template so that this works whether isfinite() is std::isfinite() or
+ * in the global namespace.  The reality seems to vary between compiler
+ * versions.
+ *
+ * Make sure namespace std exists to avoid compiler warnings.
+ *
+ * extern "C++" is required as this fragment can end up inside an extern "C" { } block
+ */
+namespace std { }
+extern "C++" template<typename T>
+inline int SWIG_isfinite_func(T x) {
+  using namespace std;
+  return isfinite(x);
+}
+#  define SWIG_isfinite(X) (SWIG_isfinite_func(X))
+# elif defined(_MSC_VER)
+#  define SWIG_isfinite(X) (_finite(X))
+# elif defined(__sun) && defined(__SVR4)
+#  include <ieeefp.h>
+#  define SWIG_isfinite(X) (finite(X))
+# endif
+#endif
+
+
+/* Accept infinite as a valid float value unless we are unable to check if a value is finite */
+#ifdef SWIG_isfinite
+# define SWIG_Float_Overflow_Check(X) ((X < -FLT_MAX || X > FLT_MAX) && SWIG_isfinite(X))
+#else
+# define SWIG_Float_Overflow_Check(X) ((X < -FLT_MAX || X > FLT_MAX))
+#endif
+
+
+SWIGINTERN int
+SWIG_AsVal_float (PyObject * obj, float *val)
+{
+  double v;
+  int res = SWIG_AsVal_double (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if (SWIG_Float_Overflow_Check(v)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = (float)(v);
+    }
+  }  
+  return res;
+}
+
+
+  #define SWIG_From_double   PyFloat_FromDouble 
+
+
+SWIGINTERNINLINE PyObject *
+SWIG_From_float  (float value)
+{    
+  return SWIG_From_double  (value);
 }
 
 #ifdef __cplusplus
@@ -5172,6 +5238,522 @@ SWIGINTERN PyObject *color_hsv_swigregister(PyObject *SWIGUNUSEDPARM(self), PyOb
   return SWIG_Py_Void();
 }
 
+SWIGINTERN PyObject *_wrap_color_hsv_float_hue_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:color_hsv_float_hue_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_hue_set" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "color_hsv_float_hue_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = (float)(val2);
+  if (arg1) (arg1)->hue = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_hue_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:color_hsv_float_hue_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_hue_get" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  result = (float) ((arg1)->hue);
+  resultobj = SWIG_From_float((float)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_h_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:color_hsv_float_h_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_h_set" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "color_hsv_float_h_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = (float)(val2);
+  if (arg1) (arg1)->h = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_h_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:color_hsv_float_h_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_h_get" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  result = (float) ((arg1)->h);
+  resultobj = SWIG_From_float((float)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_saturation_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:color_hsv_float_saturation_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_saturation_set" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "color_hsv_float_saturation_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = (float)(val2);
+  if (arg1) (arg1)->saturation = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_saturation_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:color_hsv_float_saturation_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_saturation_get" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  result = (float) ((arg1)->saturation);
+  resultobj = SWIG_From_float((float)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_sat_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:color_hsv_float_sat_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_sat_set" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "color_hsv_float_sat_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = (float)(val2);
+  if (arg1) (arg1)->sat = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_sat_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:color_hsv_float_sat_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_sat_get" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  result = (float) ((arg1)->sat);
+  resultobj = SWIG_From_float((float)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_s_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:color_hsv_float_s_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_s_set" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "color_hsv_float_s_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = (float)(val2);
+  if (arg1) (arg1)->s = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_s_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:color_hsv_float_s_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_s_get" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  result = (float) ((arg1)->s);
+  resultobj = SWIG_From_float((float)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_value_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:color_hsv_float_value_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_value_set" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "color_hsv_float_value_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = (float)(val2);
+  if (arg1) (arg1)->value = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_value_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:color_hsv_float_value_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_value_get" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  result = (float) ((arg1)->value);
+  resultobj = SWIG_From_float((float)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_val_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:color_hsv_float_val_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_val_set" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "color_hsv_float_val_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = (float)(val2);
+  if (arg1) (arg1)->val = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_val_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:color_hsv_float_val_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_val_get" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  result = (float) ((arg1)->val);
+  resultobj = SWIG_From_float((float)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_v_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:color_hsv_float_v_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_v_set" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "color_hsv_float_v_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = (float)(val2);
+  if (arg1) (arg1)->v = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_v_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:color_hsv_float_v_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_v_get" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  result = (float) ((arg1)->v);
+  resultobj = SWIG_From_float((float)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_raw_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  float *arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:color_hsv_float_raw_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_raw_set" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_float, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "color_hsv_float_raw_set" "', argument " "2"" of type '" "float [3]""'"); 
+  } 
+  arg2 = (float *)(argp2);
+  {
+    if (arg2) {
+      size_t ii = 0;
+      for (; ii < (size_t)3; ++ii) *(float *)&arg1->raw[ii] = *((float *)arg2 + ii);
+    } else {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""raw""' of type '""float [3]""'");
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_color_hsv_float_raw_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:color_hsv_float_raw_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "color_hsv_float_raw_get" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  result = (float *)(float *) ((arg1)->raw);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_float, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_color_hsv_float(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_color_hsv_float")) SWIG_fail;
+  result = (struct color_hsv_float *)calloc(1, sizeof(struct color_hsv_float));
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_color_hsv_float, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_color_hsv_float(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  struct color_hsv_float *arg1 = (struct color_hsv_float *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_color_hsv_float",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_color_hsv_float, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_color_hsv_float" "', argument " "1"" of type '" "struct color_hsv_float *""'"); 
+  }
+  arg1 = (struct color_hsv_float *)(argp1);
+  free((char *) arg1);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *color_hsv_float_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char *)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_color_hsv_float, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
 SWIGINTERN PyObject *_wrap_color_rgb_red_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   struct color_rgb *arg1 = (struct color_rgb *) 0 ;
@@ -5668,19 +6250,58 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_scale_8(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  uint8_t arg1 ;
+  uint8_t arg2 ;
+  unsigned char val1 ;
+  int ecode1 = 0 ;
+  unsigned char val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  uint8_t result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:scale_8",&obj0,&obj1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_unsigned_SS_char(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "scale_8" "', argument " "1"" of type '" "uint8_t""'");
+  } 
+  arg1 = (uint8_t)(val1);
+  ecode2 = SWIG_AsVal_unsigned_SS_char(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "scale_8" "', argument " "2"" of type '" "uint8_t""'");
+  } 
+  arg2 = (uint8_t)(val2);
+  result = (uint8_t)scale_8(arg1,arg2);
+  resultobj = SWIG_From_unsigned_SS_char((unsigned char)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_render_hsv2rgb_rainbow(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   color_hsv arg1 ;
   color_rgb arg2 ;
+  uint8_t arg3 ;
+  uint8_t arg4 ;
   void *argp1 ;
   int res1 = 0 ;
   void *argp2 ;
   int res2 = 0 ;
+  unsigned char val3 ;
+  int ecode3 = 0 ;
+  unsigned char val4 ;
+  int ecode4 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
   uint32_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:render_hsv2rgb_rainbow",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:render_hsv2rgb_rainbow",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
   {
     res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_color_hsv,  0 );
     if (!SWIG_IsOK(res1)) {
@@ -5703,7 +6324,17 @@ SWIGINTERN PyObject *_wrap_render_hsv2rgb_rainbow(PyObject *SWIGUNUSEDPARM(self)
       arg2 = *((color_rgb *)(argp2));
     }
   }
-  result = (uint32_t)render_hsv2rgb_rainbow(arg1,arg2);
+  ecode3 = SWIG_AsVal_unsigned_SS_char(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "render_hsv2rgb_rainbow" "', argument " "3"" of type '" "uint8_t""'");
+  } 
+  arg3 = (uint8_t)(val3);
+  ecode4 = SWIG_AsVal_unsigned_SS_char(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "render_hsv2rgb_rainbow" "', argument " "4"" of type '" "uint8_t""'");
+  } 
+  arg4 = (uint8_t)(val4);
+  result = (uint32_t)render_hsv2rgb_rainbow(arg1,arg2,arg3,arg4);
   resultobj = SWIG_From_unsigned_SS_int((unsigned int)(result));
   return resultobj;
 fail:
@@ -5711,66 +6342,63 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ws2811_hsv_render(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_render_hsv2rgb_rainbow_float(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  ws2811_t *arg1 = (ws2811_t *) 0 ;
-  ws2811_channel_t *arg2 = (ws2811_channel_t *) 0 ;
-  uint32_t *arg3 ;
-  int arg4 ;
-  uint32_t arg5 ;
-  void *argp1 = 0 ;
+  color_hsv_float arg1 ;
+  color_rgb arg2 ;
+  float arg3 ;
+  float arg4 ;
+  void *argp1 ;
   int res1 = 0 ;
-  void *argp2 = 0 ;
+  void *argp2 ;
   int res2 = 0 ;
-  int val4 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
   int ecode4 = 0 ;
-  unsigned int val5 ;
-  int ecode5 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
-  PyObject * obj4 = 0 ;
-  int result;
+  uint32_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOO:ws2811_hsv_render",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ws2811_t, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ws2811_hsv_render" "', argument " "1"" of type '" "ws2811_t *""'"); 
-  }
-  arg1 = (ws2811_t *)(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_ws2811_channel_t, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ws2811_hsv_render" "', argument " "2"" of type '" "ws2811_channel_t *""'"); 
-  }
-  arg2 = (ws2811_channel_t *)(argp2);
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:render_hsv2rgb_rainbow_float",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
   {
-    int len = PyObject_Length(obj2);
-    arg3 = malloc(sizeof(uint32_t) * len);
-    if (!convert_iarray_32(obj2, arg3, len)) {
-      return NULL;
+    res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_color_hsv_float,  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "render_hsv2rgb_rainbow_float" "', argument " "1"" of type '" "color_hsv_float""'"); 
+    }  
+    if (!argp1) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "render_hsv2rgb_rainbow_float" "', argument " "1"" of type '" "color_hsv_float""'");
+    } else {
+      arg1 = *((color_hsv_float *)(argp1));
     }
   }
-  ecode4 = SWIG_AsVal_int(obj3, &val4);
-  if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ws2811_hsv_render" "', argument " "4"" of type '" "int""'");
-  } 
-  arg4 = (int)(val4);
-  ecode5 = SWIG_AsVal_unsigned_SS_int(obj4, &val5);
-  if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "ws2811_hsv_render" "', argument " "5"" of type '" "uint32_t""'");
-  } 
-  arg5 = (uint32_t)(val5);
-  result = (int)ws2811_hsv_render(arg1,arg2,arg3,arg4,arg5);
-  resultobj = SWIG_From_int((int)(result));
   {
-    if (arg3) free(arg3);
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_color_rgb,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "render_hsv2rgb_rainbow_float" "', argument " "2"" of type '" "color_rgb""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "render_hsv2rgb_rainbow_float" "', argument " "2"" of type '" "color_rgb""'");
+    } else {
+      arg2 = *((color_rgb *)(argp2));
+    }
   }
+  ecode3 = SWIG_AsVal_float(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "render_hsv2rgb_rainbow_float" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = (float)(val3);
+  ecode4 = SWIG_AsVal_float(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "render_hsv2rgb_rainbow_float" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = (float)(val4);
+  result = (uint32_t)render_hsv2rgb_rainbow_float(arg1,arg2,arg3,arg4);
+  resultobj = SWIG_From_unsigned_SS_int((unsigned int)(result));
   return resultobj;
 fail:
-  {
-    if (arg3) free(arg3);
-  }
   return NULL;
 }
 
@@ -5782,6 +6410,8 @@ SWIGINTERN PyObject *_wrap_ws2811_hsv_render_array(PyObject *SWIGUNUSEDPARM(self
   color_hsv *arg3 ;
   int arg4 ;
   uint32_t arg5 ;
+  uint8_t arg6 ;
+  uint8_t arg7 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 = 0 ;
@@ -5790,14 +6420,20 @@ SWIGINTERN PyObject *_wrap_ws2811_hsv_render_array(PyObject *SWIGUNUSEDPARM(self
   int ecode4 = 0 ;
   unsigned int val5 ;
   int ecode5 = 0 ;
+  unsigned char val6 ;
+  int ecode6 = 0 ;
+  unsigned char val7 ;
+  int ecode7 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOO:ws2811_hsv_render_array",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:ws2811_hsv_render_array",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ws2811_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ws2811_hsv_render_array" "', argument " "1"" of type '" "ws2811_t *""'"); 
@@ -5832,7 +6468,106 @@ SWIGINTERN PyObject *_wrap_ws2811_hsv_render_array(PyObject *SWIGUNUSEDPARM(self
     SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "ws2811_hsv_render_array" "', argument " "5"" of type '" "uint32_t""'");
   } 
   arg5 = (uint32_t)(val5);
-  result = (int)ws2811_hsv_render_array(arg1,arg2,arg3,arg4,arg5);
+  ecode6 = SWIG_AsVal_unsigned_SS_char(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "ws2811_hsv_render_array" "', argument " "6"" of type '" "uint8_t""'");
+  } 
+  arg6 = (uint8_t)(val6);
+  ecode7 = SWIG_AsVal_unsigned_SS_char(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "ws2811_hsv_render_array" "', argument " "7"" of type '" "uint8_t""'");
+  } 
+  arg7 = (uint8_t)(val7);
+  result = (int)ws2811_hsv_render_array(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+  resultobj = SWIG_From_int((int)(result));
+  {
+    if (arg3) free(arg3);
+  }
+  return resultobj;
+fail:
+  {
+    if (arg3) free(arg3);
+  }
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ws2811_hsv_render_array_float(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ws2811_t *arg1 = (ws2811_t *) 0 ;
+  ws2811_channel_t *arg2 = (ws2811_channel_t *) 0 ;
+  color_hsv_float *arg3 ;
+  int arg4 ;
+  uint32_t arg5 ;
+  float arg6 ;
+  float arg7 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  unsigned int val5 ;
+  int ecode5 = 0 ;
+  float val6 ;
+  int ecode6 = 0 ;
+  float val7 ;
+  int ecode7 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:ws2811_hsv_render_array_float",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ws2811_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ws2811_hsv_render_array_float" "', argument " "1"" of type '" "ws2811_t *""'"); 
+  }
+  arg1 = (ws2811_t *)(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_ws2811_channel_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ws2811_hsv_render_array_float" "', argument " "2"" of type '" "ws2811_channel_t *""'"); 
+  }
+  arg2 = (ws2811_channel_t *)(argp2);
+  {
+    int len = PyObject_Length(obj2);
+    arg3 = malloc(sizeof(color_hsv_float) * len);
+    int i, j;
+    for (i = 0; i < len; i++) {
+      PyObject *o = PySequence_GetItem(obj2, i);
+      for (j = 0; j < 3; j++) {
+        PyObject *o2 = PySequence_GetItem(o, j);
+        arg3[i].raw[j] = (float)PyFloat_AsDouble(o2);
+        Py_DECREF(o2);
+      }
+      Py_DECREF(o);
+    }
+  }
+  ecode4 = SWIG_AsVal_int(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ws2811_hsv_render_array_float" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = (int)(val4);
+  ecode5 = SWIG_AsVal_unsigned_SS_int(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "ws2811_hsv_render_array_float" "', argument " "5"" of type '" "uint32_t""'");
+  } 
+  arg5 = (uint32_t)(val5);
+  ecode6 = SWIG_AsVal_float(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "ws2811_hsv_render_array_float" "', argument " "6"" of type '" "float""'");
+  } 
+  arg6 = (float)(val6);
+  ecode7 = SWIG_AsVal_float(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "ws2811_hsv_render_array_float" "', argument " "7"" of type '" "float""'");
+  } 
+  arg7 = (float)(val7);
+  result = (int)ws2811_hsv_render_array_float(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
   resultobj = SWIG_From_int((int)(result));
   {
     if (arg3) free(arg3);
@@ -5917,6 +6652,27 @@ static PyMethodDef SwigMethods[] = {
 	 { "new_color_hsv", _wrap_new_color_hsv, METH_VARARGS, NULL},
 	 { "delete_color_hsv", _wrap_delete_color_hsv, METH_VARARGS, NULL},
 	 { "color_hsv_swigregister", color_hsv_swigregister, METH_VARARGS, NULL},
+	 { "color_hsv_float_hue_set", _wrap_color_hsv_float_hue_set, METH_VARARGS, NULL},
+	 { "color_hsv_float_hue_get", _wrap_color_hsv_float_hue_get, METH_VARARGS, NULL},
+	 { "color_hsv_float_h_set", _wrap_color_hsv_float_h_set, METH_VARARGS, NULL},
+	 { "color_hsv_float_h_get", _wrap_color_hsv_float_h_get, METH_VARARGS, NULL},
+	 { "color_hsv_float_saturation_set", _wrap_color_hsv_float_saturation_set, METH_VARARGS, NULL},
+	 { "color_hsv_float_saturation_get", _wrap_color_hsv_float_saturation_get, METH_VARARGS, NULL},
+	 { "color_hsv_float_sat_set", _wrap_color_hsv_float_sat_set, METH_VARARGS, NULL},
+	 { "color_hsv_float_sat_get", _wrap_color_hsv_float_sat_get, METH_VARARGS, NULL},
+	 { "color_hsv_float_s_set", _wrap_color_hsv_float_s_set, METH_VARARGS, NULL},
+	 { "color_hsv_float_s_get", _wrap_color_hsv_float_s_get, METH_VARARGS, NULL},
+	 { "color_hsv_float_value_set", _wrap_color_hsv_float_value_set, METH_VARARGS, NULL},
+	 { "color_hsv_float_value_get", _wrap_color_hsv_float_value_get, METH_VARARGS, NULL},
+	 { "color_hsv_float_val_set", _wrap_color_hsv_float_val_set, METH_VARARGS, NULL},
+	 { "color_hsv_float_val_get", _wrap_color_hsv_float_val_get, METH_VARARGS, NULL},
+	 { "color_hsv_float_v_set", _wrap_color_hsv_float_v_set, METH_VARARGS, NULL},
+	 { "color_hsv_float_v_get", _wrap_color_hsv_float_v_get, METH_VARARGS, NULL},
+	 { "color_hsv_float_raw_set", _wrap_color_hsv_float_raw_set, METH_VARARGS, NULL},
+	 { "color_hsv_float_raw_get", _wrap_color_hsv_float_raw_get, METH_VARARGS, NULL},
+	 { "new_color_hsv_float", _wrap_new_color_hsv_float, METH_VARARGS, NULL},
+	 { "delete_color_hsv_float", _wrap_delete_color_hsv_float, METH_VARARGS, NULL},
+	 { "color_hsv_float_swigregister", color_hsv_float_swigregister, METH_VARARGS, NULL},
 	 { "color_rgb_red_set", _wrap_color_rgb_red_set, METH_VARARGS, NULL},
 	 { "color_rgb_red_get", _wrap_color_rgb_red_get, METH_VARARGS, NULL},
 	 { "color_rgb_r_set", _wrap_color_rgb_r_set, METH_VARARGS, NULL},
@@ -5937,9 +6693,11 @@ static PyMethodDef SwigMethods[] = {
 	 { "unpack_hsv", _wrap_unpack_hsv, METH_VARARGS, NULL},
 	 { "unpack_rgb", _wrap_unpack_rgb, METH_VARARGS, NULL},
 	 { "pack_rgb", _wrap_pack_rgb, METH_VARARGS, NULL},
+	 { "scale_8", _wrap_scale_8, METH_VARARGS, NULL},
 	 { "render_hsv2rgb_rainbow", _wrap_render_hsv2rgb_rainbow, METH_VARARGS, NULL},
-	 { "ws2811_hsv_render", _wrap_ws2811_hsv_render, METH_VARARGS, NULL},
+	 { "render_hsv2rgb_rainbow_float", _wrap_render_hsv2rgb_rainbow_float, METH_VARARGS, NULL},
 	 { "ws2811_hsv_render_array", _wrap_ws2811_hsv_render_array, METH_VARARGS, NULL},
+	 { "ws2811_hsv_render_array_float", _wrap_ws2811_hsv_render_array_float, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
@@ -5948,7 +6706,9 @@ static PyMethodDef SwigMethods[] = {
 
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_color_hsv = {"_p_color_hsv", "struct color_hsv *|color_hsv *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_color_hsv_float = {"_p_color_hsv_float", "struct color_hsv_float *|color_hsv_float *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_color_rgb = {"_p_color_rgb", "struct color_rgb *|color_rgb *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_float = {"_p_float", "float *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int = {"_p_int", "intptr_t *|int *|int_least32_t *|int_fast32_t *|int32_t *|int_fast16_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_long_long = {"_p_long_long", "int_least64_t *|int_fast64_t *|int64_t *|long long *|intmax_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_rpi_hw_t = {"_p_rpi_hw_t", "rpi_hw_t *", 0, 0, (void*)0, 0};
@@ -5966,7 +6726,9 @@ static swig_type_info _swigt__p_ws2811_t = {"_p_ws2811_t", "struct ws2811_t *|ws
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
   &_swigt__p_color_hsv,
+  &_swigt__p_color_hsv_float,
   &_swigt__p_color_rgb,
+  &_swigt__p_float,
   &_swigt__p_int,
   &_swigt__p_long_long,
   &_swigt__p_rpi_hw_t,
@@ -5984,7 +6746,9 @@ static swig_type_info *swig_type_initial[] = {
 
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_color_hsv[] = {  {&_swigt__p_color_hsv, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_color_hsv_float[] = {  {&_swigt__p_color_hsv_float, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_color_rgb[] = {  {&_swigt__p_color_rgb, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_float[] = {  {&_swigt__p_float, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_long_long[] = {  {&_swigt__p_long_long, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_rpi_hw_t[] = {  {&_swigt__p_rpi_hw_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -6002,7 +6766,9 @@ static swig_cast_info _swigc__p_ws2811_t[] = {  {&_swigt__p_ws2811_t, 0, 0, 0},{
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
   _swigc__p_color_hsv,
+  _swigc__p_color_hsv_float,
   _swigc__p_color_rgb,
+  _swigc__p_float,
   _swigc__p_int,
   _swigc__p_long_long,
   _swigc__p_rpi_hw_t,

@@ -56,6 +56,25 @@
    if ($1) free($1);
 }
 
+%typemap(in) color_hsv_float values[ANY] {
+  int len = PyObject_Length($input);
+  $1 = malloc(sizeof(color_hsv_float) * len);
+  int i, j;
+  for (i = 0; i < len; i++) {
+    PyObject *o = PySequence_GetItem($input, i);
+    for (j = 0; j < 3; j++) {
+      PyObject *o2 = PySequence_GetItem(o, j);
+      $1[i].raw[j] = (float)PyFloat_AsDouble(o2);
+      Py_DECREF(o2);
+    }
+    Py_DECREF(o);
+  }
+}
+
+%typemap(freearg) color_hsv_float values[ANY] {
+   if ($1) free($1);
+}
+
 %{
 static int convert_iarray_32(PyObject *input, uint32_t *ptr, int size) {
   int i;
@@ -120,7 +139,6 @@ static int convert_iarray_8(PyObject *input, uint8_t *ptr, int size) {
     return NULL;
    }
 }
-
 
 %typemap(out) uint8_t * {
   $result = PyList_New(256);

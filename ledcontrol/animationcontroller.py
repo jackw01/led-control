@@ -206,10 +206,10 @@ class AnimationController:
         """
         Render the next frame based on current time.
         """
-        begin = time.perf_counter()
         new_primary_prev_state = []
         new_secondary_prev_state = []
         led_states = []
+        mode = patterns.ColorMode.hsv
 
         # Calculate times
         # time component = time (s) * speed (cycle/s)
@@ -218,6 +218,7 @@ class AnimationController:
         secondary_time = self.time * self.params['secondary_speed']
         secondary_delta_t = self.timer.delta_t * self.params['secondary_speed']
 
+        # Initialize these in case they don't get assigned later
         primary_x = 0
         primary_y = 0
         secondary_x = 0
@@ -258,14 +259,12 @@ class AnimationController:
                                                             color)
                     new_secondary_prev_state.append((secondary_value, color))
 
-                h = int((color[0] % 1) * 255)
-                s = int(color[1] * self.params['master_saturation'] * 255)
-                v = int(color[2] * secondary_value * self.params['master_brightness'] * 255)
-                led_states.append((h, s, v))
+                if mode == patterns.ColorMode.hsv:
+                    led_states.append((color[0], color[1], color[2] * secondary_value))
 
             self.primary_prev_state = new_primary_prev_state
             self.secondary_prev_state = new_secondary_prev_state
-            return led_states
+            return led_states, mode
 
         except Exception as e:
             print('Pattern execution: {}: {}'.format(type(e).__name__, e))
@@ -276,7 +275,10 @@ class AnimationController:
         Determine time, render frame, and display.
         """
         self.time = self.timer.last_frame - self.start
-        self.led_controller.leds.set_all_pixels_hsv2(self.get_next_frame(), self.correction)
+        led_states, color_mode = self.get_next_frame()
+        self.led_controller.leds.set_all_pixels_hsv_float(led_states, self.correction,
+                                                          self.params['master_saturation'],
+                                                          self.params['master_brightness'])
 
     def end_animation_thread(self):
         """

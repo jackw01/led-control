@@ -1,10 +1,10 @@
 {
     "params": {
-        "master_brightness": 0.15,
+        "master_brightness": 0.21,
         "master_color_temp": 6500,
         "master_saturation": 1.0,
         "primary_pattern": "cycle_hue_1d",
-        "primary_scale": 1.0,
+        "primary_scale": 0.0,
         "primary_speed": 0.2,
         "secondary_pattern": "none",
         "secondary_scale": 1.0,

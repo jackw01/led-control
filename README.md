@@ -34,7 +34,7 @@ optional arguments:
 
 ## Features
 * Supports cheap and readily available WS281x and SK6812 LED strips, strings, and arrays
-* Capable of achieving up to 120 FPS on 60 LEDs and 60 FPS on 150 LEDs with low-end hardware (Raspberry Pi Zero)
+* Capable of achieving up to 240 FPS on 60 LEDs and 100 FPS on 150 LEDs with low-end hardware (Raspberry Pi Zero)
 
 ## Animation Scripting
 Animation patterns are defined as Python functions. The LEDControl web interface allows editing and creation of patterns using a subset of Python. Scripts are compiled using [RestrictedPython](https://github.com/zopefoundation/RestrictedPython) and run with a restricted set of builtin functions and global variables. This should prevent filesystem access and code execution, but the scripting system **should not be considered completely secure** and the web interface **should not be exposed to untrusted users**.
