@@ -4,7 +4,7 @@
 function handleInputChange(elem) {
   var key = elem.data('id');
   var val = parseFloat(elem.val(), 10);
-  if (!elem.is('select')) { // Sliders or numbers
+  if (!elem.is('select')) { // Sliders or numbers - enforce min/max and update other input
     var min = parseFloat(elem.attr('min'), 10);
     var max = parseFloat(elem.attr('max'), 10);
     if (val < min) val = min;
@@ -13,16 +13,19 @@ function handleInputChange(elem) {
     else $('input[type=range][data-id=' + key + ']').val(val);
     return { key: key, value: val };
   }
-  if (key === 'primary_pattern') { // On pattern change
-    codeMirror.setValue(sources[getCurrentPatternKey()].trim());
-    return { key: key, value: Object.keys(sources)[val] };
+  if (key === 'primary_pattern') { // On primary pattern change, update code display
+    var newPatternSourceKey = Object.keys(sources)[val];
+    updateCodeView(newPatternSourceKey);
+    return { key: key, value: newPatternSourceKey };
   }
 }
 
+// When a slider is moved, update number input without setting params
 function handleParamAdjust() {
   handleInputChange($(this));
 }
 
+// When a slider is dropped or a number input is changed, set params
 function handleParamUpdate() {
   var newVal = handleInputChange($(this));
   $.getJSON('/setparam', newVal, function() {});
@@ -39,30 +42,23 @@ function handleColorUpdate() {
   $.getJSON('/setcolor', { index: idx, component: cmp, value: val, }, function() {});
 }
 
-function updateSourceStatus() {
-  $('#source-status').text(status);
-  statusClasses.forEach(function (c) {
-    if (statusClass === c) $('#source-status').addClass('status-' + c);
-    else $('#source-status').removeClass('status-' + c);
-  });
-}
-
 function handleNewPattern() {
 
 }
 
+// Compile selected pattern
 function handleCompile() {
   $.getJSON('/compilepattern', {
     key: getCurrentPatternKey(),
     source: codeMirror.getValue(),
   }, function(result) {
       console.log('Compile errors/warnings:', result.errors, result.warnings);
-      if (result.errors.length === 0 && result.warnings.length === 0) {
+      if (result.errors.length === 0) { // && result.warnings.length === 0) {
         statusClass = 'success';
         status = 'Pattern compiled successfully';
       } else if (result.errors.length === 0 && result.warnings.length > 0) {
-        statusClass = 'warning';
-        status = 'Pattern generated warnings: ' + result.warnings.join(', ');
+        //statusClass = 'warning';
+        //status = 'Pattern generated warnings: ' + result.warnings.join(', ');
       } else if (result.errors.length > 0) {
         statusClass = 'error';
         status = result.errors.join(', ');
@@ -71,12 +67,33 @@ function handleCompile() {
   });
 }
 
+// Update color classes on source status element
+function updateSourceStatus() {
+  $('#source-status').text(status);
+  statusClasses.forEach(function (c) {
+    if (statusClass === c) $('#source-status').addClass('status-' + c);
+    else $('#source-status').removeClass('status-' + c);
+  });
+}
+
+// Update code viewer with new pattern key
+function updateCodeView(newKey) {
+  var code = sources[newKey].trim();
+  if (defaultSourceKeys.indexOf(newKey) >= 0) { // Prevent editing default patterns
+    code = '# Code editing disabled on default patterns. Click "New Pattern" to create and edit a copy of this pattern.\n\n' + code;
+    codeMirror.setOption('readOnly', true);
+  } else {
+    codeMirror.setOption('readOnly', false);
+  }
+  codeMirror.setValue(code);
+}
+
 function getCurrentPatternKey() {
   var currentIndex = parseInt($('select[data-id="primary_pattern"]').val(), 10);
   return Object.keys(sources)[currentIndex];
 }
 
-var codeMirror, sources;
+var codeMirror, sources, defaultSourceKeys;
 var statusClasses = ['none', 'success', 'warning', 'error'];
 var statusClass = 'none';
 var status = 'Pattern not compiled yet';
@@ -92,6 +109,7 @@ window.onload = function() {
     console.log('Sources:', result.sources);
     // Set selected pattern to correct value
     sources = result.sources;
+    defaultSourceKeys = result.defaults;
     $('select[data-id="primary_pattern"]').val(Object.keys(sources).indexOf(result.current));
 
     // Update compile status display
@@ -99,11 +117,13 @@ window.onload = function() {
 
     // Display code for starting pattern
     codeMirror = CodeMirror(document.getElementById('code'), {
-      value: sources[result.current].trim(),
+      value: '',
       mode: 'python',
       indentUnit: 4,
       lineNumbers: true,
+      lineWrapping: true,
       theme: 'summer-night',
     });
+    updateCodeView(result.current);
   });
 };

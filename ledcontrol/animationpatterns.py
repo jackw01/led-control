@@ -19,8 +19,8 @@ def pattern(t, dt, x, y, prev_state):
 
 cycle_hue_bands_1d = '''
 def pattern(t, dt, x, y, prev_state):
-    hue = t + x
-    return (hue - (hue % 0.3333), 1, 1), hsv
+    hue = (t + x) % 1
+    return (hue - (hue % 0.1666), 1, 1), hsv
 '''
 
 defaults = {
