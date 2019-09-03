@@ -10,5 +10,6 @@
         "secondary_scale": 1.0,
         "secondary_speed": 0.2
     },
-    "patterns": {}
+    "pattern_names": {},
+    "pattern_sources": {}
 }

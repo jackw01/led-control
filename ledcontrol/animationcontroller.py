@@ -93,7 +93,7 @@ class AnimationController:
         self.pattern_functions = {}
 
         # Initialize primary patterns
-        for k, v in patterns.defaults.items():
+        for k, v in patterns.default.items():
             self.set_pattern_function(k, v)
 
         # Lookup dictionary for secondary pattern functions
@@ -186,9 +186,6 @@ class AnimationController:
             self.pattern_sources[key] = source
             self.pattern_functions[key] = pattern
         return errors, warnings
-
-    def get_edited_patterns(self):
-        return {k: v for k, v in self.pattern_sources.items() if k not in patterns.defaults}
 
     #def set_color(self, index, component, value):
     #    self.colors[index][component] = value

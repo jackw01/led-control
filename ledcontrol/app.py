@@ -58,6 +58,8 @@ def create_app(led_count, refresh_rate,
     controller = AnimationController(leds, refresh_rate, led_count,
                                      pixelmappings.line(led_count), led_color_correction)
 
+    pattern_names = dict(patterns.default_names)
+
     # Create file if it doesn't exist already
     filename = Path.cwd() / 'ledcontrol.json'
     filename.touch(exist_ok=True)
@@ -67,7 +69,7 @@ def create_app(led_count, refresh_rate,
         try:
             settings = json.load(data_file)
             controller.params = settings['params']
-            for k, v in settings['patterns'].items():
+            for k, v in settings['pattern_sources'].items():
                 controller.set_pattern_function(k, v)
             #controller.colors = settings['colors']
             print('Loaded saved settings from {}'.format(filename))
@@ -80,7 +82,7 @@ def create_app(led_count, refresh_rate,
         FormItem('range', 'master_color_temp', float, 1000, 12000, 10, unit='K'),
         FormItem('range', 'master_saturation', float, 0, 1),
         FormItem('select', 'primary_pattern', int,
-                 options=list(patterns.names.values())),
+                 options=list(pattern_names.values())),
         FormItem('range', 'primary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'primary_scale', float, -10, 10),
         FormItem('code', 'pattern_source', str),
@@ -106,7 +108,7 @@ def create_app(led_count, refresh_rate,
     @app.route('/setparam')
     def set_param():
         """
-        Set a key/value pair in controller parameters.
+        Sets a key/value pair in controller parameters.
         """
         key = request.args.get('key', type=str)
         value = request.args.get('value')
@@ -119,8 +121,8 @@ def create_app(led_count, refresh_rate,
         Returns pattern sources in JSON dict form.
         """
         return jsonify(sources=controller.pattern_sources,
-                       names=patterns.names,
-                       defaults=list(patterns.defaults.keys()),
+                       names=pattern_names,
+                       defaults=list(patterns.default.keys()),
                        current=controller.params['primary_pattern'])
 
     @app.route('/compilepattern')
@@ -132,6 +134,16 @@ def create_app(led_count, refresh_rate,
         source = request.args.get('source', type=str)
         errors, warnings = controller.set_pattern_function(key, source)
         return jsonify(errors=errors, warnings=warnings)
+
+    @app.route('/setpatternname')
+    def set_pattern_name():
+        """
+        Sets a pattern name for the given key.
+        """
+        key = request.args.get('key', type=str)
+        name = request.args.get('name', type=str)
+        pattern_names[key] = name
+        return jsonify(result='')
 
     """
     @app.route('/setcolor')
@@ -147,7 +159,13 @@ def create_app(led_count, refresh_rate,
         """
         Save controller settings on shutdown.
         """
-        data = {'params': controller.params, 'patterns': controller.get_edited_patterns() }
+        data = {
+            'params': controller.params,
+            'pattern_sources':
+                {k: v for k, v in controller.pattern_sources.items() if k not in patterns.default},
+            'pattern_names':
+                {k: v for k, v in pattern_names.items() if k not in patterns.default_names}
+        }
         with open(str(filename), 'w') as data_file:
             try:
                 json.dump(data, data_file, sort_keys=True, indent=4, separators=(',', ': '))

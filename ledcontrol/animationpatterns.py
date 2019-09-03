@@ -23,12 +23,12 @@ def pattern(t, dt, x, y, prev_state):
     return (hue - (hue % 0.1666), 1, 1), hsv
 '''
 
-defaults = {
+default = {
   0: cycle_hue_1d,
   1: cycle_hue_bands_1d,
 }
 
-names = {
+default_names = {
   0: 'Cycle Hue 1D',
   1: 'Cycle Hue Bands 1D',
 }
