@@ -14,9 +14,8 @@ function handleInputChange(elem) {
     return { key: key, value: val };
   }
   if (key === 'primary_pattern') { // On primary pattern change, update code display
-    var newPatternSourceKey = Object.keys(sources)[val];
-    updateCodeView(newPatternSourceKey);
-    return { key: key, value: newPatternSourceKey };
+    updateCodeView(val);
+    return { key: key, value: val };
   }
 }
 
@@ -93,7 +92,7 @@ function getCurrentPatternKey() {
   return Object.keys(sources)[currentIndex];
 }
 
-var codeMirror, sources, defaultSourceKeys;
+var codeMirror, sources, names, defaultSourceKeys;
 var statusClasses = ['none', 'success', 'warning', 'error'];
 var statusClass = 'none';
 var status = 'Pattern not compiled yet';
@@ -106,11 +105,12 @@ window.onload = function() {
   $('#compile').on('click', handleCompile);
 
   $.getJSON('/getpatternsources', {}, function (result) {
-    console.log('Sources:', result.sources);
+    console.log('Sources:', result);
     // Set selected pattern to correct value
     sources = result.sources;
+    names = result.names;
     defaultSourceKeys = result.defaults;
-    $('select[data-id="primary_pattern"]').val(Object.keys(sources).indexOf(result.current));
+    $('select[data-id="primary_pattern"]').val(result.current);
 
     // Update compile status display
     updateSourceStatus();

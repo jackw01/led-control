@@ -3,7 +3,7 @@
         "master_brightness": 1.0,
         "master_color_temp": 6500,
         "master_saturation": 1.0,
-        "primary_pattern": "cycle_hue_bands_1d",
+        "primary_pattern": 1,
         "primary_scale": 3.59,
         "primary_speed": 0.33,
         "secondary_pattern": "none",

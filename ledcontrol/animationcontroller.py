@@ -187,9 +187,6 @@ class AnimationController:
             self.pattern_functions[key] = pattern
         return errors, warnings
 
-    def get_default_patterns(self):
-        return list(patterns.defaults.keys())
-
     def get_edited_patterns(self):
         return {k: v for k, v in self.pattern_sources.items() if k not in patterns.defaults}
 

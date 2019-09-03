@@ -11,6 +11,7 @@ from ledcontrol.animationcontroller import AnimationController
 from ledcontrol.ledcontroller import LEDController
 
 import ledcontrol.pixelmappings as pixelmappings
+import ledcontrol.animationpatterns as patterns
 
 def camel_to_title(text):
     return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', text)
@@ -78,8 +79,8 @@ def create_app(led_count, refresh_rate,
         FormItem('range', 'master_brightness', float, 0, 1),
         FormItem('range', 'master_color_temp', float, 1000, 12000, 10, unit='K'),
         FormItem('range', 'master_saturation', float, 0, 1),
-        FormItem('select', 'primary_pattern', str,
-                 options=[snake_case_to_title(e) for e in controller.pattern_sources]),
+        FormItem('select', 'primary_pattern', int,
+                 options=list(patterns.names.values())),
         FormItem('range', 'primary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'primary_scale', float, -10, 10),
         FormItem('code', 'pattern_source', str),
@@ -118,7 +119,8 @@ def create_app(led_count, refresh_rate,
         Returns pattern sources in JSON dict form.
         """
         return jsonify(sources=controller.pattern_sources,
-                       defaults=controller.get_default_patterns(),
+                       names=patterns.names,
+                       defaults=list(patterns.defaults.keys()),
                        current=controller.params['primary_pattern'])
 
     @app.route('/compilepattern')

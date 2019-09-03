@@ -24,8 +24,13 @@ def pattern(t, dt, x, y, prev_state):
 '''
 
 defaults = {
-  'cycle_hue_1d': cycle_hue_1d,
-  'cycle_hue_bands_1d': cycle_hue_bands_1d,
+  0: cycle_hue_1d,
+  1: cycle_hue_bands_1d,
+}
+
+names = {
+  0: 'Cycle Hue 1D',
+  1: 'Cycle Hue Bands 1D',
 }
 
 # Secondary animations that transform finalized colors to add brightness-based effects
