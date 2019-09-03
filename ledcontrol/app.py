@@ -117,7 +117,8 @@ def create_app(led_count, refresh_rate,
         """
         Returns pattern sources in JSON dict form.
         """
-        return jsonify(sources=controller.pattern_sources)
+        return jsonify(sources=controller.pattern_sources,
+                       current=controller.params['primary_pattern'])
 
     @app.route('/compilepattern')
     def compile_pattern():

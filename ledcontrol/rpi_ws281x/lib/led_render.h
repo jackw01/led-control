@@ -234,7 +234,7 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
   g = scale_8(g, corr_rgb.g);
   b = scale_8(b, corr_rgb.b);
 
-  return pack_rgb(r, g, b);
+    return pack_rgb(r, g, b);
 }
 
 // Render float RGB to LEDs
@@ -246,7 +246,7 @@ uint32_t render_rgb_float(color_rgb_float rgb,
 
   // If saturation is not 1, desaturate the color
   // Moves r/g/b values closer to their average
-  // Not sure if this is the technically correct way
+  // Not sure if this is the technically correct way but it seems to work?
   if (saturation < 1) {
     uint8_t v = ((uint16_t)r + (uint16_t)g + (uint16_t)b) / 3;
     int16_t s = saturation * 255.0;

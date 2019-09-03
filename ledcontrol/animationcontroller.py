@@ -94,15 +94,13 @@ class AnimationController:
 
         # Initialize primary patterns
         for k, v in patterns.defaults.items():
+            print(k)
             self.set_pattern_function(k, v)
 
         # Lookup dictionary for secondary pattern functions
         self.secondary_pattern_functions = {
             'none': None,
         }
-
-        self.pattern_1 = self.pattern_functions[self.params['primary_pattern']]
-        self.pattern_2 = self.secondary_pattern_functions[self.params['secondary_pattern']]
 
         # Set default color temp
         self.correction_original = led_color_correction
@@ -142,17 +140,18 @@ class AnimationController:
 
         name_error = False
         results = RestrictedPython.compile_restricted_exec(source, filename='<inline code>')
-        errors = list(results.errors)
+        print(results)
+        warnings = list(results.warnings)
         for name in results.used_names:
             if name not in restricted_globals and name not in arg_names:
                 name_error = True
-                errors.append('NameError: name \'{}\' is not defined'.format(name))
+                warnings.append('NameError: name \'{}\' is not defined'.format(name))
 
-        if results.code and not name_error:
+        if results.code:
             exec(results.code, restricted_globals, restricted_locals)
-            return errors, results.warnings, restricted_locals['pattern']
+            return results.errors, warnings, restricted_locals['pattern']
         else:
-            return errors, results.warnings, None
+            return results.errors, warnings, None
 
     def reset_prev_states(self):
         """
@@ -184,10 +183,9 @@ class AnimationController:
         Update the source code and recompile a pattern function.
         """
         errors, warnings, pattern = self.compile_pattern(source)
-        if len(errors) == 0 and len(warnings) == 0:
+        if len(errors) == 0:
             self.pattern_sources[key] = source
             self.pattern_functions[key] = pattern
-            self.pattern_1 = self.pattern_functions[self.params['primary_pattern']]
         return errors, warnings
 
     def get_edited_patterns(self):
@@ -210,6 +208,9 @@ class AnimationController:
         new_secondary_prev_state = []
         led_states = []
         mode = patterns.ColorMode.hsv
+
+        pattern_1 = self.pattern_functions[self.params['primary_pattern']]
+        pattern_2 = self.secondary_pattern_functions[self.params['secondary_pattern']]
 
         # Calculate times
         # time component = time (s) * speed (cycle/s)
@@ -237,26 +238,26 @@ class AnimationController:
                         primary_y =(self.mapped[i][1] / self.params['primary_scale']) % 1
 
                 # Run primary pattern to determine initial color
-                color, mode = self.pattern_1(primary_time,
-                                            primary_delta_t,
-                                            primary_x,
-                                            primary_y,
-                                            self.primary_prev_state[i])
+                color, mode = pattern_1(primary_time,
+                                        primary_delta_t,
+                                        primary_x,
+                                        primary_y,
+                                        self.primary_prev_state[i])
                 new_primary_prev_state.append(color)
 
                 # Run secondary pattern to determine new brightness and possibly modify color
-                if self.pattern_2 is not None:
+                if pattern_2 is not None:
                     if self.params['primary_scale'] != 0:
                         secondary_x = (self.mapped[i][0] / self.params['secondary_scale']) % 1
                         if not self.mapping_uses_x_only:
                             secondary_y = (self.mapped[i][1] / self.params['secondary_scale']) % 1
 
-                    secondary_value, color = self.pattern_2(secondary_time,
-                                                            secondary_delta_t,
-                                                            secondary_x,
-                                                            secondary_y,
-                                                            self.secondary_prev_state[i],
-                                                            color)
+                    secondary_value, color = pattern_2(secondary_time,
+                                                       secondary_delta_t,
+                                                       secondary_x,
+                                                       secondary_y,
+                                                       self.secondary_prev_state[i],
+                                                       color)
                     new_secondary_prev_state.append((secondary_value, color))
 
                 if mode == patterns.ColorMode.hsv:

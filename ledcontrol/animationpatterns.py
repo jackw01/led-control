@@ -17,8 +17,15 @@ def pattern(t, dt, x, y, prev_state):
     return (t + x, 1, 1), hsv
 '''
 
+cycle_hue_bands_1d = '''
+def pattern(t, dt, x, y, prev_state):
+    hue = t + x
+    return (hue - (hue % 0.3333), 1, 1), hsv
+'''
+
 defaults = {
   'cycle_hue_1d': cycle_hue_1d,
+  'cycle_hue_bands_1d': cycle_hue_bands_1d,
 }
 
 # Secondary animations that transform finalized colors to add brightness-based effects

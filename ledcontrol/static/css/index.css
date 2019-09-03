@@ -202,7 +202,6 @@ textarea {
 }
 .input-row .infotext {
   flex-basis: 100%;
-  margin-right: 0.5rem;
 }
 .input-row .button {
   white-space: nowrap;
@@ -411,6 +410,9 @@ option:hover, option:active {
 #code .input-row {
   margin-top: 0.4rem;
   margin-bottom: 0.5rem;
+}
+#code .input-row > *:not(:last-child) {
+  margin-right: 0.5rem;
 }
 
 /*# sourceMappingURL=index.css.map */
