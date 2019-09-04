@@ -70,7 +70,9 @@ def create_app(led_count, refresh_rate,
             settings = json.load(data_file)
             controller.params = settings['params']
             for k, v in settings['pattern_sources'].items():
-                controller.set_pattern_function(k, v)
+                controller.set_pattern_function(int(k), v) # JSON keys are always strings
+            for k, v in settings['pattern_names'].items():
+                pattern_names[int(k)] = v
             #controller.colors = settings['colors']
             print('Loaded saved settings from {}'.format(filename))
         except Exception:
@@ -81,8 +83,7 @@ def create_app(led_count, refresh_rate,
         FormItem('range', 'master_brightness', float, 0, 1),
         FormItem('range', 'master_color_temp', float, 1000, 12000, 10, unit='K'),
         FormItem('range', 'master_saturation', float, 0, 1),
-        FormItem('select', 'primary_pattern', int,
-                 options=list(pattern_names.values())),
+        FormItem('select', 'primary_pattern', int, options=list(pattern_names.values())),
         FormItem('range', 'primary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'primary_scale', float, -10, 10),
         FormItem('code', 'pattern_source', str),

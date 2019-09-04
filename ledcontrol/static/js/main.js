@@ -41,13 +41,34 @@ function handleColorUpdate() {
   $.getJSON('/setcolor', { index: idx, component: cmp, value: val, }, function() {});
 }
 
+// Create copy of current pattern
 function handleNewPattern() {
+  // Clear compile status
+  statusClass = 'none';
+  status = 'Pattern not compiled yet';
+  updateSourceStatus();
 
+  // Set new source and name, add option
+  var key = getCurrentPatternKey();
+  var newKey = Date.now();
+  sources[newKey] = sources[key];
+  names[newKey] = names[key] + ' (Copy)';
+  $('select[data-id="primary_pattern"]')
+    .append(`<option value="${newKey}">${names[newKey]}</option>`)
+    .val(newKey);
+
+  // Update code and button states, send everything to the server
+  updateCodeView(newKey);
+  handleCompile(); // Compile first
+  $.getJSON('/setpatternname', { key: newKey, name: names[newKey] }, function () { }); // Set name
+  $.getJSON('/setparam', { key: 'primary_pattern', value: newKey }, function () { }); // Select
 }
 
+// Rename current pattern
 function handleRenamePattern() {
   var key = getCurrentPatternKey();
   var newName = $('#pattern-name').val();
+  names[key] = newName;
   $('select[data-id="primary_pattern"] option[value=' + key + ']').html(newName);
   $.getJSON('/setpatternname', { key: key, name: newName }, function () { });
 }
@@ -76,14 +97,15 @@ function handleCompile() {
 // Update color classes on source status element
 function updateSourceStatus() {
   $('#source-status').text(status);
-  statusClasses.forEach(function (c) {
+  statusClasses.forEach((c) => {
     if (statusClass === c) $('#source-status').addClass('status-' + c);
     else $('#source-status').removeClass('status-' + c);
   });
 }
 
-// Update code viewer with new pattern key
+// Update code viewer, buttons, and pattern name with new pattern key
 function updateCodeView(newKey) {
+  $('#pattern-name').val(names[newKey]);
   var code = sources[newKey].trim();
   if (defaultSourceKeys.indexOf(newKey) >= 0) { // Prevent editing default patterns
     code = '# Code editing and renaming disabled on default patterns. Click "New Pattern" to create and edit a copy of this pattern.\n\n' + code;
@@ -98,7 +120,7 @@ function updateCodeView(newKey) {
 
 function getCurrentPatternKey() {
   var currentIndex = parseInt($('select[data-id="primary_pattern"]').val(), 10);
-  return Object.keys(sources)[currentIndex];
+  return parseInt($('select[data-id="primary_pattern"]').val(), 10);
 }
 
 var codeMirror, sources, names, defaultSourceKeys;
@@ -120,8 +142,12 @@ window.onload = function() {
     sources = result.sources;
     names = result.names;
     defaultSourceKeys = result.defaults;
+    Object.entries(names).forEach(([k, v]) => {
+      if (!defaultSourceKeys.includes(k)) {
+        $('select[data-id="primary_pattern"]').append(`<option value="${k}">${v}</option>`);
+      }
+    });
     $('select[data-id="primary_pattern"]').val(result.current);
-    $('#pattern-name').val(names[result.current]);
 
     // Update compile status display
     updateSourceStatus();
