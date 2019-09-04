@@ -2,11 +2,11 @@
 // Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
 function handleInputChange(elem) {
-  var key = elem.data('id');
-  var val = parseFloat(elem.val(), 10);
+  const key = elem.data('id');
+  let val = parseFloat(elem.val(), 10);
   if (!elem.is('select')) { // Sliders or numbers - enforce min/max and update other input
-    var min = parseFloat(elem.attr('min'), 10);
-    var max = parseFloat(elem.attr('max'), 10);
+    const min = parseFloat(elem.attr('min'), 10);
+    const max = parseFloat(elem.attr('max'), 10);
     if (val < min) val = min;
     if (val > max) val = max;
     if (elem.attr('type') == 'range') $('input[type=number][data-id=' + key + ']').val(val);
@@ -26,19 +26,18 @@ function handleParamAdjust() {
 
 // When a slider is dropped or a number input is changed, set params
 function handleParamUpdate() {
-  var newVal = handleInputChange($(this));
-  $.getJSON('/setparam', newVal, function() {});
+  $.getJSON('/setparam', handleInputChange($(this)), () => {});
 }
 
 function handleColorUpdate() {
-  var elem = $(this);
-  var idx = elem.data('idx');
-  var cmp = elem.data('cmp');
-  var val = parseFloat(elem.val(), 10);
-  var min = parseFloat(elem.attr('min'), 10);
-  var max = parseFloat(elem.attr('max'), 10);
+  const elem = $(this);
+  const idx = elem.data('idx');
+  const cmp = elem.data('cmp');
+  const val = parseFloat(elem.val(), 10);
+  const min = parseFloat(elem.attr('min'), 10);
+  const max = parseFloat(elem.attr('max'), 10);
   if (val < min || val > max) return;
-  $.getJSON('/setcolor', { index: idx, component: cmp, value: val, }, function() {});
+  $.getJSON('/setcolor', { index: idx, component: cmp, value: val, }, () => {});
 }
 
 // Create copy of current pattern
@@ -49,8 +48,8 @@ function handleNewPattern() {
   updateSourceStatus();
 
   // Set new source and name, add option
-  var key = getCurrentPatternKey();
-  var newKey = Date.now();
+  const key = getCurrentPatternKey();
+  const newKey = Date.now();
   sources[newKey] = sources[key];
   names[newKey] = names[key] + ' (Copy)';
   $('select[data-id="primary_pattern"]')
@@ -60,17 +59,17 @@ function handleNewPattern() {
   // Update code and button states, send everything to the server
   updateCodeView(newKey);
   handleCompile(); // Compile first
-  $.getJSON('/setpatternname', { key: newKey, name: names[newKey] }, function () { }); // Set name
-  $.getJSON('/setparam', { key: 'primary_pattern', value: newKey }, function () { }); // Select
+  $.getJSON('/setpatternname', { key: newKey, name: names[newKey] }, () => {}); // Set name
+  $.getJSON('/setparam', { key: 'primary_pattern', value: newKey }, () => {}); // Select
 }
 
 // Rename current pattern
 function handleRenamePattern() {
-  var key = getCurrentPatternKey();
-  var newName = $('#pattern-name').val();
+  const key = getCurrentPatternKey();
+  const newName = $('#pattern-name').val();
   names[key] = newName;
   $('select[data-id="primary_pattern"] option[value=' + key + ']').html(newName);
-  $.getJSON('/setpatternname', { key: key, name: newName }, function () { });
+  $.getJSON('/setpatternname', { key: key, name: newName }, () => {});
 }
 
 // Compile selected pattern
@@ -78,7 +77,7 @@ function handleCompile() {
   $.getJSON('/compilepattern', {
     key: getCurrentPatternKey(),
     source: codeMirror.getValue(),
-  }, function(result) {
+  }, (result) => {
       console.log('Compile errors/warnings:', result.errors, result.warnings);
       if (result.errors.length === 0) { // && result.warnings.length === 0) {
         statusClass = 'success';
@@ -106,7 +105,7 @@ function updateSourceStatus() {
 // Update code viewer, buttons, and pattern name with new pattern key
 function updateCodeView(newKey) {
   $('#pattern-name').val(names[newKey]);
-  var code = sources[newKey].trim();
+  let code = sources[newKey].trim();
   if (defaultSourceKeys.indexOf(newKey) >= 0) { // Prevent editing default patterns
     code = '# Code editing and renaming disabled on default patterns. Click "New Pattern" to create and edit a copy of this pattern.\n\n' + code;
     codeMirror.setOption('readOnly', true);
@@ -119,14 +118,13 @@ function updateCodeView(newKey) {
 }
 
 function getCurrentPatternKey() {
-  var currentIndex = parseInt($('select[data-id="primary_pattern"]').val(), 10);
   return parseInt($('select[data-id="primary_pattern"]').val(), 10);
 }
 
-var codeMirror, sources, names, defaultSourceKeys;
-var statusClasses = ['none', 'success', 'warning', 'error'];
-var statusClass = 'none';
-var status = 'Pattern not compiled yet';
+let codeMirror, sources, names, defaultSourceKeys;
+const statusClasses = ['none', 'success', 'warning', 'error'];
+let statusClass = 'none';
+let status = 'Pattern not compiled yet';
 
 window.onload = function() {
   $('input[type=range].update-on-change').on('mousemove touchmove', handleParamAdjust);
@@ -136,7 +134,7 @@ window.onload = function() {
   $('#pattern-name').on('change', handleRenamePattern);
   $('#compile').on('click', handleCompile);
 
-  $.getJSON('/getpatternsources', {}, function (result) {
+  $.getJSON('/getpatternsources', {}, (result) => {
     console.log('Sources:', result);
     // Set selected pattern to correct value
     sources = result.sources;

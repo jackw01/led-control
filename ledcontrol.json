@@ -3,7 +3,7 @@
         "master_brightness": 0.2,
         "master_color_temp": 6500,
         "master_saturation": 1.0,
-        "primary_pattern": 1567572907169,
+        "primary_pattern": 1567574495648,
         "primary_scale": 3.59,
         "primary_speed": 0.33,
         "secondary_pattern": "none",
@@ -11,9 +11,11 @@
         "secondary_speed": 0.2
     },
     "pattern_names": {
-        "1567572907169": "Cycle Hue Bands 1D (Copy)"
+        "1567572907169": "Cycle Hue Bands 1D (Copy)",
+        "1567574495648": "Cycle Hue Bands 1D (Copy) (Copy)"
     },
     "pattern_sources": {
-        "1567572907169": "def pattern(t, dt, x, y, prev_state):\n    hue = (t + x) % 1\n    return (hue - (hue % 0.1666), 1, 1), hsv"
+        "1567572907169": "def pattern(t, dt, x, y, prev_state):\n    hue = (t + x) % 1\n    return (hue - (hue % 0.1666), 1, 1), hsv",
+        "1567574495648": "def pattern(t, dt, x, y, prev_state):\n    hue = (t + x * 2) % 1\n    return (hue - (hue % 0.1666), 1, 1), hsv"
     }
 }

@@ -1,5 +1,5 @@
 # led-control
-WS2812 LED controller with web interface for Raspberry Pi
+Advanced WS2812/SK6812 LED controller with Python animation programming and web code editor/control interface for Raspberry Pi
 
 ## Note
 Version 2.0 is currently in development in the master branch. Version 1.0 is contained in the 1.0 branch, but is no longer usable as Adafruit's setup instructions and the name and installation method for the library used for WS2812 LEDs have changed.
@@ -33,11 +33,14 @@ optional arguments:
 ```
 
 ## Features
+* Lightweight responsive web interface works on both desktop and mobile devices
 * Supports cheap and readily available WS281x and SK6812 LED strips, strings, and arrays
 * Capable of achieving up to 240 FPS on 60 LEDs and 100 FPS on 150 LEDs with low-end hardware (Raspberry Pi Zero)
+* Web backend written in Python using the [Flask](https://github.com/pallets/flask) web framework
+* Color conversions, color correction, and final rendering steps are done in a C extension module for maximum performance
 
-## Animation Scripting
-Animation patterns are defined as Python functions. The LEDControl web interface allows editing and creation of patterns using a subset of Python. Scripts are compiled using [RestrictedPython](https://github.com/zopefoundation/RestrictedPython) and run with a restricted set of builtin functions and global variables. This should prevent filesystem access and code execution, but the scripting system **should not be considered completely secure** and the web interface **should not be exposed to untrusted users**.
+## Animation Editing
+Animation patterns are defined as Python functions. The LEDControl web interface allows editing and creation of patterns using a subset of Python. Patterns are compiled using [RestrictedPython](https://github.com/zopefoundation/RestrictedPython) and run with a restricted set of builtin functions and global variables. This should prevent filesystem access and code execution, but the scripting system **should not be considered completely secure** and the web interface **should not be exposed to untrusted users**.
 
 ### Pattern Function Guide
 Each animation frame, the pattern function is called once per LED/pixel with time, position, and previous state as inputs to determine the next color of that pixel.
@@ -59,7 +62,7 @@ Delta time in cycles
 Normalized (0 to 1) value representing the position of the current LED in arbitrary units (after mapping LED indices to positions and scaling). Straight LED strips are mapped to the x axis only. One position unit represents the scale factor multiplied by the length of the axis. At a scale of less than 1, one position unit represents a fraction of the axis length and the animation is repeated to fill all the LEDs.
 
 ##### `prev_state`
-Previous color state of the current LED as an HSV or RGB tuple. Initialized to (0, 0, 0) on the first animation frame.
+Previous color state of the current LED as an HSV or RGB tuple. Initialized to `(0, 0, 0)` on the first animation frame.
 
 #### Return Values
 Pattern functions must return a color in tuple form and either `hsv` or `rgb` depending on the format of the color. All values must be in the 0 to 1 range, except for hue. Hue values less than 0 or greater than 1 will wrap.
@@ -71,7 +74,7 @@ Pattern functions must return a color in tuple form and either `hsv` or `rgb` de
 
 ### Additional Utility Functions
 #### `clamp(x, min, max)`
-Returns min if x < min and max if x > max, otherwise returns x
+Returns `min` if `x < min` and max if `x > max`, otherwise returns `x`
 
 #### `wave_pulse(t, duty_cycle=0.5)`
 Returns the instantaneous value of a 1Hz pulse wave of the specified duty cycle at time `t`
