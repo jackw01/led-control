@@ -443,11 +443,20 @@ option {
 
 #code {
   & .input-row {
-    margin-top: 0.4rem;
-    margin-bottom: 0.5rem;
+    margin: 0.5rem 0;
+
+    & input[type='text'] {
+      flex-basis: 100%;
+      margin-top: 0;
+      margin-bottom: 0;
+      line-height: 22px;
+      padding: 4px 6px 5px;
+    }
 
     &>*:not(:last-child) {
       margin-right: 0.5rem;
     }
   }
+
+  margin-bottom: 1rem;
 }

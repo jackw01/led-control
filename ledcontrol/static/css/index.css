@@ -407,9 +407,18 @@ option:hover, option:active {
   background: #058189;
 }
 
+#code {
+  margin-bottom: 1rem;
+}
 #code .input-row {
-  margin-top: 0.4rem;
-  margin-bottom: 0.5rem;
+  margin: 0.5rem 0;
+}
+#code .input-row input[type=text] {
+  flex-basis: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 22px;
+  padding: 4px 6px 5px;
 }
 #code .input-row > *:not(:last-child) {
   margin-right: 0.5rem;

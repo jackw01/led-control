@@ -45,6 +45,13 @@ function handleNewPattern() {
 
 }
 
+function handleRenamePattern() {
+  var key = getCurrentPatternKey();
+  var newName = $('#pattern-name').val();
+  $('select[data-id="primary_pattern"] option[value=' + key + ']').html(newName);
+  $.getJSON('/setpatternname', { key: key, name: newName }, function () { });
+}
+
 // Compile selected pattern
 function handleCompile() {
   $.getJSON('/compilepattern', {
@@ -79,10 +86,12 @@ function updateSourceStatus() {
 function updateCodeView(newKey) {
   var code = sources[newKey].trim();
   if (defaultSourceKeys.indexOf(newKey) >= 0) { // Prevent editing default patterns
-    code = '# Code editing disabled on default patterns. Click "New Pattern" to create and edit a copy of this pattern.\n\n' + code;
+    code = '# Code editing and renaming disabled on default patterns. Click "New Pattern" to create and edit a copy of this pattern.\n\n' + code;
     codeMirror.setOption('readOnly', true);
+    $('#pattern-name').prop('disabled', true);
   } else {
     codeMirror.setOption('readOnly', false);
+    $('#pattern-name').prop('disabled', false);
   }
   codeMirror.setValue(code);
 }
@@ -102,6 +111,7 @@ window.onload = function() {
   $('.update-on-change').on('change', handleParamUpdate);
   $('.update-color-on-change').on('change mousemove touchmove', handleColorUpdate);
   $('#new-pattern').on('click', handleNewPattern);
+  $('#pattern-name').on('change', handleRenamePattern);
   $('#compile').on('click', handleCompile);
 
   $.getJSON('/getpatternsources', {}, function (result) {
@@ -111,6 +121,7 @@ window.onload = function() {
     names = result.names;
     defaultSourceKeys = result.defaults;
     $('select[data-id="primary_pattern"]').val(result.current);
+    $('#pattern-name').val(names[result.current]);
 
     // Update compile status display
     updateSourceStatus();

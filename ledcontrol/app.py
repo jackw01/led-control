@@ -130,7 +130,7 @@ def create_app(led_count, refresh_rate,
         """
         Compiles a pattern, returns errors and warnings in JSON array form.
         """
-        key = request.args.get('key', type=str)
+        key = request.args.get('key', type=int)
         source = request.args.get('source', type=str)
         errors, warnings = controller.set_pattern_function(key, source)
         return jsonify(errors=errors, warnings=warnings)
@@ -140,7 +140,7 @@ def create_app(led_count, refresh_rate,
         """
         Sets a pattern name for the given key.
         """
-        key = request.args.get('key', type=str)
+        key = request.args.get('key', type=int)
         name = request.args.get('name', type=str)
         pattern_names[key] = name
         return jsonify(result='')
