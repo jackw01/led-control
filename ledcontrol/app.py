@@ -147,6 +147,18 @@ def create_app(led_count, refresh_rate,
         pattern_names[key] = name
         return jsonify(result='')
 
+    @app.route('/setcolor')
+    def set_color():
+        """
+        Sets a color in the palette
+        """
+        index = request.args.get('index', type=int)
+        h = round(request.args.get('h', type=float), 3)
+        s = round(request.args.get('s', type=float), 3)
+        v = round(request.args.get('v', type=float), 3)
+        controller.set_color(index, (h, s, v))
+        return jsonify(result = '')
+
     @app.route('/setcolorcomponent')
     def set_color_component():
         """

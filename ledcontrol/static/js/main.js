@@ -29,17 +29,6 @@ function handleParamUpdate() {
   $.getJSON('/setparam', handleInputChange($(this)), () => {});
 }
 
-function handleColorUpdate() {
-  const elem = $(this);
-  const idx = elem.data('idx');
-  const cmp = elem.data('cmp');
-  const val = parseFloat(elem.val(), 10);
-  const min = parseFloat(elem.attr('min'), 10);
-  const max = parseFloat(elem.attr('max'), 10);
-  if (val < min || val > max) return;
-  $.getJSON('/setcolor', { index: idx, component: cmp, value: val, }, () => {});
-}
-
 // Create copy of current pattern
 function handleNewPattern() {
   // Clear compile status
@@ -129,7 +118,6 @@ let status = 'Pattern not compiled yet';
 window.onload = function() {
   $('input[type=range].update-on-change').on('mousemove touchmove', handleParamAdjust);
   $('.update-on-change').on('change', handleParamUpdate);
-  $('.update-color-on-change').on('change mousemove touchmove', handleColorUpdate);
   $('#new-pattern').on('click', handleNewPattern);
   $('#pattern-name').on('change', handleRenamePattern);
   $('#compile').on('click', handleCompile);
@@ -161,27 +149,41 @@ window.onload = function() {
     });
     updateCodeView(result.current);
 
-    const pickr = Pickr.create({
-      el: '.color-picker',
-      theme: 'classic',
-      showAlways: true,
-      inline: true,
-      lockOpacity: true,
-      comparison: false,
-      default: '#42445a',
-      swatches: null,
-      components: {
-        preview: false,
-        opacity: false,
-        hue: true,
-        interaction: { // Input / output Options
-          hex: true,
-          rgba: true,
-          hsla: true,
-          hsva: true,
-          input: true,
+    const count = $('.color-picker').length;
+    for (let i = 0; i < count; i++) {
+      const color = $(`#color-picker-${i}`).data('value');
+      const pickr = Pickr.create({
+        el: `#color-picker-${i}`,
+        theme: 'classic',
+        showAlways: true,
+        inline: true,
+        lockOpacity: true,
+        comparison: false,
+        default: `hsv(${color[0] * 360}, ${color[1] * 100}%, ${color[2] * 100}%)`,
+        swatches: null,
+        components: {
+          preview: false,
+          opacity: false,
+          hue: true,
+          interaction: { // Input / output Options
+            hex: true,
+            rgba: true,
+            hsla: true,
+            hsva: true,
+            input: true,
+          },
         },
-      },
-    });
+      });
+      pickr.index = i;
+      pickr.on('changestop', (instance) => {
+        const color = instance.getColor();
+        $.getJSON('/setcolor', {
+          index: instance.index,
+          h: color.h / 360,
+          s: color.s / 100,
+          v: color.v / 100,
+        }, () => {});
+      })
+    }
   });
 };

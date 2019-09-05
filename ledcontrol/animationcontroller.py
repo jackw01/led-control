@@ -190,6 +190,9 @@ class AnimationController:
             self.pattern_functions[key] = pattern
         return errors, warnings
 
+    def set_color(self, index, value):
+        self.colors[index] = value
+
     def set_color_component(self, index, component, value):
         self.colors[index][component] = value
 
