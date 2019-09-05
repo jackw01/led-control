@@ -213,14 +213,13 @@ textarea {
 }
 
 .infotext {
-  color: #e6e8ec;
   border-radius: 3px;
-  text-decoration: none;
   padding: 3px 6px 6px;
+  display: inline-block;
+  text-decoration: none;
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
-  display: inline-block;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
 }
 .infotext.status-none {
@@ -245,16 +244,16 @@ textarea {
 }
 
 .button {
-  background: rgba(6, 162, 171, 0.05);
-  border: 1px solid #04737a;
   color: #e6e8ec;
   border-radius: 3px;
-  text-decoration: none;
+  background: rgba(6, 162, 171, 0.05);
+  border: 1px solid #04737a;
   padding: 3px 6px 6px;
+  display: inline-block;
+  text-decoration: none;
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
-  display: inline-block;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
 }
 .button:hover {
@@ -265,16 +264,14 @@ textarea {
 textarea, input[type=text], input[type=password], input[type=number] {
   margin: 5px 0;
   padding: 8px;
-  border: none;
+  font-size: 0.9em;
   border-radius: 3px;
   outline: none;
-  font-size: 0.9em;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
   background: transparent;
   color: #e6e8ec;
   border: 1px solid #04737a;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
 }
-
 textarea:focus, input[type=text]:focus, input[type=password]:focus, input[type=number]:focus {
   border: 1px solid #07c3cd;
 }
@@ -422,6 +419,46 @@ option:hover, option:active {
 }
 #code .input-row > *:not(:last-child) {
   margin-right: 0.5rem;
+}
+
+#main .pcr-button {
+  display: none;
+}
+#main .pcr-app {
+  background: #16181a;
+  box-shadow: none;
+  font-family: inherit;
+}
+#main .pcr-app .pcr-picker {
+  border: 1px solid #e6e8ec;
+}
+#main .pcr-app .pcr-swatches {
+  margin: 0;
+}
+#main .pcr-app .pcr-result {
+  border-radius: 3px;
+  outline: none;
+  background: transparent;
+  color: #e6e8ec;
+  border: 1px solid #04737a;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+#main .pcr-app .pcr-result:focus {
+  border: 1px solid #07c3cd;
+}
+#main .pcr-app .pcr-type {
+  color: #e6e8ec;
+  border-radius: 3px;
+  background: rgba(6, 162, 171, 0.05);
+  border: 1px solid #04737a;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+#main .pcr-app .pcr-type:hover {
+  background: rgba(6, 162, 171, 0.15);
+  border: 1px solid #07c3cd;
+}
+#main .pcr-app input:focus {
+  box-shadow: none;
 }
 
 /*# sourceMappingURL=index.css.map */

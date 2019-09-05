@@ -160,5 +160,28 @@ window.onload = function() {
       theme: 'summer-night',
     });
     updateCodeView(result.current);
+
+    const pickr = Pickr.create({
+      el: '.color-picker',
+      theme: 'classic',
+      showAlways: true,
+      inline: true,
+      lockOpacity: true,
+      comparison: false,
+      default: '#42445a',
+      swatches: null,
+      components: {
+        preview: false,
+        opacity: false,
+        hue: true,
+        interaction: { // Input / output Options
+          hex: true,
+          rgba: true,
+          hsla: true,
+          hsva: true,
+          input: true,
+        },
+      },
+    });
   });
 };

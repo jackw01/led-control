@@ -238,18 +238,29 @@ textarea {
   margin-top: 0.4rem;
 }
 
-@mixin button {
+@mixin button-color {
   color: $body-color;
   border-radius: $border-radius;
-  text-decoration: none;
+  background: rgba($input-border-color, 0.05);
+  border: 1px solid darken($input-border-color, 10%);
+
+  &:hover {
+    background: rgba($input-border-color, 0.15);
+    border: 1px solid $input-border-focus;
+  }
+}
+
+@mixin button {
   padding: 3px 6px 6px;
+  display: inline-block;
+  text-decoration: none;
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
-  display: inline-block;
 }
 
 .infotext {
+  border-radius: $border-radius;
   @include button();
   @include transition();
 
@@ -279,13 +290,19 @@ textarea {
 }
 
 .button {
-  background: rgba($input-border-color, 0.05);
-  border: 1px solid darken($input-border-color, 10%);
+  @include button-color();
   @include button();
   @include transition();
+}
 
-  &:hover {
-    background: rgba($input-border-color, 0.15);
+@mixin input-color {
+  border-radius: $border-radius;
+  outline: none;
+  background: transparent; //$input-bg;
+  color: $input-color;
+  border: 1px solid darken($input-border-color, 10%);
+
+  &:focus {
     border: 1px solid $input-border-focus;
   }
 }
@@ -293,18 +310,9 @@ textarea {
 textarea, input[type="text"], input[type="password"], input[type="number"] {
   margin: 5px 0;
   padding: 8px;
-  border: none;
-  border-radius: $border-radius;
-  outline: none;
   font-size: 0.9em;
+  @include input-color();
   @include transition();
-  background: transparent; //$input-bg;
-  color: $input-color;
-  border: 1px solid darken($input-border-color, 10%);
-}
-
-textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus {
-  border: 1px solid $input-border-focus;
 }
 
 .text-input-error {
@@ -460,3 +468,41 @@ option {
 
   margin-bottom: 1rem;
 }
+
+#main {
+  & .pcr-button {
+    display: none;
+  }
+
+  & .pcr-app {
+    background: $body-bg;
+    box-shadow: none;
+    font-family: inherit;
+
+    & .pcr-picker {
+      border: 1px solid $gray-100;
+    }
+
+    & .pcr-swatches {
+      margin: 0;
+    }
+
+    & .pcr-result {
+      @include input-color();
+      @include transition();
+    }
+
+    & .pcr-type {
+      @include button-color();
+      @include transition();
+    }
+
+    & input:focus {
+      box-shadow: none;
+    }
+  }
+}
+
+
+
+
