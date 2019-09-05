@@ -2,7 +2,7 @@
 Advanced WS2812/SK6812 LED controller with Python animation programming and web code editor/control interface for Raspberry Pi
 
 ## Note
-Version 2.0 is currently in development in the master branch. Version 1.0 is contained in the 1.0 branch, but is no longer usable as Adafruit's setup instructions and the name and installation method for the library used for WS2812 LEDs have changed.
+Version 1.0 is currently in development in the master branch. Version 0.1 is contained in the 0.1 branch, but is no longer usable as Adafruit's setup instructions and the name and installation method for the library used for WS2812 LEDs have changed.
 
 ## Install
 1. Read this Adafruit guide and follow the directions to connect an LED strip to your Raspberry Pi, install the Python library, and test the strip: https://learn.adafruit.com/neopixels-on-raspberry-pi

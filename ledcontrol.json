@@ -17,5 +17,7 @@
     "pattern_sources": {
         "1567572907169": "def pattern(t, dt, x, y, prev_state):\n    hue = (t + x) % 1\n    return (hue - (hue % 0.1666), 1, 1), hsv",
         "1567574495648": "def pattern(t, dt, x, y, prev_state):\n    hue = (t + x * 2) % 1\n    return (hue - (hue % 0.1666), 1, 1), hsv"
-    }
+    },
+    "colors": [
+    ]
 }

@@ -5,7 +5,7 @@ from setuptools import find_packages, setup, Extension
 
 setup(
     name='led-control',
-    version='2.0.0',
+    version='1.0.0',
     description='WS2812 LED strip controller with web interface for Raspberry Pi',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',

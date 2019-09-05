@@ -73,7 +73,7 @@ def create_app(led_count, refresh_rate,
                 controller.set_pattern_function(int(k), v) # JSON keys are always strings
             for k, v in settings['pattern_names'].items():
                 pattern_names[int(k)] = v
-            #controller.colors = settings['colors']
+            controller.colors = settings['colors']
             print('Loaded saved settings from {}'.format(filename))
         except Exception:
             print('Could not open saved settings at {}, ignoring.'.format(filename))
@@ -146,15 +146,16 @@ def create_app(led_count, refresh_rate,
         pattern_names[key] = name
         return jsonify(result='')
 
-    """
-    @app.route('/setcolor')
-    def set_color():
+    @app.route('/setcolorcomponent')
+    def set_color_component():
+        """
+        Sets a component of a color in the palette
+        """
         index = request.args.get('index', type=int)
         component = request.args.get('component', type=int)
         value = request.args.get('value', type=float)
-        controller.set_color(index, component, value)
+        controller.set_color_component(index, component, value)
         return jsonify(result = '')
-    """
 
     def save_settings():
         """
@@ -165,7 +166,8 @@ def create_app(led_count, refresh_rate,
             'pattern_sources':
                 {k: v for k, v in controller.pattern_sources.items() if k not in patterns.default},
             'pattern_names':
-                {k: v for k, v in pattern_names.items() if k not in patterns.default_names}
+                {k: v for k, v in pattern_names.items() if k not in patterns.default_names},
+            'colors': controller.colors,
         }
         with open(str(filename), 'w') as data_file:
             try:

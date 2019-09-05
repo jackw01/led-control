@@ -101,6 +101,9 @@ class AnimationController:
             'none': None,
         }
 
+        # Color palette used for animations
+        self.colors = [(0, 0, 1)]
+
         # Set default color temp
         self.correction_original = led_color_correction
         self.set_color_correction(self.params['master_color_temp'])
@@ -187,8 +190,8 @@ class AnimationController:
             self.pattern_functions[key] = pattern
         return errors, warnings
 
-    #def set_color(self, index, component, value):
-    #    self.colors[index][component] = value
+    def set_color_component(self, index, component, value):
+        self.colors[index][component] = value
 
     def begin_animation_thread(self):
         """
@@ -238,7 +241,8 @@ class AnimationController:
                                         primary_delta_t,
                                         primary_x,
                                         primary_y,
-                                        self.primary_prev_state[i])
+                                        self.primary_prev_state[i],
+                                        self.colors)
                 new_primary_prev_state.append(color)
 
                 # Run secondary pattern to determine new brightness and possibly modify color
