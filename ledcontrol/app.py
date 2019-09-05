@@ -104,7 +104,8 @@ def create_app(led_count, refresh_rate,
                 item.val = item.type(controller.params[item.key])
         return render_template('index.html',
                                form=form,
-                               params=controller.params)
+                               params=controller.params,
+                               colors=controller.colors)
 
     @app.route('/setparam')
     def set_param():

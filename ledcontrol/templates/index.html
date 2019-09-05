@@ -15,13 +15,14 @@
   <link rel="stylesheet" href="static/css/fonts.css">
   <link rel="stylesheet" href="static/css/codemirror.css">
   <link rel="stylesheet" href="static/css/codemirror-custom.css">
+  <link rel="stylesheet" href="static/css/picker-1.4.1-classic.min.css">
   <link rel="stylesheet" href="static/css/index.css">
 </head>
 <body class="body-dark">
   <div class="wrapper clearfix">
     <main id="main">
       <h2 class="header-stylized-text">LED Control Center</h2>
-    <br/>
+      <br/>
       {% for input in form %}
       {% if input.control == 'select' %}
       <div class="input-row input-row-top-margin">
@@ -86,45 +87,11 @@
       {% endfor %}
       <hr>
       {% for color in colors %}
-      <h4>Color {{ loop.index }}</h4>
-      <table class="input-table">
-        <tr>
-          <td>
-            <label>Hue:</label>
-          </td>
-          <td>
-            <span class="slider-container">
-              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[0] }}"
-                class="update-color-on-change hue-grad" autocomplete="off" data-idx="{{ loop.index0 }}"
-                data-cmp="{{ 0 }}">
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label>Saturation:</label>
-          </td>
-          <td>
-            <span class="slider-container">
-              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[1] }}"
-                class="update-color-on-change sat-grad" autocomplete="off" data-idx="{{ loop.index0 }}"
-                data-cmp="{{ 1 }}">
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label>Value:</label>
-          </td>
-          <td>
-            <span class="slider-container">
-              <input type="range" style="width:300px" min="0" max="1" step="0.001" value="{{ color[2] }}"
-                class="update-color-on-change val-grad" autocomplete="off" data-idx="{{ loop.index0 }}"
-                data-cmp="{{ 2 }}">
-            </span>
-          </td>
-        </tr>
-      </table>
+      <div class="input-row input-row-top-margin">
+        <span class="label">Color {{ loop.index }}:</span>
+        <span class="color-picker">
+        </span>
+      </div>
       {% endfor %}
     </main>
     <footer>
@@ -136,6 +103,7 @@
   <script src="static/js/jquery-3.3.1.min.js"></script>
   <script src="static/js/codemirror-5.48.4.js"></script>
   <script src="static/js/codemirror-5.48.4-python.js"></script>
+  <script src="static/js/pickr-1.4.1.min.js"></script>
   <script src="static/js/main.js"></script>
 </body>
 </html>

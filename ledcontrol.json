@@ -1,4 +1,11 @@
 {
+    "colors": [
+        [
+            0,
+            0,
+            1
+        ]
+    ],
     "params": {
         "master_brightness": 0.2,
         "master_color_temp": 6500,
@@ -15,9 +22,7 @@
         "1567574495648": "Cycle Hue Bands 1D (Copy) (Copy)"
     },
     "pattern_sources": {
-        "1567572907169": "def pattern(t, dt, x, y, prev_state):\n    hue = (t + x) % 1\n    return (hue - (hue % 0.1666), 1, 1), hsv",
-        "1567574495648": "def pattern(t, dt, x, y, prev_state):\n    hue = (t + x * 2) % 1\n    return (hue - (hue % 0.1666), 1, 1), hsv"
-    },
-    "colors": [
-    ]
+        "1567572907169": "def pattern(t, dt, x, y, prev_state, colors):\n    hue = (t + x) % 1\n    return (hue - (hue % 0.1666), 1, 1), hsv",
+        "1567574495648": "def pattern(t, dt, x, y, prev_state, colors):\n    hue = (t + x * 2) % 1\n    return (hue - (hue % 0.1666), 1, 1), hsv"
+    }
 }
