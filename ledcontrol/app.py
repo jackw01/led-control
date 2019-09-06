@@ -16,7 +16,7 @@ import ledcontrol.animationpatterns as patterns
 def camel_to_title(text):
     return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', text)
 
-def snake_case_to_title(text):
+def snake_to_title(text):
     return text.replace('_', ' ').title()
 
 # Record class for form items
@@ -83,16 +83,19 @@ def create_app(led_count, refresh_rate,
         FormItem('range', 'master_brightness', float, 0, 1),
         FormItem('range', 'master_color_temp', float, 1000, 12000, 10, unit='K'),
         FormItem('range', 'master_saturation', float, 0, 1),
-        FormItem('select', 'primary_pattern', int, options=list(pattern_names.values())),
+        FormItem('select', 'primary_pattern', int,
+            options=list(pattern_names.values())),
         FormItem('range', 'primary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'primary_scale', float, -10, 10),
         FormItem('code', 'pattern_source', str),
+        FormItem('select', 'secondary_pattern', int,
+            options=[snake_to_title(n) for n in list(patterns.default_secondary_names.values())]),
         FormItem('range', 'secondary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'secondary_scale', float, -10, 10),
     ]
 
     for item in form:
-        item.label = snake_case_to_title(item.key)
+        item.label = snake_to_title(item.key)
 
     @app.route('/')
     def index():

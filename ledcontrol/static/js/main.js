@@ -11,12 +11,9 @@ function handleInputChange(elem) {
     if (val > max) val = max;
     if (elem.attr('type') == 'range') $('input[type=number][data-id=' + key + ']').val(val);
     else $('input[type=range][data-id=' + key + ']').val(val);
-    return { key: key, value: val };
   }
-  if (key === 'primary_pattern') { // On primary pattern change, update code display
-    updateCodeView(val);
-    return { key: key, value: val };
-  }
+  if (key === 'primary_pattern') updateCodeView(val); // On primary pattern change, update code
+  return { key: key, value: val };
 }
 
 // When a slider is moved, update number input without setting params

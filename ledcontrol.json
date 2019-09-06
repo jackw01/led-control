@@ -18,7 +18,7 @@
         "primary_pattern": 1567574495648,
         "primary_scale": 3.59,
         "primary_speed": 0.33,
-        "secondary_pattern": "none",
+        "secondary_pattern": 0,
         "secondary_scale": 1.0,
         "secondary_speed": 0.2
     },

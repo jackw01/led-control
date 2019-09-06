@@ -79,10 +79,10 @@ class AnimationController:
             'master_brightness': 0.15,
             'master_color_temp': 6500,
             'master_saturation': 1.0,
-            'primary_pattern': 'cycle_hue_1d',
+            'primary_pattern': 0,
             'primary_speed': 0.2,
             'primary_scale': 1.0,
-            'secondary_pattern': 'none',
+            'secondary_pattern': 0,
             'secondary_speed': 0.2,
             'secondary_scale': 1.0,
         }
@@ -97,9 +97,7 @@ class AnimationController:
             self.set_pattern_function(k, v)
 
         # Lookup dictionary for secondary pattern functions
-        self.secondary_pattern_functions = {
-            'none': None,
-        }
+        self.secondary_pattern_functions = patterns.default_secondary
 
         # Color palette used for animations
         self.colors = [(0, 0, 1)]
@@ -276,7 +274,7 @@ class AnimationController:
 
         except Exception as e:
             print('Pattern execution: {}: {}'.format(type(e).__name__, e))
-            return [(0, 0, 0) for i in range(self.led_count)]
+            return [(0, 0, 0) for i in range(self.led_count)], patterns.ColorMode.hsv
 
     def update_leds(self):
         """

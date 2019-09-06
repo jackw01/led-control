@@ -43,12 +43,16 @@ default_names = {
 # Secondary animations that transform finalized colors to add brightness-based effects
 # return brightness, colorRGB
 
-def secondary_solid(t, dt, x, y, prev_state, in_color):
-  return 1.0, in_color
-
 def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
     v = prev_state[0] - dt
     if v <= 0:
       return random(), in_color
     else:
       return v, prev_state[1]
+
+default_secondary = {
+  0: None,
+  1: twinkle_pulse_1d,
+}
+
+default_secondary_names = {k: v.__name__ if v else 'None' for k, v in default_secondary.items()}
