@@ -126,9 +126,7 @@ window.onload = function() {
     names = result.names;
     defaultSourceKeys = result.defaults;
     Object.entries(names).forEach(([k, v]) => {
-      if (!defaultSourceKeys.includes(k)) {
-        $('select[data-id="primary_pattern"]').append(`<option value="${k}">${v}</option>`);
-      }
+      $('select[data-id="primary_pattern"]').append(`<option value="${k}">${v}</option>`);
     });
     $('select[data-id="primary_pattern"]').val(result.current);
 

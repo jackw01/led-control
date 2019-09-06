@@ -34,7 +34,7 @@ optional arguments:
 
 ## Features
 * Lightweight responsive web interface works on both desktop and mobile devices
-* Supports cheap and readily available WS281x and SK6812 LED strips, strings, and arrays
+* Supports cheap and readily available WS281x and SK6812 LED strips and strings
 * Capable of achieving up to 240 FPS on 60 LEDs and 100 FPS on 150 LEDs with low-end hardware (Raspberry Pi Zero)
 * Web backend written in Python using the [Flask](https://github.com/pallets/flask) web framework
 * Color conversions, color correction, and final rendering steps are done in a C extension module for maximum performance

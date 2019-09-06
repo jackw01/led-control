@@ -29,15 +29,15 @@ def pattern(t, dt, x, y, prev_state, colors):
 '''
 
 default = {
-  0: solid_color,
-  1: cycle_hue_1d,
-  2: cycle_hue_bands_1d,
+    0: solid_color,
+    1: cycle_hue_1d,
+    2: cycle_hue_bands_1d,
 }
 
 default_names = {
-  0: 'Solid Color',
-  1: 'Cycle Hue 1D',
-  2: 'Cycle Hue Bands 1D',
+    0: 'Solid Color',
+    1: 'Cycle Hue 1D',
+    2: 'Cycle Hue Bands 1D',
 }
 
 # Secondary animations that transform finalized colors to add brightness-based effects
@@ -46,13 +46,13 @@ default_names = {
 def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
     v = prev_state[0] - dt
     if v <= 0:
-      return random(), in_color
+        return random(), in_color
     else:
-      return v, prev_state[1]
+        return v, prev_state[1]
 
 default_secondary = {
-  0: None,
-  1: twinkle_pulse_1d,
+    0: None,
+    1: twinkle_pulse_1d,
 }
 
 default_secondary_names = {k: v.__name__ if v else 'None' for k, v in default_secondary.items()}
