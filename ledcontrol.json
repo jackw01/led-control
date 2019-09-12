@@ -12,14 +12,14 @@
         ]
     ],
     "params": {
-        "master_brightness": 0.23,
+        "master_brightness": 0.19,
         "master_color_temp": 6500,
         "master_saturation": 1.0,
-        "primary_pattern": 1,
+        "primary_pattern": 3,
         "primary_scale": 0.0,
         "primary_speed": 0.33,
-        "secondary_pattern": 4,
-        "secondary_scale": 4.67,
+        "secondary_pattern": 3,
+        "secondary_scale": 0.9,
         "secondary_speed": 0.13
     },
     "pattern_names": {

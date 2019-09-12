@@ -15,32 +15,33 @@ ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
 def blank(t, dt, x, y, prev_state, colors):
     return (0, 0, 0), ColorMode.hsv
 
-solid_color = '''
+default = {
+    0: '''
 def pattern(t, dt, x, y, prev_state, colors):
     return colors[0], hsv
-'''
-
-cycle_hue_1d = '''
+''',
+    1: '''
 def pattern(t, dt, x, y, prev_state, colors):
     return (t + x, 1, 1), hsv
-'''
-
-cycle_hue_bands_1d = '''
+''',
+    2: '''
 def pattern(t, dt, x, y, prev_state, colors):
     hue = (t + x) % 1
     return (hue - (hue % 0.1666), 1, 1), hsv
-'''
-
-default = {
-    0: solid_color,
-    1: cycle_hue_1d,
-    2: cycle_hue_bands_1d,
+''',
+    3: '''
+def pattern(t, dt, x, y, prev_state, colors):
+    return (wave_sine(t + x),
+            wave_sine(t + x + 0.333),
+            wave_sine(t + x + 0.666)), rgb
+''',
 }
 
 default_names = {
     0: 'Solid Color',
     1: 'Cycle Hue 1D',
     2: 'Cycle Hue Bands 1D',
+    3: 'RGB Sines',
 }
 
 # Secondary animations that transform finalized colors to add brightness-based effects
@@ -74,4 +75,6 @@ default_secondary = {
     5: twinkle_pulse_1d,
 }
 
-default_secondary_names = {k: v.__name__ if v else 'None' for k, v in default_secondary.items()}
+default_secondary_names = {
+    k: utils.snake_to_title(v.__name__) if v else 'None' for k, v in default_secondary.items()
+}

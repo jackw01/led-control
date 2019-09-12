@@ -13,6 +13,14 @@ def clamp(x, min, max):
     else:
         return x
 
+# Title generation
+
+def camel_to_title(text):
+    return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', text)
+
+def snake_to_title(text):
+    return text.replace('_', ' ').title()
+
 # Waveforms for pattern generation. All have a period of 2 time units and range from 0-1.
 # Sawtooth wave is just (t % 1)
 

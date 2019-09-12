@@ -12,12 +12,7 @@ from ledcontrol.ledcontroller import LEDController
 
 import ledcontrol.pixelmappings as pixelmappings
 import ledcontrol.animationpatterns as patterns
-
-def camel_to_title(text):
-    return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', text)
-
-def snake_to_title(text):
-    return text.replace('_', ' ').title()
+import ledcontrol.utils as utils
 
 # Record class for form items
 fields = [
@@ -88,14 +83,14 @@ def create_app(led_count, refresh_rate,
         FormItem('range', 'primary_scale', float, -10, 10),
         FormItem('code', 'pattern_source', str),
         FormItem('select', 'secondary_pattern', int,
-            options=[snake_to_title(n) for n in list(patterns.default_secondary_names.values())],
+            options=list(patterns.default_secondary_names.values()),
             val=controller.params['secondary_pattern']),
         FormItem('range', 'secondary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'secondary_scale', float, -10, 10),
     ]
 
     for item in form:
-        item.label = snake_to_title(item.key)
+        item.label = utils.snake_to_title(item.key)
 
     @app.route('/')
     def index():
