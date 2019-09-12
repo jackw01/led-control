@@ -34,7 +34,9 @@
             data-id="{{ input.key }}"
           >
             {% for opt in input.options %}
-            <option value="{{ loop.index0 }}">
+            <option
+              value="{{ loop.index0 }}"
+              {% if input.val == loop.index0 %}selected{% endif %}>
               {{ opt }}
             </option>
             {% endfor %}

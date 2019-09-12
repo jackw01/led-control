@@ -1,6 +1,7 @@
 # led-control WS2812B LED Controller Server
 # Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
+import math
 from random import random
 from enum import Enum
 
@@ -48,6 +49,15 @@ default_names = {
 def sine_1d(t, dt, x, y, prev_state, in_color):
     return utils.wave_sine(t + x), in_color
 
+def ramp_1d(t, dt, x, y, prev_state, in_color):
+    return (t + x) % 1, in_color # test ramp^2
+
+def bounce_triangle_1d(t, dt, x, y, prev_state, in_color):
+    return math.sin(2 * math.pi * (0.25 + x + math.fabs((2 * t) % 2 - 1))) / 2 + 0.5, in_color
+
+def bounce_sine_1d(t, dt, x, y, prev_state, in_color):
+    return math.sin(2 * math.pi * (0.75 + x + math.cos(2 * math.pi * t) / 2)) / 2 + 0.5, in_color
+
 def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
     v = prev_state[0] - dt
     if v <= 0:
@@ -58,7 +68,10 @@ def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
 default_secondary = {
     0: None,
     1: sine_1d,
-    2: twinkle_pulse_1d,
+    2: ramp_1d,
+    3: bounce_triangle_1d,
+    4: bounce_sine_1d,
+    5: twinkle_pulse_1d,
 }
 
 default_secondary_names = {k: v.__name__ if v else 'None' for k, v in default_secondary.items()}

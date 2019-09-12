@@ -26,7 +26,7 @@ def wave_triangle(t):
 
 # Sine wave - should test speed of approximation methods
 def wave_sine(t):
-    return math.sin(2 * math.pi * t) / 2 + 0.5 # 2 * math.pi * t + 0.5 * math.pi
+    return math.sin(2 * math.pi * (t + 0.25)) / 2 + 0.5 # 2 * math.pi * t + 0.5 * math.pi
 
 # Misc shaping functions
 
