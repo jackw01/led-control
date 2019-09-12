@@ -4,6 +4,7 @@
 import math
 import random
 import time
+import traceback
 import RestrictedPython
 from threading import Event, Thread
 
@@ -269,11 +270,13 @@ class AnimationController:
                                        color[2] * secondary_value))
 
             self.primary_prev_state = new_primary_prev_state
-            self.secondary_prev_state = new_secondary_prev_state
+            if pattern_2 is not None:
+                self.secondary_prev_state = new_secondary_prev_state
+
             return led_states, mode
 
         except Exception as e:
-            print('Pattern execution: {}: {}'.format(type(e).__name__, e))
+            print('Pattern execution: {}'.format(traceback.format_exception(type(e), e, e.__traceback__)))
             return [(0, 0, 0) for i in range(self.led_count)], patterns.ColorMode.hsv
 
     def update_leds(self):
