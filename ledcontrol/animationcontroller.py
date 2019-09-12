@@ -248,7 +248,7 @@ class AnimationController:
 
                 # Run secondary pattern to determine new brightness and possibly modify color
                 if pattern_2 is not None:
-                    if self.params['primary_scale'] != 0:
+                    if self.params['secondary_scale'] != 0:
                         secondary_x = (self.mapped[i][0] / self.params['secondary_scale']) % 1
                         if not self.mapping_uses_x_only:
                             secondary_y = (self.mapped[i][1] / self.params['secondary_scale']) % 1

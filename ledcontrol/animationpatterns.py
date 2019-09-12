@@ -4,6 +4,8 @@
 from random import random
 from enum import Enum
 
+import ledcontrol.utils as utils
+
 ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
 
 # Primary animations that generate patterns in HSV or RGB color spaces
@@ -43,6 +45,9 @@ default_names = {
 # Secondary animations that transform finalized colors to add brightness-based effects
 # return brightness, colorRGB
 
+def sine_1d(t, dt, x, y, prev_state, in_color):
+    return utils.wave_sine(t + x), in_color
+
 def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
     v = prev_state[0] - dt
     if v <= 0:
@@ -52,7 +57,8 @@ def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
 
 default_secondary = {
     0: None,
-    1: twinkle_pulse_1d,
+    1: sine_1d,
+    2: twinkle_pulse_1d,
 }
 
 default_secondary_names = {k: v.__name__ if v else 'None' for k, v in default_secondary.items()}
