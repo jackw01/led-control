@@ -174,7 +174,9 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
                                       color_rgb corr_rgb, float saturation, float brightness) {
   uint8_t hue = hsv.hue * 255.0;
   uint8_t sat = hsv.sat * saturation * 255.0;
-  uint8_t val = hsv.val * brightness * 255.0;
+  uint8_t val = (hsv.val * hsv.val) * 255;
+  if (val > 0 && val < 255) val += 1;
+  val = scale_8(val, brightness * 255);
   uint8_t r, g, b;
 
   uint8_t offset = hue & 0x1F; // 0..31
@@ -257,7 +259,6 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
 
   // Now scale everything down if we're at value < 255.
   if (val != 255) {
-    val = val * val / 255;
     if (val == 0) {
       r = 0;
       g = 0;

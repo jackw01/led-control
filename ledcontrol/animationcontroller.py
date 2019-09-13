@@ -279,7 +279,9 @@ class AnimationController:
             return led_states, mode
 
         except Exception as e:
-            print('Pattern execution: {}'.format(traceback.format_exception(type(e), e, e.__traceback__)))
+            print('Pattern execution: {}'.format(traceback.format_exception(type(e),
+                                                                            e,
+                                                                            e.__traceback__)))
             return [(0, 0, 0) for i in range(self.led_count)], patterns.ColorMode.hsv
 
     def update_leds(self):

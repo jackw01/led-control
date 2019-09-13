@@ -76,14 +76,17 @@ Pattern functions must return a color in tuple form and either `hsv` or `rgb` de
 #### `clamp(x, min, max)`
 Returns `min` if `x < min` and max if `x > max`, otherwise returns `x`
 
-#### `wave_pulse(t, duty_cycle=0.5)`
-Returns the instantaneous value of a 1Hz pulse wave of the specified duty cycle at time `t`. Wave has a period of 2 time units and range from 0-1.
+#### `wave_sine(t)`
+Returns the instantaneous value of a 1Hz sine wave at time `t`. Wave has a period of 2 time units and range from 0-1.
+
+#### `wave_cubic(t)`
+Returns the instantaneous value of a 1Hz cubic approximated sine wave (triangle wave with cubic easing) at time `t`. Appears smoother than a sine wave. Wave has a period of 2 time units and range from 0-1.
 
 #### `wave_triangle(t)`
 Returns the instantaneous value of a 1Hz triangle wave at time `t`. Wave has a period of 2 time units and range from 0-1.
 
-#### `wave_sine(t)`
-Returns the instantaneous value of a 1Hz sine wave at time `t`. Wave has a period of 2 time units and range from 0-1.
+#### `wave_pulse(t, duty_cycle=0.5)`
+Returns the instantaneous value of a 1Hz pulse wave of the specified duty cycle at time `t`. Wave has a period of 2 time units and range from 0-1.
 
 #### `impulse_exp(t)`
 Asymmetrical exponential "impulse". Peaks at `t=1`.

@@ -58,6 +58,9 @@ default_names = {
 def sine_1d(t, dt, x, y, prev_state, in_color):
     return utils.wave_sine(t + x), in_color
 
+def cubic_1d(t, dt, x, y, prev_state, in_color):
+    return utils.wave_cubic(t + x), in_color
+
 def ramp_1d(t, dt, x, y, prev_state, in_color):
     return (t + x) % 1, in_color # test ramp^2
 
@@ -77,10 +80,11 @@ def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
 default_secondary = {
     0: None,
     1: sine_1d,
-    2: ramp_1d,
-    3: bounce_triangle_1d,
-    4: bounce_sine_1d,
-    5: twinkle_pulse_1d,
+    2: cubic_1d,
+    3: ramp_1d,
+    4: bounce_triangle_1d,
+    5: bounce_sine_1d,
+    6: twinkle_pulse_1d,
 }
 
 default_secondary_names = {

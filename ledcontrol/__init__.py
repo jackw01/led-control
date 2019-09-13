@@ -15,8 +15,8 @@ def main():
                         help='Hostname to use for web interface. Default: 0.0.0.0')
     parser.add_argument('--strip', type=int, default=0,
                         help='Length of the LED strip.')
-    parser.add_argument('--fps', type=int, default=24,
-                        help='Refresh rate for LEDs, in FPS. Default: 24')
+    parser.add_argument('--fps', type=int, default=60,
+                        help='Refresh rate for LEDs, in FPS. Default: 60')
     parser.add_argument('--led_pin', type=int, default=18,
                         help='Pin for LEDs (GPIO10, GPIO12, GPIO18 or GPIO21). Default: 18')
     parser.add_argument('--led_data_rate', type=int, default=800000,
