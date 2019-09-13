@@ -2,7 +2,6 @@
 # Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
 import json
-import re
 import atexit
 from recordclass import recordclass
 from pathlib import Path

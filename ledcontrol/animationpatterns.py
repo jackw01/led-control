@@ -42,6 +42,10 @@ def pattern(t, dt, x, y, prev_state, colors):
     c = blackbody_to_rgb(v * v * 5500 + 1000)
     return (c[0] * v, c[1] * v, c[2] * v), rgb
 ''',
+    5: '''
+def pattern(t, dt, x, y, prev_state, colors):
+    return (math.fabs((2 * t) % 2 - 1) + x, 1, 1), hsv
+''',
 }
 
 default_names = {
@@ -49,7 +53,8 @@ default_names = {
     1: 'Cycle Hue 1D',
     2: 'Cycle Hue Bands 1D',
     3: 'RGB Sines 1D',
-    4: 'Cycle Blackbody 1D'
+    4: 'Cycle Blackbody 1D',
+    5: 'Bounce Hue 1D',
 }
 
 # Secondary animations that transform finalized colors to add brightness-based effects
@@ -70,6 +75,9 @@ def bounce_triangle_1d(t, dt, x, y, prev_state, in_color):
 def bounce_sine_1d(t, dt, x, y, prev_state, in_color):
     return math.sin(2 * math.pi * (0.75 + x + math.cos(2 * math.pi * t) / 2)) / 2 + 0.5, in_color
 
+def bounce_cubic_1d(t, dt, x, y, prev_state, in_color):
+    return utils.wave_cubic(0.5 + x + math.cos(2 * math.pi * t) / 2), in_color
+
 def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
     v = prev_state[0] - dt
     if v <= 0:
@@ -84,7 +92,8 @@ default_secondary = {
     3: ramp_1d,
     4: bounce_triangle_1d,
     5: bounce_sine_1d,
-    6: twinkle_pulse_1d,
+    6: bounce_cubic_1d,
+    7: twinkle_pulse_1d,
 }
 
 default_secondary_names = {
