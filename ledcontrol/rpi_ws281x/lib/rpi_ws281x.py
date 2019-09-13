@@ -264,6 +264,10 @@ ws2811_led_get = _rpi_ws281x.ws2811_led_get
 def ws2811_led_set(channel, lednum, color):
     return _rpi_ws281x.ws2811_led_set(channel, lednum, color)
 ws2811_led_set = _rpi_ws281x.ws2811_led_set
+
+def wave_cubic(t):
+    return _rpi_ws281x.wave_cubic(t)
+wave_cubic = _rpi_ws281x.wave_cubic
 class color_hsv(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, color_hsv, name, value)

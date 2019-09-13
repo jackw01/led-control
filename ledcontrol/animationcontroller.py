@@ -48,6 +48,8 @@ class RepeatedTimer:
 
             # Calculate wait for next iteration
             self.wait_time = self.interval - (self.last_render_end - self.last_render_start)
+            if self.count % 100 == 0:
+                print('Wait ratio: {}'.format(self.wait_time / self.interval))
             if (self.wait_time < 0):
                 self.wait_time = 0
 
@@ -110,6 +112,7 @@ class AnimationController:
         # Prepare to start
         self.start = time.perf_counter()
         self.time = 0
+        self.render_perf_avg = 0
 
     def compile_pattern(self, source):
         """
@@ -134,6 +137,7 @@ class AnimationController:
             'wave_pulse': utils.wave_pulse,
             'wave_triangle': utils.wave_triangle,
             'wave_sine': utils.wave_sine,
+            'wave_cubic': rpi_ws281x.wave_cubic,
             'impulse_exp': utils.impulse_exp,
             'fract': utils.fract,
             'blackbody_to_rgb': rpi_ws281x.blackbody_to_rgb,
@@ -289,7 +293,9 @@ class AnimationController:
         Determine time, render frame, and display.
         """
         self.time = self.timer.last_frame - self.start
+        t0 = time.perf_counter()
         led_states, mode = self.get_next_frame()
+        t1 = time.perf_counter()
         if mode == patterns.ColorMode.hsv:
             self.led_controller.leds.set_all_pixels_hsv_float(led_states, self.correction,
                                                               self.params['master_saturation'],
@@ -298,6 +304,11 @@ class AnimationController:
             self.led_controller.leds.set_all_pixels_rgb_float(led_states, self.correction,
                                                               self.params['master_saturation'],
                                                               self.params['master_brightness'])
+
+        self.render_perf_avg += (t1 - t0)
+        if self.timer.count % 100 == 0:
+            print(self.render_perf_avg / 100)
+            self.render_perf_avg = 0
 
     def end_animation_thread(self):
         """

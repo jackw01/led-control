@@ -17,7 +17,7 @@ Advanced WS2812/SK6812 LED controller with Python animation programming and web 
 4. `python3 setup.py install`. Python 3.6 or newer is required.
 5. `sudo ledcontrol --port 8080 --strip 150 --fps 30`
 
-## Command Line Configuration Arguments
+### Command Line Configuration Arguments
 Web server and LED hardware parameters must be specified as command line arguments when running ledcontrol.
 ```
 usage: ledcontrol [-h] [--port PORT] [--host HOST] [--strip STRIP] [--fps FPS]

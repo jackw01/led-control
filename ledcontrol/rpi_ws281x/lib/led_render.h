@@ -23,6 +23,14 @@ int ws2811_led_set(ws2811_channel_t *channel, int lednum, uint32_t color) {
 
 // Important stuff starts here
 
+// Optimized C utility functions
+float wave_cubic(float t) {
+  float tri = fabs(fmod(2.0 * t, 2.0) - 1.0);
+  float t2 = tri * tri;
+  float t3 = t2 * tri;
+  return 3.0 * t2 - 2.0 * t3;
+}
+
 // HSV/RGB types based on FastLED
 typedef struct color_hsv {
   union {
