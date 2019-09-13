@@ -3531,6 +3531,22 @@ SWIG_From_float  (float value)
   return SWIG_From_double  (value);
 }
 
+
+SWIGINTERN int
+SWIG_AsVal_unsigned_SS_short (PyObject * obj, unsigned short *val)
+{
+  unsigned long v;
+  int res = SWIG_AsVal_unsigned_SS_long (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v > USHRT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = (unsigned short)(v);
+    }
+  }  
+  return res;
+}
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -6712,6 +6728,75 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_blackbody_to_rgb(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  uint16_t arg1 ;
+  unsigned short val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj0 = 0 ;
+  color_rgb_float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:blackbody_to_rgb",&obj0)) SWIG_fail;
+  ecode1 = SWIG_AsVal_unsigned_SS_short(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "blackbody_to_rgb" "', argument " "1"" of type '" "uint16_t""'");
+  } 
+  arg1 = (uint16_t)(val1);
+  result = blackbody_to_rgb(arg1);
+  {
+    resultobj = PyList_New(3);
+    PyList_SetItem(resultobj, 0, PyFloat_FromDouble((&result)->r));
+    PyList_SetItem(resultobj, 1, PyFloat_FromDouble((&result)->g));
+    PyList_SetItem(resultobj, 2, PyFloat_FromDouble((&result)->b));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_blackbody_correction_rgb(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  color_rgb_float arg1 ;
+  uint16_t arg2 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  unsigned short val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  color_rgb_float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:blackbody_correction_rgb",&obj0,&obj1)) SWIG_fail;
+  {
+    res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_color_rgb_float,  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "blackbody_correction_rgb" "', argument " "1"" of type '" "color_rgb_float""'"); 
+    }  
+    if (!argp1) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "blackbody_correction_rgb" "', argument " "1"" of type '" "color_rgb_float""'");
+    } else {
+      arg1 = *((color_rgb_float *)(argp1));
+    }
+  }
+  ecode2 = SWIG_AsVal_unsigned_SS_short(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "blackbody_correction_rgb" "', argument " "2"" of type '" "uint16_t""'");
+  } 
+  arg2 = (uint16_t)(val2);
+  result = blackbody_correction_rgb(arg1,arg2);
+  {
+    resultobj = PyList_New(3);
+    PyList_SetItem(resultobj, 0, PyFloat_FromDouble((&result)->r));
+    PyList_SetItem(resultobj, 1, PyFloat_FromDouble((&result)->g));
+    PyList_SetItem(resultobj, 2, PyFloat_FromDouble((&result)->b));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_render_hsv2rgb_rainbow_float(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   color_hsv_float arg1 ;
@@ -7142,6 +7227,8 @@ static PyMethodDef SwigMethods[] = {
 	 { "pack_rgb", _wrap_pack_rgb, METH_VARARGS, NULL},
 	 { "scale_8", _wrap_scale_8, METH_VARARGS, NULL},
 	 { "clamp", _wrap_clamp, METH_VARARGS, NULL},
+	 { "blackbody_to_rgb", _wrap_blackbody_to_rgb, METH_VARARGS, NULL},
+	 { "blackbody_correction_rgb", _wrap_blackbody_correction_rgb, METH_VARARGS, NULL},
 	 { "render_hsv2rgb_rainbow_float", _wrap_render_hsv2rgb_rainbow_float, METH_VARARGS, NULL},
 	 { "render_rgb_float", _wrap_render_rgb_float, METH_VARARGS, NULL},
 	 { "ws2811_hsv_render_array_float", _wrap_ws2811_hsv_render_array_float, METH_VARARGS, NULL},

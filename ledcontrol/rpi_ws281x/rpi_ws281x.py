@@ -13,6 +13,12 @@ try:
 except NameError:
     xrange = range
 
+def blackbody_to_rgb(kelvin):
+    return ws.blackbody_to_rgb(int(kelvin))
+
+def blackbody_correction_rgb(rgb, kelvin):
+    return ws.blackbody_correction_rgb(rgb, int(kelvin))
+
 def Color(red, green, blue, white=0):
     """Convert the provided red, green, blue color to a 24-bit color value.
     Each color component should be a value 0-255 where 0 is the lowest intensity

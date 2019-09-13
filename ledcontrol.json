@@ -1,8 +1,8 @@
 {
     "colors": [
         [
-            0.475,
-            0.998,
+            0.559,
+            0.297,
             1.0
         ],
         [
@@ -12,15 +12,15 @@
         ]
     ],
     "params": {
-        "master_brightness": 0.03,
-        "master_color_temp": 6500,
+        "master_brightness": 0.2,
+        "master_color_temp": 6500.0,
         "master_saturation": 1.0,
-        "primary_pattern": 3,
-        "primary_scale": 0.0,
+        "primary_pattern": 4,
+        "primary_scale": 2.22,
         "primary_speed": 0.33,
         "secondary_pattern": 0,
         "secondary_scale": 0.9,
-        "secondary_speed": 0.13
+        "secondary_speed": 0.58
     },
     "pattern_names": {
         "1567572907169": "Cycle Hue Bands 1D (Copy)",

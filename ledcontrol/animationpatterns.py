@@ -5,6 +5,7 @@ import math
 from random import random
 from enum import Enum
 
+import ledcontrol.rpi_ws281x as rpi_ws281x
 import ledcontrol.utils as utils
 
 ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
@@ -35,13 +36,20 @@ def pattern(t, dt, x, y, prev_state, colors):
             wave_sine(t + x + 0.333),
             wave_sine(t + x + 0.666)), rgb
 ''',
+    4: '''
+def pattern(t, dt, x, y, prev_state, colors):
+    v = (t + x) % 1
+    c = blackbody_to_rgb(v * v * 5500 + 1000)
+    return (c[0] * v, c[1] * v, c[2] * v), rgb
+''',
 }
 
 default_names = {
     0: 'Solid Color',
     1: 'Cycle Hue 1D',
     2: 'Cycle Hue Bands 1D',
-    3: 'RGB Sines',
+    3: 'RGB Sines 1D',
+    4: 'Cycle Blackbody 1D'
 }
 
 # Secondary animations that transform finalized colors to add brightness-based effects

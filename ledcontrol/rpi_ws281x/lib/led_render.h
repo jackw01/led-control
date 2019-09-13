@@ -4,6 +4,8 @@
 #ifndef __LED_RENDER_H__
 #define __LED_RENDER_H__
 
+#include <math.h>
+
 ws2811_channel_t *ws2811_channel_get(ws2811_t *ws, int channelnum) {
   return &ws->channel[channelnum];
 }
@@ -130,6 +132,43 @@ float clamp(float d, float min, float max) {
   return t > max ? max : t;
 }
 
+color_rgb_float blackbody_to_rgb(uint16_t kelvin) {
+  // See http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
+  // See http://www.zombieprototypes.com/?p=210
+
+  float tmp_internal = kelvin / 100.0;
+  float r_out = 0.0;
+  float g_out = 0.0;
+  float b_out = 0.0;
+
+  if (tmp_internal <= 66) {
+    float xg = tmp_internal - 2.0;
+    r_out = 1.0;
+    g_out = clamp((-155.25485 - 0.44596 * xg + 104.49216 * logf(xg)) / 255.0, 0, 1);
+  } else {
+    float xr = tmp_internal - 55.0;
+    float xg = tmp_internal - 50.0;
+    r_out = clamp((351.97691 + 0.11421 * xr - 40.25366 * logf(xr)) / 255.0, 0, 1);
+    g_out = clamp((325.44941 + 0.07943 * xg - 28.08529 * logf(xg)) / 255.0, 0, 1);
+  }
+
+  if (tmp_internal >= 66) {
+    b_out = 1.0;
+  } else if (tmp_internal <= 19) {
+    b_out = 0.0;
+  } else {
+    float xb = tmp_internal - 10.0;
+    b_out = clamp((-254.76935 + 0.82740 * xb + 115.67994 * logf(xb)) / 255.0, 0, 1);
+  }
+
+  return (color_rgb_float){r_out, g_out, b_out};
+}
+
+color_rgb_float blackbody_correction_rgb(color_rgb_float rgb, uint16_t kelvin) {
+  color_rgb_float blackbody = blackbody_to_rgb(kelvin);
+  return (color_rgb_float){blackbody.r * rgb.r, blackbody.g * rgb.g, blackbody.b * rgb.b};
+}
+
 // Render float HSV to LEDs with "Rainbow" color transform from FastLED
 uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
                                       color_rgb corr_rgb, float saturation, float brightness) {
@@ -234,7 +273,7 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
   g = scale_8(g, corr_rgb.g);
   b = scale_8(b, corr_rgb.b);
 
-    return pack_rgb(r, g, b);
+  return pack_rgb(r, g, b);
 }
 
 // Render float RGB to LEDs

@@ -68,6 +68,13 @@
    if ($1) free($1);
 }
 
+%typemap(out) color_rgb_float {
+  $result = PyList_New(3);
+  PyList_SetItem($result, 0, PyFloat_FromDouble($1.r));
+  PyList_SetItem($result, 1, PyFloat_FromDouble($1.g));
+  PyList_SetItem($result, 2, PyFloat_FromDouble($1.b));
+}
+
 %{
 static int convert_iarray_32(PyObject *input, uint32_t *ptr, int size) {
   int i;

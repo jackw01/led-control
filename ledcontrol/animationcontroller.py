@@ -9,6 +9,7 @@ import RestrictedPython
 from threading import Event, Thread
 
 import ledcontrol.animationpatterns as patterns
+import ledcontrol.rpi_ws281x as rpi_ws281x
 import ledcontrol.utils as utils
 
 class RepeatedTimer:
@@ -135,6 +136,8 @@ class AnimationController:
             'wave_sine': utils.wave_sine,
             'impulse_exp': utils.impulse_exp,
             'fract': utils.fract,
+            'blackbody_to_rgb': rpi_ws281x.blackbody_to_rgb,
+            'blackbody_correction_rgb': rpi_ws281x.blackbody_correction_rgb,
         }
         restricted_locals = {}
         arg_names = ['t', 'dt', 'x', 'y', 'prev_state']

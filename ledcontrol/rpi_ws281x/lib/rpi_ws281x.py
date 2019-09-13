@@ -481,6 +481,14 @@ def clamp(d, min, max):
     return _rpi_ws281x.clamp(d, min, max)
 clamp = _rpi_ws281x.clamp
 
+def blackbody_to_rgb(kelvin):
+    return _rpi_ws281x.blackbody_to_rgb(kelvin)
+blackbody_to_rgb = _rpi_ws281x.blackbody_to_rgb
+
+def blackbody_correction_rgb(rgb, kelvin):
+    return _rpi_ws281x.blackbody_correction_rgb(rgb, kelvin)
+blackbody_correction_rgb = _rpi_ws281x.blackbody_correction_rgb
+
 def render_hsv2rgb_rainbow_float(hsv, corr_rgb, saturation, brightness):
     return _rpi_ws281x.render_hsv2rgb_rainbow_float(hsv, corr_rgb, saturation, brightness)
 render_hsv2rgb_rainbow_float = _rpi_ws281x.render_hsv2rgb_rainbow_float
