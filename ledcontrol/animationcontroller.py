@@ -123,11 +123,15 @@ class AnimationController:
                 return obj[index]
             raise Exception()
 
+        def getiter(obj):
+            return obj
+
         restricted_globals = {
             '__builtins__': RestrictedPython.Guards.safe_builtins,
             '_print_': RestrictedPython.PrintCollector,
             '_getattr_': RestrictedPython.Guards.safer_getattr,
             '_getitem_': getitem,
+            '_getiter_': getiter,
             '_write_': RestrictedPython.Guards.full_write_guard,
             'math': math,
             'random': random,
@@ -138,6 +142,7 @@ class AnimationController:
             'wave_triangle': rpi_ws281x.wave_triangle,
             'wave_sine': rpi_ws281x.wave_sine,
             'wave_cubic': rpi_ws281x.wave_cubic,
+            'wave_quadratic': rpi_ws281x.wave_quadratic,
             'impulse_exp': utils.impulse_exp,
             'fract': utils.fract,
             'blackbody_to_rgb': rpi_ws281x.blackbody_to_rgb,

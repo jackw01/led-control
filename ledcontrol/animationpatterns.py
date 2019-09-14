@@ -52,6 +52,16 @@ def pattern(t, dt, x, y, prev_state, colors):
 def pattern(t, dt, x, y, prev_state, colors):
     return (math.fabs((2 * t) % 2 - 1) + x, 1, 1), hsv
 ''',
+    7: '''
+def pattern(t, dt, x, y, prev_state, colors):
+    color = [0, 0, 0]
+    t2 = t
+    for i in range(3):
+        delay = 0.05 * i
+        v = x + (wave_sine(t2 + delay)) + wave_sine(x + 0.666 * t2 + delay)
+        color[i] = 0.03 / wave_triangle(v)
+    return color, rgb
+''',
 }
 
 default_names = {
@@ -62,6 +72,7 @@ default_names = {
     4: 'RGB Cubics 1D',
     5: 'Cycle Blackbody 1D',
     6: 'Bounce Hue 1D',
+    7: 'RGB Ripples 1D',
 }
 
 # Secondary animations that transform finalized colors to add brightness-based effects

@@ -520,6 +520,10 @@ wave_sine = _rpi_ws281x.wave_sine
 def wave_cubic(t):
     return _rpi_ws281x.wave_cubic(t)
 wave_cubic = _rpi_ws281x.wave_cubic
+
+def wave_quadratic(t):
+    return _rpi_ws281x.wave_quadratic(t)
+wave_quadratic = _rpi_ws281x.wave_quadratic
 # This file is compatible with both classic and new-style classes.
 
 

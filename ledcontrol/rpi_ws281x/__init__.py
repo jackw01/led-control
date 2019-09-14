@@ -9,6 +9,7 @@ from .lib.rpi_ws281x import (
     wave_triangle,
     wave_sine,
     wave_cubic,
+    wave_quadratic,
 )
 from .lib import *
 
