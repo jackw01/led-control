@@ -61,22 +61,28 @@ class RepeatedTimer:
         self.thread.join()
 
 class AnimationController:
-    def __init__(self, led_controller, refresh_rate, led_count, mapping, led_color_correction):
+    def __init__(self, led_controller, refresh_rate, led_count, mapping_func, led_color_correction):
         self.led_controller = led_controller
         self.refresh_rate = refresh_rate
         self.led_count = led_count
-        self.mapping = mapping
+        self.mapping_func = mapping_func
 
-        # Map led indices to normalized position vectors
-        self.mapped = [self.mapping(i) for i in range(self.led_count)]
         # Initialize prev state arrays
         self.reset_prev_states()
+
+        # Map led indices to normalized position vectors
+        self.mapped = [self.mapping_func(i) for i in range(self.led_count)]
 
         # Check mapping dimensions to simplify loop if possible
         self.mapping_uses_x_only = True
         for point in self.mapped:
             if point.y != 0:
                 self.mapping_uses_x_only = False
+
+        # Create lists used to cache current mapping
+        # so it doesn't have to be recalculated every frame
+        self.primary_mapping = []
+        self.secondary_mapping = []
 
         # Used to render main slider/select list
         self.params = {
@@ -108,7 +114,11 @@ class AnimationController:
 
         # Set default color temp
         self.correction_original = led_color_correction
-        self.set_color_correction(self.params['master_color_temp'])
+        self.calculate_color_correction()
+
+        # Set default mapping
+        self.calculate_mappings()
+
         # Prepare to start
         self.start = time.perf_counter()
         self.time = 0
@@ -142,7 +152,6 @@ class AnimationController:
             'wave_triangle': rpi_ws281x.wave_triangle,
             'wave_sine': rpi_ws281x.wave_sine,
             'wave_cubic': rpi_ws281x.wave_cubic,
-            'wave_quadratic': rpi_ws281x.wave_quadratic,
             'impulse_exp': utils.impulse_exp,
             'fract': utils.fract,
             'blackbody_to_rgb': rpi_ws281x.blackbody_to_rgb,
@@ -173,15 +182,31 @@ class AnimationController:
         self.primary_prev_state = [(0, 0, 0) for i in range(self.led_count)]
         self.secondary_prev_state = [(0, (0, 0, 0)) for i in range(self.led_count)]
 
-    def set_color_correction(self, kelvin):
+    def calculate_color_correction(self):
         """
-        Set blackbody color temperature correction.
+        Calculate and store color temperature correction.
         """
-        temp_rgb = [int(x * 255) for x in rpi_ws281x.blackbody_to_rgb(kelvin)]
-        c = [self.correction_original[0] * temp_rgb[0] // 255,
-             self.correction_original[1] * temp_rgb[1] // 255,
-             self.correction_original[2] * temp_rgb[2] // 255]
+        rgb = [int(x * 255) for x in rpi_ws281x.blackbody_to_rgb(self.params['master_color_temp'])]
+        c = [self.correction_original[0] * rgb[0] // 255,
+             self.correction_original[1] * rgb[1] // 255,
+             self.correction_original[2] * rgb[2] // 255]
         self.correction = (c[0] << 16) | (c[1] << 8) | c[2]
+
+    def calculate_mappings(self):
+        """
+        Calculate and store spatial mapping values with current scale
+        """
+        self.primary_mapping = []
+        self.secondary_mapping = []
+        for i in range(self.led_count):
+            self.primary_mapping.append((
+                (self.mapped[i][0] / self.params['primary_scale']) % 1,
+                (self.mapped[i][1] / self.params['primary_scale']) % 1
+            ))
+            self.secondary_mapping.append((
+                (self.mapped[i][0] / self.params['secondary_scale']) % 1,
+                (self.mapped[i][1] / self.params['secondary_scale']) % 1
+            ))
 
     def set_param(self, key, value):
         """
@@ -189,7 +214,9 @@ class AnimationController:
         """
         self.params[key] = value
         if key == 'master_color_temp':
-            self.set_color_correction(value)
+            self.calculate_color_correction()
+        elif key == 'primary_scale' or key == 'secondary_scale':
+            self.calculate_mappings()
 
     def set_pattern_function(self, key, source):
         """
@@ -233,43 +260,29 @@ class AnimationController:
         secondary_delta_t = self.timer.delta_t * self.params['secondary_speed']
 
         # Initialize these in case they don't get assigned later
-        primary_x = 0
-        primary_y = 0
-        secondary_x = 0
-        secondary_y = 0
         secondary_value = 1
 
         try:
-            for i in range(len(self.mapped)):
+            for i in range(self.led_count):
                 # Calculate scale components to determine animation position
                 # scale component = position (max size) / scale (pattern length in units)
                 # One cycle is a normalized input value's transition from 0 to 1
 
-                if self.params['primary_scale'] != 0:
-                    primary_x = (self.mapped[i][0] / self.params['primary_scale']) % 1
-                    if not self.mapping_uses_x_only:
-                        primary_y =(self.mapped[i][1] / self.params['primary_scale']) % 1
-
                 # Run primary pattern to determine initial color
                 color, mode = pattern_1(primary_time,
                                         primary_delta_t,
-                                        primary_x,
-                                        primary_y,
+                                        self.primary_mapping[i][0],
+                                        self.primary_mapping[i][1],
                                         self.primary_prev_state[i],
                                         self.colors)
                 new_primary_prev_state.append(color)
 
                 # Run secondary pattern to determine new brightness and possibly modify color
                 if pattern_2 is not None:
-                    if self.params['secondary_scale'] != 0:
-                        secondary_x = (self.mapped[i][0] / self.params['secondary_scale']) % 1
-                        if not self.mapping_uses_x_only:
-                            secondary_y = (self.mapped[i][1] / self.params['secondary_scale']) % 1
-
                     secondary_value, color = pattern_2(secondary_time,
                                                        secondary_delta_t,
-                                                       secondary_x,
-                                                       secondary_y,
+                                                       self.secondary_mapping[i][0],
+                                                       self.secondary_mapping[i][1],
                                                        self.secondary_prev_state[i],
                                                        color)
                     new_secondary_prev_state.append((secondary_value, color))

@@ -63,6 +63,8 @@ def create_app(led_count, refresh_rate,
         try:
             settings = json.load(data_file)
             controller.params = settings['params']
+            controller.calculate_color_correction()
+            controller.calculate_mappings()
             for k, v in settings['pattern_sources'].items():
                 controller.set_pattern_function(int(k), v) # JSON keys are always strings
             for k, v in settings['pattern_names'].items():

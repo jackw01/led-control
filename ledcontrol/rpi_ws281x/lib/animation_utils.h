@@ -35,15 +35,4 @@ float wave_cubic(float t) {
   }
 }
 
-// Sine approximation (triangle wave with quadratic in-out easing)
-float wave_quadratic(float t) {
-  float tri = fabs(fmod(2.0 * t, 2.0) - 1.0);
-  if (tri > 0.5) {
-    float t2 = 1.0 - tri;
-    return 1.0 - 2.0 * t2 * t2;
-  } else {
-    return 2.0 * tri * tri;
-  }
-}
-
 #endif

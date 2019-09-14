@@ -7179,28 +7179,6 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_wave_quadratic(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  float arg1 ;
-  float val1 ;
-  int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
-  float result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:wave_quadratic",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_float(obj0, &val1);
-  if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "wave_quadratic" "', argument " "1"" of type '" "float""'");
-  } 
-  arg1 = (float)(val1);
-  result = (float)wave_quadratic(arg1);
-  resultobj = SWIG_From_float((float)(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "ws2811_channel_t_gpionum_set", _wrap_ws2811_channel_t_gpionum_set, METH_VARARGS, NULL},
@@ -7341,7 +7319,6 @@ static PyMethodDef SwigMethods[] = {
 	 { "wave_triangle", _wrap_wave_triangle, METH_VARARGS, NULL},
 	 { "wave_sine", _wrap_wave_sine, METH_VARARGS, NULL},
 	 { "wave_cubic", _wrap_wave_cubic, METH_VARARGS, NULL},
-	 { "wave_quadratic", _wrap_wave_quadratic, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
