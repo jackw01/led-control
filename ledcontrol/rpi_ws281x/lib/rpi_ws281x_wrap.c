@@ -3532,22 +3532,6 @@ SWIG_From_float  (float value)
   return SWIG_From_double  (value);
 }
 
-
-SWIGINTERN int
-SWIG_AsVal_unsigned_SS_short (PyObject * obj, unsigned short *val)
-{
-  unsigned long v;
-  int res = SWIG_AsVal_unsigned_SS_long (obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v > USHRT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = (unsigned short)(v);
-    }
-  }  
-  return res;
-}
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -6731,18 +6715,18 @@ fail:
 
 SWIGINTERN PyObject *_wrap_blackbody_to_rgb(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  uint16_t arg1 ;
-  unsigned short val1 ;
+  float arg1 ;
+  float val1 ;
   int ecode1 = 0 ;
   PyObject * obj0 = 0 ;
   color_rgb_float result;
   
   if (!PyArg_ParseTuple(args,(char *)"O:blackbody_to_rgb",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_unsigned_SS_short(obj0, &val1);
+  ecode1 = SWIG_AsVal_float(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "blackbody_to_rgb" "', argument " "1"" of type '" "uint16_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "blackbody_to_rgb" "', argument " "1"" of type '" "float""'");
   } 
-  arg1 = (uint16_t)(val1);
+  arg1 = (float)(val1);
   result = blackbody_to_rgb(arg1);
   {
     resultobj = PyList_New(3);
@@ -6759,10 +6743,10 @@ fail:
 SWIGINTERN PyObject *_wrap_blackbody_correction_rgb(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   color_rgb_float arg1 ;
-  uint16_t arg2 ;
+  float arg2 ;
   void *argp1 ;
   int res1 = 0 ;
-  unsigned short val2 ;
+  float val2 ;
   int ecode2 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
@@ -6780,11 +6764,11 @@ SWIGINTERN PyObject *_wrap_blackbody_correction_rgb(PyObject *SWIGUNUSEDPARM(sel
       arg1 = *((color_rgb_float *)(argp1));
     }
   }
-  ecode2 = SWIG_AsVal_unsigned_SS_short(obj1, &val2);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "blackbody_correction_rgb" "', argument " "2"" of type '" "uint16_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "blackbody_correction_rgb" "', argument " "2"" of type '" "float""'");
   } 
-  arg2 = (uint16_t)(val2);
+  arg2 = (float)(val2);
   result = blackbody_correction_rgb(arg1,arg2);
   {
     resultobj = PyList_New(3);
@@ -7098,6 +7082,59 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_wave_pulse(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  float arg1 ;
+  float arg2 ;
+  float val1 ;
+  int ecode1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:wave_pulse",&obj0,&obj1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_float(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "wave_pulse" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = (float)(val1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "wave_pulse" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = (float)(val2);
+  result = (float)wave_pulse(arg1,arg2);
+  resultobj = SWIG_From_float((float)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_wave_triangle(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  float arg1 ;
+  float val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:wave_triangle",&obj0)) SWIG_fail;
+  ecode1 = SWIG_AsVal_float(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "wave_triangle" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = (float)(val1);
+  result = (float)wave_triangle(arg1);
+  resultobj = SWIG_From_float((float)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_wave_sine(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   float arg1 ;
@@ -7278,6 +7315,8 @@ static PyMethodDef SwigMethods[] = {
 	 { "render_rgb_float", _wrap_render_rgb_float, METH_VARARGS, NULL},
 	 { "ws2811_hsv_render_array_float", _wrap_ws2811_hsv_render_array_float, METH_VARARGS, NULL},
 	 { "ws2811_rgb_render_array_float", _wrap_ws2811_rgb_render_array_float, METH_VARARGS, NULL},
+	 { "wave_pulse", _wrap_wave_pulse, METH_VARARGS, NULL},
+	 { "wave_triangle", _wrap_wave_triangle, METH_VARARGS, NULL},
 	 { "wave_sine", _wrap_wave_sine, METH_VARARGS, NULL},
 	 { "wave_cubic", _wrap_wave_cubic, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }

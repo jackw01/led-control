@@ -134,8 +134,8 @@ class AnimationController:
             'hsv': patterns.ColorMode.hsv,
             'rgb': patterns.ColorMode.rgb,
             'clamp': utils.clamp,
-            'wave_pulse': utils.wave_pulse,
-            'wave_triangle': utils.wave_triangle,
+            'wave_pulse': rpi_ws281x.wave_pulse,
+            'wave_triangle': rpi_ws281x.wave_triangle,
             'wave_sine': rpi_ws281x.wave_sine,
             'wave_cubic': rpi_ws281x.wave_cubic,
             'impulse_exp': utils.impulse_exp,
@@ -172,7 +172,7 @@ class AnimationController:
         """
         Set blackbody color temperature correction.
         """
-        temp_rgb = utils.blackbody2rgb_2(kelvin)
+        temp_rgb = [int(x * 255) for x in rpi_ws281x.blackbody_to_rgb(kelvin)]
         c = [self.correction_original[0] * temp_rgb[0] // 255,
              self.correction_original[1] * temp_rgb[1] // 255,
              self.correction_original[2] * temp_rgb[2] // 255]

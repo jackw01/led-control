@@ -45,7 +45,7 @@ def pattern(t, dt, x, y, prev_state, colors):
     5: '''
 def pattern(t, dt, x, y, prev_state, colors):
     v = (t + x) % 1
-    c = blackbody_to_rgb(int(v * v * 5500) + 1000)
+    c = blackbody_to_rgb(v * v * 5500 + 1000)
     return (c[0] * v, c[1] * v, c[2] * v), rgb
 ''',
     6: '''
@@ -77,7 +77,7 @@ def ramp_1d(t, dt, x, y, prev_state, in_color):
     return (t + x) % 1, in_color # test ramp^2
 
 def bounce_triangle_1d(t, dt, x, y, prev_state, in_color):
-    return rpi_ws281x.wave_sine(x + math.fabs((2 * t) % 2 - 1)), in_color
+    return rpi_ws281x.wave_sine(x + rpi_ws281x.wave_triangle(t)), in_color
 
 def bounce_sine_1d(t, dt, x, y, prev_state, in_color):
     return rpi_ws281x.wave_sine(x + rpi_ws281x.wave_sine(t)), in_color

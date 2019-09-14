@@ -7,7 +7,17 @@
 #include <math.h>
 
 // Optimized C utility functions
-// Waveforms for pattern generation. All have a period of 2 time units and range from 0-1.
+// Waveforms for pattern generation. All have a period of 1 time unit and range from 0-1.
+
+// Pulse with duty cycle
+float wave_pulse(float t, float duty_cycle) {
+  return ceil(duty_cycle - fmod(t, 1.0));
+}
+
+// Triangle
+float wave_triangle(float t) {
+  return fabs(fmod(2.0 * t, 2.0) - 1.0);
+}
 
 // Sine
 float wave_sine(float t) {

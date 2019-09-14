@@ -505,6 +505,14 @@ def ws2811_rgb_render_array_float(ws, channel, values, count, correction, satura
     return _rpi_ws281x.ws2811_rgb_render_array_float(ws, channel, values, count, correction, saturation, brightness)
 ws2811_rgb_render_array_float = _rpi_ws281x.ws2811_rgb_render_array_float
 
+def wave_pulse(t, duty_cycle):
+    return _rpi_ws281x.wave_pulse(t, duty_cycle)
+wave_pulse = _rpi_ws281x.wave_pulse
+
+def wave_triangle(t):
+    return _rpi_ws281x.wave_triangle(t)
+wave_triangle = _rpi_ws281x.wave_triangle
+
 def wave_sine(t):
     return _rpi_ws281x.wave_sine(t)
 wave_sine = _rpi_ws281x.wave_sine

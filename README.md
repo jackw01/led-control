@@ -83,24 +83,27 @@ Pattern functions must return a color in tuple form and either `hsv` or `rgb` de
 * All functions and constants from the [`math` module](https://docs.python.org/3/library/math.html)
 * All functions from the [`random` module](https://docs.python.org/3/library/random.html)
 
+### Wave Functions
+All waveforms have a period of 1 time unit, a range from 0 to 1, and a peak (`f(t)=1`) at `t=0`. These wave functions are implemented in C which gives a suprisingly significant performance improvement over Python.
+
+#### `wave_sine(t)`
+Returns the instantaneous value of a 1Hz sine wave at time `t`.
+
+#### `wave_cubic(t)`
+Returns the instantaneous value of a 1Hz cubic approximated sine wave (triangle wave with cubic easing) at time `t`. Appears to spend more time near 0 and 1 than a sine wave.
+
+#### `wave_triangle(t)`
+Returns the instantaneous value of a 1Hz triangle wave at time `t`.
+
+#### `wave_pulse(t, duty_cycle)`
+Returns the instantaneous value of a 1Hz pulse wave of the specified duty cycle (range 0 to 1) at time `t`.
+
 ### Additional Utility Functions
 #### `clamp(x, min, max)`
 Returns `min` if `x < min` and max if `x > max`, otherwise returns `x`
 
 #### `fract(x)`
 Returns the floating point component of `x` (`x - floor(x)`)
-
-#### `wave_sine(t)`
-Returns the instantaneous value of a 1Hz sine wave at time `t`. Wave has a period of 2 time units and range from 0-1.
-
-#### `wave_cubic(t)`
-Returns the instantaneous value of a 1Hz cubic approximated sine wave (triangle wave with cubic easing) at time `t`. Appears smoother than a sine wave. Wave has a period of 2 time units and range from 0-1.
-
-#### `wave_triangle(t)`
-Returns the instantaneous value of a 1Hz triangle wave at time `t`. Wave has a period of 2 time units and range from 0-1.
-
-#### `wave_pulse(t, duty_cycle=0.5)`
-Returns the instantaneous value of a 1Hz pulse wave of the specified duty cycle at time `t`. Wave has a period of 2 time units and range from 0-1.
 
 #### `impulse_exp(t)`
 Asymmetrical exponential "impulse" wave function. Peaks at `t=1`.

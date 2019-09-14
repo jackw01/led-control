@@ -5,6 +5,8 @@ from .rpi_ws281x import PixelStrip, Color
 from .lib.rpi_ws281x import (
     blackbody_to_rgb,
     blackbody_correction_rgb,
+    wave_pulse,
+    wave_triangle,
     wave_sine,
     wave_cubic,
 )

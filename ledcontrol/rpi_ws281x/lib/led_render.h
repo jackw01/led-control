@@ -132,7 +132,7 @@ float clamp(float d, float min, float max) {
   return t > max ? max : t;
 }
 
-color_rgb_float blackbody_to_rgb(uint16_t kelvin) {
+color_rgb_float blackbody_to_rgb(float kelvin) {
   // See http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
   // See http://www.zombieprototypes.com/?p=210
 
@@ -164,7 +164,7 @@ color_rgb_float blackbody_to_rgb(uint16_t kelvin) {
   return (color_rgb_float){r_out, g_out, b_out};
 }
 
-color_rgb_float blackbody_correction_rgb(color_rgb_float rgb, uint16_t kelvin) {
+color_rgb_float blackbody_correction_rgb(color_rgb_float rgb, float kelvin) {
   color_rgb_float blackbody = blackbody_to_rgb(kelvin);
   return (color_rgb_float){blackbody.r * rgb.r, blackbody.g * rgb.g, blackbody.b * rgb.b};
 }
