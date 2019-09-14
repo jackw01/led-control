@@ -33,18 +33,6 @@ def wave_pulse(t, duty_cycle=0.5):
 def wave_triangle(t):
     return math.fabs(((2 * t) % 2) - 1)
 
-# Sine wave
-def wave_sine(t):
-    return math.sin(2 * math.pi * (t + 0.25)) / 2 + 0.5 # 2 * math.pi * t + 0.5 * math.pi
-
-# Cubic approximation of a sine wave (triangle wave with easing)
-# https://github.com/FastLED/FastLED/wiki/FastLED-Wave-Functions
-def wave_cubic(t):
-    tri = math.fabs(((2 * t) % 2) - 1)
-    t2 = tri * tri
-    t3 = t2 * tri
-    return 3 * t2 - 2 * t3
-
 # Misc shaping functions
 
 # Exponential asymmetric impulse function - peaks at t=1

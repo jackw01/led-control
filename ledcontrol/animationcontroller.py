@@ -136,7 +136,7 @@ class AnimationController:
             'clamp': utils.clamp,
             'wave_pulse': utils.wave_pulse,
             'wave_triangle': utils.wave_triangle,
-            'wave_sine': utils.wave_sine,
+            'wave_sine': rpi_ws281x.wave_sine,
             'wave_cubic': rpi_ws281x.wave_cubic,
             'impulse_exp': utils.impulse_exp,
             'fract': utils.fract,

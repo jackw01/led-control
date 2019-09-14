@@ -59,7 +59,7 @@ default_names = {
     1: 'Cycle Hue 1D',
     2: 'Cycle Hue Bands 1D',
     3: 'RGB Sines 1D',
-    4: 'RGB Sines Approximation 1D',
+    4: 'RGB Cubics 1D',
     5: 'Cycle Blackbody 1D',
     6: 'Bounce Hue 1D',
 }
@@ -68,22 +68,22 @@ default_names = {
 # return brightness, colorRGB
 
 def sine_1d(t, dt, x, y, prev_state, in_color):
-    return utils.wave_sine(t + x), in_color
+    return rpi_ws281x.wave_sine(t + x), in_color
 
 def cubic_1d(t, dt, x, y, prev_state, in_color):
-    return utils.wave_cubic(t + x), in_color
+    return rpi_ws281x.wave_cubic(t + x), in_color
 
 def ramp_1d(t, dt, x, y, prev_state, in_color):
     return (t + x) % 1, in_color # test ramp^2
 
 def bounce_triangle_1d(t, dt, x, y, prev_state, in_color):
-    return math.sin(2 * math.pi * (0.25 + x + math.fabs((2 * t) % 2 - 1))) / 2 + 0.5, in_color
+    return rpi_ws281x.wave_sine(x + math.fabs((2 * t) % 2 - 1)), in_color
 
 def bounce_sine_1d(t, dt, x, y, prev_state, in_color):
-    return math.sin(2 * math.pi * (0.75 + x + math.cos(2 * math.pi * t) / 2)) / 2 + 0.5, in_color
+    return rpi_ws281x.wave_sine(x + rpi_ws281x.wave_sine(t)), in_color
 
 def bounce_cubic_1d(t, dt, x, y, prev_state, in_color):
-    return utils.wave_cubic(0.5 + x + math.cos(2 * math.pi * t) / 2), in_color
+    return rpi_ws281x.wave_cubic(x + rpi_ws281x.wave_sine(t)), in_color
 
 def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
     v = prev_state[0] - dt

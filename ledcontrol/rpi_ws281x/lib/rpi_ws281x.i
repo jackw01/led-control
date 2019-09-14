@@ -152,6 +152,7 @@ static int convert_iarray_8(PyObject *input, uint8_t *ptr, int size) {
 %{
 #include "c/rpi_ws281x/ws2811.h"
 #include "led_render.h"
+#include "animation_utils.h"
 %}
 
 // Process ws2811.h header and export all included functions.
@@ -159,3 +160,4 @@ static int convert_iarray_8(PyObject *input, uint8_t *ptr, int size) {
 
 // Include render utils
 %include "led_render.h"
+%include "animation_utils.h"

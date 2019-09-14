@@ -264,10 +264,6 @@ ws2811_led_get = _rpi_ws281x.ws2811_led_get
 def ws2811_led_set(channel, lednum, color):
     return _rpi_ws281x.ws2811_led_set(channel, lednum, color)
 ws2811_led_set = _rpi_ws281x.ws2811_led_set
-
-def wave_cubic(t):
-    return _rpi_ws281x.wave_cubic(t)
-wave_cubic = _rpi_ws281x.wave_cubic
 class color_hsv(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, color_hsv, name, value)
@@ -508,6 +504,14 @@ ws2811_hsv_render_array_float = _rpi_ws281x.ws2811_hsv_render_array_float
 def ws2811_rgb_render_array_float(ws, channel, values, count, correction, saturation, brightness):
     return _rpi_ws281x.ws2811_rgb_render_array_float(ws, channel, values, count, correction, saturation, brightness)
 ws2811_rgb_render_array_float = _rpi_ws281x.ws2811_rgb_render_array_float
+
+def wave_sine(t):
+    return _rpi_ws281x.wave_sine(t)
+wave_sine = _rpi_ws281x.wave_sine
+
+def wave_cubic(t):
+    return _rpi_ws281x.wave_cubic(t)
+wave_cubic = _rpi_ws281x.wave_cubic
 # This file is compatible with both classic and new-style classes.
 
 

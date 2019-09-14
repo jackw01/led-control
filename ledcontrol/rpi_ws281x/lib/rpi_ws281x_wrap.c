@@ -3098,6 +3098,7 @@ static int convert_iarray_8(PyObject *input, uint8_t *ptr, int size) {
 
 #include "c/rpi_ws281x/ws2811.h"
 #include "led_render.h"
+#include "animation_utils.h"
 
 
 SWIGINTERNINLINE PyObject*
@@ -4733,28 +4734,6 @@ SWIGINTERN PyObject *_wrap_ws2811_led_set(PyObject *SWIGUNUSEDPARM(self), PyObje
   arg3 = (uint32_t)(val3);
   result = (int)ws2811_led_set(arg1,arg2,arg3);
   resultobj = SWIG_From_int((int)(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_wave_cubic(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  float arg1 ;
-  float val1 ;
-  int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
-  float result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:wave_cubic",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_float(obj0, &val1);
-  if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "wave_cubic" "', argument " "1"" of type '" "float""'");
-  } 
-  arg1 = (float)(val1);
-  result = (float)wave_cubic(arg1);
-  resultobj = SWIG_From_float((float)(result));
   return resultobj;
 fail:
   return NULL;
@@ -7119,6 +7098,50 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_wave_sine(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  float arg1 ;
+  float val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:wave_sine",&obj0)) SWIG_fail;
+  ecode1 = SWIG_AsVal_float(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "wave_sine" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = (float)(val1);
+  result = (float)wave_sine(arg1);
+  resultobj = SWIG_From_float((float)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_wave_cubic(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  float arg1 ;
+  float val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:wave_cubic",&obj0)) SWIG_fail;
+  ecode1 = SWIG_AsVal_float(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "wave_cubic" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = (float)(val1);
+  result = (float)wave_cubic(arg1);
+  resultobj = SWIG_From_float((float)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "ws2811_channel_t_gpionum_set", _wrap_ws2811_channel_t_gpionum_set, METH_VARARGS, NULL},
@@ -7169,7 +7192,6 @@ static PyMethodDef SwigMethods[] = {
 	 { "ws2811_channel_get", _wrap_ws2811_channel_get, METH_VARARGS, NULL},
 	 { "ws2811_led_get", _wrap_ws2811_led_get, METH_VARARGS, NULL},
 	 { "ws2811_led_set", _wrap_ws2811_led_set, METH_VARARGS, NULL},
-	 { "wave_cubic", _wrap_wave_cubic, METH_VARARGS, NULL},
 	 { "color_hsv_hue_set", _wrap_color_hsv_hue_set, METH_VARARGS, NULL},
 	 { "color_hsv_hue_get", _wrap_color_hsv_hue_get, METH_VARARGS, NULL},
 	 { "color_hsv_h_set", _wrap_color_hsv_h_set, METH_VARARGS, NULL},
@@ -7256,6 +7278,8 @@ static PyMethodDef SwigMethods[] = {
 	 { "render_rgb_float", _wrap_render_rgb_float, METH_VARARGS, NULL},
 	 { "ws2811_hsv_render_array_float", _wrap_ws2811_hsv_render_array_float, METH_VARARGS, NULL},
 	 { "ws2811_rgb_render_array_float", _wrap_ws2811_rgb_render_array_float, METH_VARARGS, NULL},
+	 { "wave_sine", _wrap_wave_sine, METH_VARARGS, NULL},
+	 { "wave_cubic", _wrap_wave_cubic, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
