@@ -5,7 +5,7 @@ Advanced WS2812/SK6812 LED controller with Python animation programming and web 
 * Lightweight, responsive web interface works on both desktop and mobile devices
 * In-browser code editor with smart indentation, syntax highlighting, and syntax error detection makes creating animation patterns easy
 * Supports cheap and readily available WS281x and SK6812 LED strips and strings
-* Capable of achieving up to 280 FPS on 60 LEDs and 120 FPS on 150 LEDs on a Raspberry Pi Zero (see note below)
+* Capable of achieving up to 350 FPS on 60 LEDs and 160 FPS on 150 LEDs on a Raspberry Pi Zero (see note below)
 * Web backend written in Python using the [Flask](https://github.com/pallets/flask) web framework
 * Color conversions, color correction, and final rendering steps are done in a C extension module for maximum performance
 
