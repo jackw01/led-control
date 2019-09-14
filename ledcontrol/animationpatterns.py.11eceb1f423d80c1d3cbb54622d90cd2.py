@@ -101,7 +101,7 @@ def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
     if v <= 0:
         return in_color, random()
     else:
-        return prev_state[1], v
+        return in_color, v, prev_state[1]
 
 default_secondary = {
     0: None,

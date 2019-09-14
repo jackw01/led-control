@@ -12,7 +12,7 @@
         ]
     ],
     "params": {
-        "master_brightness": 0.02,
+        "master_brightness": 0.14,
         "master_color_temp": 6500.0,
         "master_saturation": 1.0,
         "primary_pattern": 1,
