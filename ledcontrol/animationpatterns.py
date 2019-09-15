@@ -87,14 +87,14 @@ def cubic_1d(t, dt, x, y, prev_state, in_color):
 def ramp_1d(t, dt, x, y, prev_state, in_color):
     return in_color, (t + x) % 1 # test ramp^2
 
-def bounce_triangle_1d(t, dt, x, y, prev_state, in_color):
+def bounce_linear_1d(t, dt, x, y, prev_state, in_color):
     return in_color, rpi_ws281x.wave_sine(x + rpi_ws281x.wave_triangle(t))
 
 def bounce_sine_1d(t, dt, x, y, prev_state, in_color):
     return in_color, rpi_ws281x.wave_sine(x + rpi_ws281x.wave_sine(t))
 
 def bounce_cubic_1d(t, dt, x, y, prev_state, in_color):
-    return in_color, rpi_ws281x.wave_cubic(x + rpi_ws281x.wave_sine(t))
+    return in_color, rpi_ws281x.wave_sine(x + rpi_ws281x.wave_cubic(t))
 
 def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
     v = prev_state[0] - dt
@@ -108,7 +108,7 @@ default_secondary = {
     1: sine_1d,
     2: cubic_1d,
     3: ramp_1d,
-    4: bounce_triangle_1d,
+    4: bounce_linear_1d,
     5: bounce_sine_1d,
     6: bounce_cubic_1d,
     7: twinkle_pulse_1d,

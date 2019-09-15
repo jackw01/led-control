@@ -78,6 +78,9 @@ Normalized (0 to 1) value representing the position of the current LED in arbitr
 ##### `prev_state`
 Previous color state of the current LED as an HSV or RGB tuple. Initialized to `(0, 0, 0)` on the first animation frame.
 
+##### `colors`
+User-selectable color as an array containing one HSV tuple. Only contains one color.
+
 #### Return Values
 Pattern functions must return a color in tuple form and either `hsv` or `rgb` depending on the format of the color. All values must be in the 0 to 1 range, except for hue. Hue values less than 0 or greater than 1 will wrap. RGB values less than zero or greater than one will be clamped to the 0-1 range.
 
