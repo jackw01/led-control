@@ -151,6 +151,7 @@ static int convert_iarray_8(PyObject *input, uint8_t *ptr, int size) {
 // Declare functions which will be exported as anything in the ws2811.h header.
 %{
 #include "c/rpi_ws281x/ws2811.h"
+#include "color_types.h"
 #include "led_render.h"
 #include "animation_utils.h"
 %}
@@ -159,5 +160,6 @@ static int convert_iarray_8(PyObject *input, uint8_t *ptr, int size) {
 %include "c/rpi_ws281x/ws2811.h"
 
 // Include render utils
+%include "color_types.h"
 %include "led_render.h"
 %include "animation_utils.h"

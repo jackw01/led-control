@@ -9,6 +9,8 @@ from .lib.rpi_ws281x import (
     wave_triangle,
     wave_sine,
     wave_cubic,
+    plasma_sines,
+    plasma_rgb,
 )
 from .lib import *
 

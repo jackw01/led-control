@@ -252,18 +252,6 @@ ws2811_wait = _rpi_ws281x.ws2811_wait
 def ws2811_get_return_t_str(state):
     return _rpi_ws281x.ws2811_get_return_t_str(state)
 ws2811_get_return_t_str = _rpi_ws281x.ws2811_get_return_t_str
-
-def ws2811_channel_get(ws, channelnum):
-    return _rpi_ws281x.ws2811_channel_get(ws, channelnum)
-ws2811_channel_get = _rpi_ws281x.ws2811_channel_get
-
-def ws2811_led_get(channel, lednum):
-    return _rpi_ws281x.ws2811_led_get(channel, lednum)
-ws2811_led_get = _rpi_ws281x.ws2811_led_get
-
-def ws2811_led_set(channel, lednum, color):
-    return _rpi_ws281x.ws2811_led_set(channel, lednum, color)
-ws2811_led_set = _rpi_ws281x.ws2811_led_set
 class color_hsv(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, color_hsv, name, value)
@@ -465,6 +453,18 @@ color_rgb_float_swigregister = _rpi_ws281x.color_rgb_float_swigregister
 color_rgb_float_swigregister(color_rgb_float)
 
 
+def ws2811_channel_get(ws, channelnum):
+    return _rpi_ws281x.ws2811_channel_get(ws, channelnum)
+ws2811_channel_get = _rpi_ws281x.ws2811_channel_get
+
+def ws2811_led_get(channel, lednum):
+    return _rpi_ws281x.ws2811_led_get(channel, lednum)
+ws2811_led_get = _rpi_ws281x.ws2811_led_get
+
+def ws2811_led_set(channel, lednum, color):
+    return _rpi_ws281x.ws2811_led_set(channel, lednum, color)
+ws2811_led_set = _rpi_ws281x.ws2811_led_set
+
 def unpack_rgb(arg1):
     return _rpi_ws281x.unpack_rgb(arg1)
 unpack_rgb = _rpi_ws281x.unpack_rgb
@@ -520,6 +520,14 @@ wave_sine = _rpi_ws281x.wave_sine
 def wave_cubic(t):
     return _rpi_ws281x.wave_cubic(t)
 wave_cubic = _rpi_ws281x.wave_cubic
+
+def plasma_sines(x, y, t, coeff_x, coeff_y, coeff_x_y, coeff_dist_xy):
+    return _rpi_ws281x.plasma_sines(x, y, t, coeff_x, coeff_y, coeff_x_y, coeff_dist_xy)
+plasma_sines = _rpi_ws281x.plasma_sines
+
+def plasma_rgb(x, y, t, coeff_x, coeff_y, coeff_x_y, coeff_dist_xy, delay_r, delay_g, delay_b, freq_r, freq_g, freq_b):
+    return _rpi_ws281x.plasma_rgb(x, y, t, coeff_x, coeff_y, coeff_x_y, coeff_dist_xy, delay_r, delay_g, delay_b, freq_r, freq_g, freq_b)
+plasma_rgb = _rpi_ws281x.plasma_rgb
 # This file is compatible with both classic and new-style classes.
 
 

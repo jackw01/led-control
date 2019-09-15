@@ -62,6 +62,20 @@ def pattern(t, dt, x, y, prev_state, colors):
         color[i] = 0.03 / wave_triangle(v)
     return color, rgb
 ''',
+    8: '''
+def pattern(t, dt, x, y, prev_state, colors):
+    v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
+    return (wave_sine(v),
+            wave_sine(v + 0.333),
+            wave_sine(v + 0.666)), rgb
+''',
+    9: '''
+def pattern(t, dt, x, y, prev_state, colors):
+    v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
+    return (0.9 - wave_sine(v),
+            wave_sine(v + 0.333) - 0.1,
+            0.9 - wave_sine(v + 0.666)), rgb
+''',
 }
 
 default_names = {
@@ -73,6 +87,8 @@ default_names = {
     5: 'Cycle Blackbody 1D',
     6: 'Bounce Hue 1D',
     7: 'RGB Ripples 1D',
+    8: 'RGB Plasma (Spectrum) 1D',
+    9: 'RGB Plasma (Burn) 1D',
 }
 
 # Secondary animations that transform finalized colors to add brightness-based effects

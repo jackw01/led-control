@@ -1,16 +1,17 @@
 # led-control
-Advanced WS2812/SK6812 LED controller with Python animation programming and web code editor/control interface for Raspberry Pi
+Advanced WS2812/SK6812 LED controller with Python pattern shader programming and web code editor/control interface for Raspberry Pi
 
 ## Features
 * Lightweight, responsive web interface works on both desktop and mobile devices
 * In-browser code editor with smart indentation, syntax highlighting, and syntax error detection makes creating animation patterns easy
+* Animation patterns are defined as Python functions that work similarly to fragment shaders
 * Supports cheap and readily available WS281x and SK6812 LED strips and strings
-* Capable of achieving up to 350 FPS on 60 LEDs and 160 FPS on 150 LEDs on a Raspberry Pi Zero (see note below)
+* Capable of achieving up to 380 FPS on 60 LEDs and 160 FPS on 150 LEDs on a Raspberry Pi Zero (see note below)
 * Web backend written in Python using the [Flask](https://github.com/pallets/flask) web framework
 * Color conversions, color correction, and final rendering steps are done in a C extension module for maximum performance
 
 ### Framerate Note
-Only very simple animation patterns will run this fast. More complex patterns will run slower, but framerates should stay above 24FPS even with large numbers of LEDs (150). This should not be an issue unless you are trying to display very fast-moving animations on long LED strips. All of the framerate numbers here were obtained from testing on a Raspberry Pi Zero, and almost any other Raspberry Pi will be able to run animations faster.
+Only very simple shaders will run this fast. More complex shaders will run slower, but framerates should stay comfortably above 24FPS even with large numbers of LEDs (150). This should not be an issue unless you are trying to display very fast-moving animations on long LED strips. All of the framerate numbers here were obtained from testing on a Raspberry Pi Zero, and almost any other Raspberry Pi will be able to run animations faster.
 
 ## Install
 ### Software Setup
@@ -18,7 +19,7 @@ Only very simple animation patterns will run this fast. More complex patterns wi
 2. `git clone https://github.com/jackw01/led-control.git`
 3. `cd led-control`
 4. `python3 setup.py install`. Python 3.6 or newer is required.
-5. `sudo ledcontrol --port 8080 --strip 150 --fps 30`
+5. `sudo ledcontrol --port 8080 --strip 150 --fps 60`
 
 ### Command Line Configuration Arguments
 Web server and LED hardware parameters must be specified as command line arguments when running ledcontrol.
@@ -53,15 +54,17 @@ optional arguments:
                         #FFB0F0
 ```
 
-## Animation Editing
-Animation patterns are defined as Python functions. The LEDControl web interface allows editing and creation of patterns using a subset of Python. Patterns are compiled using [RestrictedPython](https://github.com/zopefoundation/RestrictedPython) and run with a restricted set of builtin functions and global variables. This should prevent filesystem access and code execution, but the scripting system **should not be considered completely secure** and the web interface **should not be exposed to untrusted users**.
+## Pattern Editing
+Animation patterns are defined as Python functions that work similarly to GLSL fragment shaders or DirectX pixel shaders. The LEDControl web interface allows editing and creation of patterns using a subset of Python.
+
+Patterns are compiled using [RestrictedPython](https://github.com/zopefoundation/RestrictedPython) and run with a restricted set of builtin functions and global variables. This should prevent filesystem access and code execution, but the scripting system **should not be considered completely secure** and the web interface **should not be exposed to untrusted users**.
 
 ### Pattern Function Guide
 Each animation frame, the pattern function is called once per LED/pixel with time, position, and previous state as inputs to determine the next color of that pixel.
 
 ```python
 # cycle_hue_1d
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, prev_state, colors):
     return (t + x, 1, 1), hsv
 ```
 
