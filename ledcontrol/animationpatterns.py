@@ -55,11 +55,10 @@ def pattern(t, dt, x, y, prev_state, colors):
     7: '''
 def pattern(t, dt, x, y, prev_state, colors):
     color = [0, 0, 0]
-    t2 = t
     for i in range(3):
         delay = 0.05 * i
-        v = x + (wave_sine(t2 + delay)) + wave_sine(x + 0.666 * t2 + delay)
-        color[i] = 0.03 / wave_triangle(v)
+        v = x + (wave_sine(t + delay)) + wave_sine(x + 0.666 * t + delay)
+        color[i] = 0.005 / wave_triangle(v)
     return color, rgb
 ''',
     8: '''

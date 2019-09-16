@@ -7,22 +7,24 @@
         ]
     ],
     "params": {
-        "master_brightness": 0.43,
+        "master_brightness": 1.0,
         "master_color_temp": 6500.0,
         "master_saturation": 1.0,
         "primary_pattern": 10,
-        "primary_scale": 1.0,
-        "primary_speed": 0.36,
+        "primary_scale": 0.94,
+        "primary_speed": 0.61,
         "secondary_pattern": 0,
         "secondary_scale": 0.9,
         "secondary_speed": 0.33
     },
     "pattern_names": {
         "1568338519497": "RGB Test",
-        "1568426118198": "RGB Tris 1D"
+        "1568426118198": "RGB Tris 1D",
+        "1568613597835": "RGB Ripples 1D (Copy)"
     },
     "pattern_sources": {
         "1568338519497": "def pattern(t, dt, x, y, prev_state, colors):\n    return (1.0, 1.0, 1.0), rgb",
-        "1568426118198": "def pattern(t, dt, x, y, prev_state, colors):\n    return (wave_triangle(t + x),\n            wave_triangle((t + x) * 1.2),\n            wave_triangle((t + x) * 1.4)), rgb"
+        "1568426118198": "def pattern(t, dt, x, y, prev_state, colors):\n    return (wave_triangle(t + x),\n            wave_triangle((t + x) * 1.2),\n            wave_triangle((t + x) * 1.4)), rgb",
+        "1568613597835": "def pattern(t, dt, x, y, prev_state, colors):\n    color = [0, 0, 0]\n    for i in range(3):\n        delay = 0.05 * i\n        v = x + (wave_sine(t + delay)) + wave_sine(x + 0.666 * t + delay)\n        color[i] = 0.03 / wave_triangle(v)\n    return color, rgb"
     }
 }

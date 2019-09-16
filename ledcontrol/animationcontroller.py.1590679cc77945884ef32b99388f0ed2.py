@@ -211,20 +211,24 @@ class AnimationController:
         else:
             p = [(0, 0) for i in range(self.led_count)]
 
-        if self.params['secondary_scale'] != 0:
+        if self.params['primary_scale'] != 0:
             for i in range(self.led_count):
                 # Calculate scale components to determine animation position
                 # scale component = position (max size) / scale (pattern length in units)
                 # One cycle is a normalized input value's transition from 0 to 1
                 s.append((
-                    (self.mapped[i][0] / self.params['secondary_scale']) % 1,
-                    (self.mapped[i][1] / self.params['secondary_scale']) % 1
-                ))
+                (self.mapped[i][0] / self.params['secondary_scale']) % 1,
+                (self.mapped[i][1] / self.params['secondary_scale']) % 1
+            ))
         else:
-            s = [(0, 0) for i in range(self.led_count)]
+            x = [(0, 0) for i in range(self.led_count)]
+
+
 
         self.primary_mapping = p
         self.secondary_mapping = s
+
+        print(self.primary_mapping)
 
     def set_param(self, key, value):
         """
