@@ -525,9 +525,9 @@ def plasma_sines(x, y, t, coeff_x, coeff_y, coeff_x_y, coeff_dist_xy):
     return _rpi_ws281x.plasma_sines(x, y, t, coeff_x, coeff_y, coeff_x_y, coeff_dist_xy)
 plasma_sines = _rpi_ws281x.plasma_sines
 
-def plasma_rgb(x, y, t, coeff_x, coeff_y, coeff_x_y, coeff_dist_xy, delay_r, delay_g, delay_b, freq_r, freq_g, freq_b):
-    return _rpi_ws281x.plasma_rgb(x, y, t, coeff_x, coeff_y, coeff_x_y, coeff_dist_xy, delay_r, delay_g, delay_b, freq_r, freq_g, freq_b)
-plasma_rgb = _rpi_ws281x.plasma_rgb
+def plasma_sines_octave(x, y, t, octaves, temporal_freq_persistence, amplitude_persistence):
+    return _rpi_ws281x.plasma_sines_octave(x, y, t, octaves, temporal_freq_persistence, amplitude_persistence)
+plasma_sines_octave = _rpi_ws281x.plasma_sines_octave
 # This file is compatible with both classic and new-style classes.
 
 

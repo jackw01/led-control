@@ -7,12 +7,12 @@
         ]
     ],
     "params": {
-        "master_brightness": 0.07,
+        "master_brightness": 0.43,
         "master_color_temp": 6500.0,
         "master_saturation": 1.0,
-        "primary_pattern": 9,
+        "primary_pattern": 10,
         "primary_scale": 1.0,
-        "primary_speed": 0.17,
+        "primary_speed": 0.36,
         "secondary_pattern": 0,
         "secondary_scale": 0.9,
         "secondary_speed": 0.33

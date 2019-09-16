@@ -7256,135 +7256,67 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_plasma_rgb(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_plasma_sines_octave(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   float arg1 ;
   float arg2 ;
   float arg3 ;
-  float arg4 ;
+  uint8_t arg4 ;
   float arg5 ;
   float arg6 ;
-  float arg7 ;
-  float arg8 ;
-  float arg9 ;
-  float arg10 ;
-  float arg11 ;
-  float arg12 ;
-  float arg13 ;
   float val1 ;
   int ecode1 = 0 ;
   float val2 ;
   int ecode2 = 0 ;
   float val3 ;
   int ecode3 = 0 ;
-  float val4 ;
+  unsigned char val4 ;
   int ecode4 = 0 ;
   float val5 ;
   int ecode5 = 0 ;
   float val6 ;
   int ecode6 = 0 ;
-  float val7 ;
-  int ecode7 = 0 ;
-  float val8 ;
-  int ecode8 = 0 ;
-  float val9 ;
-  int ecode9 = 0 ;
-  float val10 ;
-  int ecode10 = 0 ;
-  float val11 ;
-  int ecode11 = 0 ;
-  float val12 ;
-  int ecode12 = 0 ;
-  float val13 ;
-  int ecode13 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   PyObject * obj4 = 0 ;
   PyObject * obj5 = 0 ;
-  PyObject * obj6 = 0 ;
-  PyObject * obj7 = 0 ;
-  PyObject * obj8 = 0 ;
-  PyObject * obj9 = 0 ;
-  PyObject * obj10 = 0 ;
-  PyObject * obj11 = 0 ;
-  PyObject * obj12 = 0 ;
-  color_rgb_float result;
+  float result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOOOOO:plasma_rgb",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9,&obj10,&obj11,&obj12)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:plasma_sines_octave",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
   ecode1 = SWIG_AsVal_float(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "plasma_rgb" "', argument " "1"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "plasma_sines_octave" "', argument " "1"" of type '" "float""'");
   } 
   arg1 = (float)(val1);
   ecode2 = SWIG_AsVal_float(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "plasma_rgb" "', argument " "2"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "plasma_sines_octave" "', argument " "2"" of type '" "float""'");
   } 
   arg2 = (float)(val2);
   ecode3 = SWIG_AsVal_float(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "plasma_rgb" "', argument " "3"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "plasma_sines_octave" "', argument " "3"" of type '" "float""'");
   } 
   arg3 = (float)(val3);
-  ecode4 = SWIG_AsVal_float(obj3, &val4);
+  ecode4 = SWIG_AsVal_unsigned_SS_char(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "plasma_rgb" "', argument " "4"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "plasma_sines_octave" "', argument " "4"" of type '" "uint8_t""'");
   } 
-  arg4 = (float)(val4);
+  arg4 = (uint8_t)(val4);
   ecode5 = SWIG_AsVal_float(obj4, &val5);
   if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "plasma_rgb" "', argument " "5"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "plasma_sines_octave" "', argument " "5"" of type '" "float""'");
   } 
   arg5 = (float)(val5);
   ecode6 = SWIG_AsVal_float(obj5, &val6);
   if (!SWIG_IsOK(ecode6)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "plasma_rgb" "', argument " "6"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "plasma_sines_octave" "', argument " "6"" of type '" "float""'");
   } 
   arg6 = (float)(val6);
-  ecode7 = SWIG_AsVal_float(obj6, &val7);
-  if (!SWIG_IsOK(ecode7)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "plasma_rgb" "', argument " "7"" of type '" "float""'");
-  } 
-  arg7 = (float)(val7);
-  ecode8 = SWIG_AsVal_float(obj7, &val8);
-  if (!SWIG_IsOK(ecode8)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "plasma_rgb" "', argument " "8"" of type '" "float""'");
-  } 
-  arg8 = (float)(val8);
-  ecode9 = SWIG_AsVal_float(obj8, &val9);
-  if (!SWIG_IsOK(ecode9)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "plasma_rgb" "', argument " "9"" of type '" "float""'");
-  } 
-  arg9 = (float)(val9);
-  ecode10 = SWIG_AsVal_float(obj9, &val10);
-  if (!SWIG_IsOK(ecode10)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "plasma_rgb" "', argument " "10"" of type '" "float""'");
-  } 
-  arg10 = (float)(val10);
-  ecode11 = SWIG_AsVal_float(obj10, &val11);
-  if (!SWIG_IsOK(ecode11)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode11), "in method '" "plasma_rgb" "', argument " "11"" of type '" "float""'");
-  } 
-  arg11 = (float)(val11);
-  ecode12 = SWIG_AsVal_float(obj11, &val12);
-  if (!SWIG_IsOK(ecode12)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode12), "in method '" "plasma_rgb" "', argument " "12"" of type '" "float""'");
-  } 
-  arg12 = (float)(val12);
-  ecode13 = SWIG_AsVal_float(obj12, &val13);
-  if (!SWIG_IsOK(ecode13)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode13), "in method '" "plasma_rgb" "', argument " "13"" of type '" "float""'");
-  } 
-  arg13 = (float)(val13);
-  result = plasma_rgb(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10,arg11,arg12,arg13);
-  {
-    resultobj = PyList_New(3);
-    PyList_SetItem(resultobj, 0, PyFloat_FromDouble((&result)->r));
-    PyList_SetItem(resultobj, 1, PyFloat_FromDouble((&result)->g));
-    PyList_SetItem(resultobj, 2, PyFloat_FromDouble((&result)->b));
-  }
+  result = (float)plasma_sines_octave(arg1,arg2,arg3,arg4,arg5,arg6);
+  resultobj = SWIG_From_float((float)(result));
   return resultobj;
 fail:
   return NULL;
@@ -7532,7 +7464,7 @@ static PyMethodDef SwigMethods[] = {
 	 { "wave_sine", _wrap_wave_sine, METH_VARARGS, NULL},
 	 { "wave_cubic", _wrap_wave_cubic, METH_VARARGS, NULL},
 	 { "plasma_sines", _wrap_plasma_sines, METH_VARARGS, NULL},
-	 { "plasma_rgb", _wrap_plasma_rgb, METH_VARARGS, NULL},
+	 { "plasma_sines_octave", _wrap_plasma_sines_octave, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 

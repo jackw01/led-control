@@ -10,7 +10,7 @@ from .lib.rpi_ws281x import (
     wave_sine,
     wave_cubic,
     plasma_sines,
-    plasma_rgb,
+    plasma_sines_octave,
 )
 from .lib import *
 

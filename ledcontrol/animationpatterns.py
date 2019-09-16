@@ -76,6 +76,13 @@ def pattern(t, dt, x, y, prev_state, colors):
             wave_sine(v + 0.333) - 0.1,
             0.9 - wave_sine(v + 0.666)), rgb
 ''',
+    10: '''
+def pattern(t, dt, x, y, prev_state, colors):
+    v = plasma_sines_octave(x, y, t, 7, 1.5, 0.5)
+    return (0.9 - wave_sine(v),
+            wave_sine(v + 0.333) - 0.1,
+            0.9 - wave_sine(v + 0.666)), rgb
+''',
 }
 
 default_names = {
@@ -89,6 +96,7 @@ default_names = {
     7: 'RGB Ripples 1D',
     8: 'RGB Plasma (Spectrum) 1D',
     9: 'RGB Plasma (Burn) 1D',
+    10: 'RGB Octave Plasma (Burn) 1D',
 }
 
 # Secondary animations that transform finalized colors to add brightness-based effects
