@@ -181,8 +181,8 @@ class AnimationController:
         """
         Reset previous animation state lists.
         """
-        self.primary_prev_state = [(0, 0, 0) for i in range(self.led_count)]
-        self.secondary_prev_state = [(0, (0, 0, 0)) for i in range(self.led_count)]
+        self.primary_prev_state = [((0, 0, 0), 0) for i in range(self.led_count)]
+        self.secondary_prev_state = [((0, 0, 0), 0) for i in range(self.led_count)]
 
     def calculate_color_correction(self):
         """
@@ -288,7 +288,7 @@ class AnimationController:
                                   primary_delta_t,
                                   self.primary_mapping[i][0],
                                   self.primary_mapping[i][1],
-                                  self.primary_prev_state[i][1],
+                                  self.primary_prev_state[i][0],
                                   self.colors)[0], 1) for i in range(self.led_count)]
             self.primary_prev_state = state_1
 
@@ -308,7 +308,7 @@ class AnimationController:
             print('Pattern execution: {}'.format(traceback.format_exception(type(e),
                                                                             e,
                                                                             e.__traceback__)))
-            state_2 = [(0, (0, 0, 0)) for i in range(self.led_count)]
+            state_2 = [((0, 0, 0), 0) for i in range(self.led_count)]
 
         # Write colors to LEDs
         if mode == patterns.ColorMode.hsv:

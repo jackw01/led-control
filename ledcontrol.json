@@ -7,16 +7,16 @@
         ]
     ],
     "params": {
-        "master_brightness": 0.19,
+        "master_brightness": 0.1,
         "master_color_temp": 6500.0,
         "master_gamma": 1.0,
         "master_saturation": 1.0,
-        "primary_pattern": 1,
+        "primary_pattern": 10,
         "primary_scale": 0.94,
-        "primary_speed": 0.61,
-        "secondary_pattern": 0,
-        "secondary_scale": -0.16,
-        "secondary_speed": 1.09
+        "primary_speed": 0.39,
+        "secondary_pattern": 7,
+        "secondary_scale": 3.72,
+        "secondary_speed": 0.55
     },
     "pattern_names": {
         "1568338519497": "RGB Test",

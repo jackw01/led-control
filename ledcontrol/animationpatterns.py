@@ -120,11 +120,11 @@ def bounce_cubic_1d(t, dt, x, y, prev_state, in_color):
     return in_color, rpi_ws281x.wave_sine(x + rpi_ws281x.wave_cubic(t))
 
 def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
-    v = prev_state[0] - dt
+    v = prev_state[1] - dt
     if v <= 0:
         return in_color, random()
     else:
-        return prev_state[1], v
+        return prev_state[0], v
 
 default_secondary = {
     0: None,
