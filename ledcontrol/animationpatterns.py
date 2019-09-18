@@ -94,8 +94,8 @@ default_names = {
     6: 'Bounce Hue 1D',
     7: 'RGB Ripples 1D',
     8: 'RGB Plasma (Spectrum) 1D',
-    9: 'RGB Plasma (Burn) 1D',
-    10: 'RGB Octave Plasma (Burn) 1D',
+    9: 'RGB Plasma (Fire) 1D',
+    10: 'RGB Octave Plasma (Fire) 1D',
 }
 
 # Secondary animations that transform finalized colors to add brightness-based effects

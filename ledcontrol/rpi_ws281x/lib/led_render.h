@@ -186,6 +186,12 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
     }
   }
 
+  if (gamma != 1) {
+    r = pow((float)r / 255.0, gamma) * 255;
+    g = pow((float)g / 255.0, gamma) * 255;
+    b = pow((float)b / 255.0, gamma) * 255;
+  }
+
   r = scale_8(r, corr_rgb.r);
   g = scale_8(g, corr_rgb.g);
   b = scale_8(b, corr_rgb.b);
@@ -218,9 +224,9 @@ uint32_t render_rgb_float(color_rgb_float rgb,
   }
 
   if (gamma != 1) {
-    uint8_t r8 = pow(r, gamma);
-    uint8_t g8 = pow(g, gamma);
-    uint8_t b8 = pow(b, gamma);
+    r = pow(r, gamma);
+    g = pow(g, gamma);
+    b = pow(b, gamma);
   }
 
   uint8_t r8 = r * 255;
