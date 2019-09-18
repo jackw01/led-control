@@ -489,20 +489,20 @@ def blackbody_correction_rgb(rgb, kelvin):
     return _rpi_ws281x.blackbody_correction_rgb(rgb, kelvin)
 blackbody_correction_rgb = _rpi_ws281x.blackbody_correction_rgb
 
-def render_hsv2rgb_rainbow_float(hsv, corr_rgb, saturation, brightness):
-    return _rpi_ws281x.render_hsv2rgb_rainbow_float(hsv, corr_rgb, saturation, brightness)
+def render_hsv2rgb_rainbow_float(hsv, corr_rgb, saturation, brightness, gamma):
+    return _rpi_ws281x.render_hsv2rgb_rainbow_float(hsv, corr_rgb, saturation, brightness, gamma)
 render_hsv2rgb_rainbow_float = _rpi_ws281x.render_hsv2rgb_rainbow_float
 
-def render_rgb_float(rgb, corr_rgb, saturation, brightness):
-    return _rpi_ws281x.render_rgb_float(rgb, corr_rgb, saturation, brightness)
+def render_rgb_float(rgb, corr_rgb, saturation, brightness, gamma):
+    return _rpi_ws281x.render_rgb_float(rgb, corr_rgb, saturation, brightness, gamma)
 render_rgb_float = _rpi_ws281x.render_rgb_float
 
-def ws2811_hsv_render_array_float(ws, channel, values, count, correction, saturation, brightness):
-    return _rpi_ws281x.ws2811_hsv_render_array_float(ws, channel, values, count, correction, saturation, brightness)
+def ws2811_hsv_render_array_float(ws, channel, values, count, correction, saturation, brightness, gamma):
+    return _rpi_ws281x.ws2811_hsv_render_array_float(ws, channel, values, count, correction, saturation, brightness, gamma)
 ws2811_hsv_render_array_float = _rpi_ws281x.ws2811_hsv_render_array_float
 
-def ws2811_rgb_render_array_float(ws, channel, values, count, correction, saturation, brightness):
-    return _rpi_ws281x.ws2811_rgb_render_array_float(ws, channel, values, count, correction, saturation, brightness)
+def ws2811_rgb_render_array_float(ws, channel, values, count, correction, saturation, brightness, gamma):
+    return _rpi_ws281x.ws2811_rgb_render_array_float(ws, channel, values, count, correction, saturation, brightness, gamma)
 ws2811_rgb_render_array_float = _rpi_ws281x.ws2811_rgb_render_array_float
 
 def wave_pulse(t, duty_cycle):

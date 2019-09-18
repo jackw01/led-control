@@ -12,7 +12,7 @@ try:
     xrange(0)
 except NameError:
     xrange = range
-    
+
 def Color(red, green, blue, white=0):
     """Convert the provided red, green, blue color to a 24-bit color value.
     Each color component should be a value 0-255 where 0 is the lowest intensity
@@ -180,10 +180,10 @@ class PixelStrip(object):
         setattr(c, 'b', self._led_data[n] & 0xff)
         return c
 
-    def set_all_pixels_hsv_float(self, pixels, correction, saturation, brightness):
+    def set_all_pixels_hsv_float(self, pixels, correction, saturation, brightness, gamma):
         ws.ws2811_hsv_render_array_float(self._leds, self._channel, pixels, len(pixels),
-                                         correction, saturation, brightness)
+                                         correction, saturation, brightness, gamma)
 
-    def set_all_pixels_rgb_float(self, pixels, correction, saturation, brightness):
+    def set_all_pixels_rgb_float(self, pixels, correction, saturation, brightness, gamma):
         ws.ws2811_rgb_render_array_float(self._leds, self._channel, pixels, len(pixels),
-                                         correction, saturation, brightness)
+                                         correction, saturation, brightness, gamma)

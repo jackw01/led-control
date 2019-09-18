@@ -87,6 +87,7 @@ class AnimationController:
         self.params = {
             'master_brightness': 0.15,
             'master_color_temp': 6500,
+            'master_gamma': 1.0,
             'master_saturation': 1.0,
             'primary_pattern': 0,
             'primary_speed': 0.2,
@@ -315,14 +316,16 @@ class AnimationController:
                 [(c[0][0], c[0][1], c[0][2] * c[1]) for c in state_2],
                 self.correction,
                 self.params['master_saturation'],
-                self.params['master_brightness']
+                self.params['master_brightness'],
+                self.params['master_gamma']
             )
         elif mode == patterns.ColorMode.rgb:
             self.led_controller.leds.set_all_pixels_rgb_float(
                 [(c[0][0] * c[1], c[0][1] * c[1], c[0][2] * c[1]) for c in state_2],
                 self.correction,
                 self.params['master_saturation'],
-                self.params['master_brightness']
+                self.params['master_brightness'],
+                self.params['master_gamma']
             )
 
         # End render

@@ -78,6 +78,7 @@ def create_app(led_count, refresh_rate,
     form = [
         FormItem('range', 'master_brightness', float, 0, 1),
         FormItem('range', 'master_color_temp', float, 1000, 12000, 10, unit='K'),
+        FormItem('range', 'master_gamma', float, 0.01, 3),
         FormItem('range', 'master_saturation', float, 0, 1),
         FormItem('select', 'primary_pattern', int),
         FormItem('range', 'primary_speed', float, 0.01, 2, unit='Hz'),

@@ -7,8 +7,9 @@
         ]
     ],
     "params": {
-        "master_brightness": 1.0,
+        "master_brightness": 0.18,
         "master_color_temp": 6500.0,
+        "master_gamma": 1.0,
         "master_saturation": 1.0,
         "primary_pattern": 10,
         "primary_scale": 0.94,
