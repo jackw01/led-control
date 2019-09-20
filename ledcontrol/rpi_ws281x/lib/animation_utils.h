@@ -122,7 +122,8 @@ double perlin_noise_3d(double x, double y, double z) {
   y -= floor(y);
   z -= floor(z);
   double u = fade(x), v = fade(y), w = fade(z);
-  int A = p[X  ]+Y, AA = p[A]+Z, AB = p[A+1]+Z, B = p[X+1]+Y, BA = p[B]+Z, BB = p[B+1]+Z;
+  int A = p[X] + Y, AA = p[A] + Z, AB = p[A + 1] + Z;
+  int B = p[X + 1] + Y, BA = p[B] + Z, BB = p[B + 1]+Z;
   return lerp(w, lerp(v, lerp(u, grad(p[AA  ], x  , y  , z   ),
                                  grad(p[BA  ], x-1, y  , z   )),
                          lerp(u, grad(p[AB  ], x  , y-1, z   ),
@@ -130,7 +131,7 @@ double perlin_noise_3d(double x, double y, double z) {
                  lerp(v, lerp(u, grad(p[AA+1], x  , y  , z-1 ),
                                  grad(p[BA+1], x-1, y  , z-1 )),
                          lerp(u, grad(p[AB+1], x  , y-1, z-1 ),
-                                     grad(p[BB+1], x-1, y-1, z-1 ))));
+                                 grad(p[BB+1], x-1, y-1, z-1 ))));
 }
 
 #endif

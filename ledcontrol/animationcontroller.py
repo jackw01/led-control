@@ -154,6 +154,7 @@ class AnimationController:
             'wave_cubic': rpi_ws281x.wave_cubic,
             'plasma_sines': rpi_ws281x.plasma_sines,
             'plasma_sines_octave': rpi_ws281x.plasma_sines_octave,
+            'perlin_noise_3d': rpi_ws281x.perlin_noise_3d,
             'impulse_exp': utils.impulse_exp,
             'fract': utils.fract,
             'blackbody_to_rgb': rpi_ws281x.blackbody_to_rgb,

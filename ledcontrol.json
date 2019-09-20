@@ -14,9 +14,9 @@
         "primary_pattern": 10,
         "primary_scale": 0.94,
         "primary_speed": 0.24,
-        "secondary_pattern": 8,
-        "secondary_scale": 0.43,
-        "secondary_speed": 1.43
+        "secondary_pattern": 6,
+        "secondary_scale": 0.94,
+        "secondary_speed": 1.58
     },
     "pattern_names": {
         "1568338519497": "RGB Test",

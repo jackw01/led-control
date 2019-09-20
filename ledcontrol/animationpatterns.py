@@ -120,7 +120,7 @@ def bounce_cubic_1d(t, dt, x, y, prev_state, in_color):
     return in_color, rpi_ws281x.wave_sine(x + rpi_ws281x.wave_cubic(t))
 
 def perlin_noise_2d(t, dt, x, y, prev_state, in_color):
-    return in_color, rpi_ws281x.perlin_noise_3d(x, y, t);
+    return in_color, rpi_ws281x.perlin_noise_3d(x, y, t)
 
 def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
     v = prev_state[1] - dt
