@@ -11,6 +11,7 @@ from .lib.rpi_ws281x import (
     wave_cubic,
     plasma_sines,
     plasma_sines_octave,
+    perlin_noise_3d,
 )
 from .lib import *
 

@@ -119,12 +119,22 @@ def bounce_sine_1d(t, dt, x, y, prev_state, in_color):
 def bounce_cubic_1d(t, dt, x, y, prev_state, in_color):
     return in_color, rpi_ws281x.wave_sine(x + rpi_ws281x.wave_cubic(t))
 
+def perlin_noise_2d(t, dt, x, y, prev_state, in_color):
+    return in_color, rpi_ws281x.perlin_noise_3d(x, y, t);
+
 def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
     v = prev_state[1] - dt
-    if v <= 0:
+    if v <= -1:
         return in_color, random()
-    else:
+    elif v > 0:
         return prev_state[0], v
+    else:
+        return (0, 0, 0), v
+
+def twinkle_pulse_2_1d(t, dt, x, y, prev_state, in_color):
+    part = utils.fract(rpi_ws281x.wave_sine(t))
+    v = 1 - utils.clamp(abs(x - part) * 10, 0, 1)
+    return in_color, v
 
 default_secondary = {
     0: None,
@@ -134,7 +144,9 @@ default_secondary = {
     4: bounce_linear_1d,
     5: bounce_sine_1d,
     6: bounce_cubic_1d,
+    6: perlin_noise_2d,
     7: twinkle_pulse_1d,
+    8: twinkle_pulse_2_1d,
 }
 
 default_secondary_names = {

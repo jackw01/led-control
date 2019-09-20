@@ -528,6 +528,23 @@ plasma_sines = _rpi_ws281x.plasma_sines
 def plasma_sines_octave(x, y, t, octaves, temporal_freq_persistence, amplitude_persistence):
     return _rpi_ws281x.plasma_sines_octave(x, y, t, octaves, temporal_freq_persistence, amplitude_persistence)
 plasma_sines_octave = _rpi_ws281x.plasma_sines_octave
+
+def fade(t):
+    return _rpi_ws281x.fade(t)
+fade = _rpi_ws281x.fade
+
+def lerp(t, a, b):
+    return _rpi_ws281x.lerp(t, a, b)
+lerp = _rpi_ws281x.lerp
+
+def grad(hash, x, y, z):
+    return _rpi_ws281x.grad(hash, x, y, z)
+grad = _rpi_ws281x.grad
+
+def perlin_noise_3d(x, y, z):
+    return _rpi_ws281x.perlin_noise_3d(x, y, z)
+perlin_noise_3d = _rpi_ws281x.perlin_noise_3d
 # This file is compatible with both classic and new-style classes.
 
+cvar = _rpi_ws281x.cvar
 
