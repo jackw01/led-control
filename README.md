@@ -85,7 +85,7 @@ Previous color state of the current LED as an HSV or RGB tuple. Initialized to `
 User-selectable color as an array containing one HSV tuple. Only contains one color.
 
 #### Return Values
-Pattern functions must return a color in tuple form and either `hsv` or `rgb` depending on the format of the color. All values must be in the 0 to 1 range, except for hue. Hue values less than 0 or greater than 1 will wrap. RGB values less than zero or greater than one will be clamped to the 0-1 range.
+Pattern functions must return a color in tuple form and either `hsv` or `rgb` depending on the format of the color. All values must be in the 0 to 1 range, except for hue. Hue values less than 0 or greater than 1 will wrap. RGB will be clamped to the 0-1 range.
 
 ### Supported Python Globals
 * Builtins: `None`, `False`, `True`, `abs`, `bool`, `callable`, `chr`, `complex`, `divmod`, `float`, `hash`, `hex`, `id`, `int`, `isinstance`, `issubclass`, `len`, `oct`, `ord`, `pow`, `range`, `repr`, `round`, `slice`, `str`, `tuple`, `zip`
@@ -108,7 +108,7 @@ Returns the instantaneous value of a 1Hz triangle wave at time `t`.
 Returns the instantaneous value of a 1Hz pulse wave of the specified duty cycle (range 0 to 1) at time `t`.
 
 #### `plasma_sines_octave(x, y, t, octaves, temporal_freq_persistence, amplitude_persistence)`
-Custom optimized "plasma" implementation that essentially returns a sum of several octaves of sinusoid-based waveforms. This creates more detailed and better looking plasma effects than simpler implementations. For each successive octave, the spatial frequency of the wave is multiplied by 2, the temporal frequency (how fast the wave changes with time) is multiplied by `temporal_freq_persistence`, and the amplitude is multiplied by `amplitude_persistence`. Returns a value from 0 to 1. `octaves` must be an integer.
+Custom optimized "plasma" implementation that returns a sum of several octaves of sinusoid-based waveforms. This creates more detailed and better looking plasma effects than simpler implementations. For each successive octave, the spatial frequency of the wave is multiplied by 2, the temporal frequency (how fast the wave changes with time) is multiplied by `temporal_freq_persistence`, and the amplitude is multiplied by `amplitude_persistence`. Returns a value from 0 to 1. `octaves` must be an integer. See the usage notes below.
 
 #### `perlin_noise_3d(x, y, z)`
 Standard 3D perlin noise. Use time as one of the arguments to make the noise vary with time. Returns a value from 0 to 1.
@@ -131,3 +131,38 @@ Returns a normalized RGB tuple for a color temperature in Kelvin.
 
 #### `blackbody_correction_rgb(rgb, kelvin)`
 Tints an RGB color (normalized RGB tuple) to a color temperature in Kelvin. Returns a normalized RGB tuple.
+
+### Using Plasma Utility Functions
+`plasma_sines` and `plasma_sines_octave` both return the instantaneous value of a 2D periodic function at time `t` and position (`x`, `y`). The typical way of converting this value to a color is to assign the RGB values to expressions of the form `a * wave_sine(b * x + c) + d`, where `wave_sine` is a function that returns a sinusoid waveform with range 0 to 1. This is done in the code for several built in patterns.
+
+Below is GLSL code for testing and experimenting with these plasma functions in 2D. This code can be easily run on [Shadertoy](https://www.shadertoy.com/new).
+
+#### `plasma_sines`
+```GLSL
+float wave_sine(float t) {
+  return cos(6.283 * t) / 2.0 + 0.5;
+}
+
+float plasma_sines(float x, float y, float t,
+                   float coeff_x, float coeff_y, float coeff_x_y, float coeff_dist_xy) {
+  float v = 0.0;
+  v += sin((x + t) * coeff_x);
+  v += sin((y + t) * coeff_y);
+  v += sin((x + y + t) * coeff_x_y);
+  v += sin((sqrt(x * x + y * y) + t) * coeff_dist_xy);
+  return v;
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
+    // Normalized pixel coordinates (from 0 to 1)
+    vec2 uv = fragCoord / iResolution.xy;
+
+    float v = plasma_sines(uv.x, uv.y, iTime, 1.0, 0.5, 0.5, 1.0);
+
+    float r = 0.8 - wave_sine(v);
+    float g = wave_sine(v + 0.333) - 0.2;
+    float b = 0.8 - wave_sine(v + 0.666);
+
+    fragColor = vec4(r, g, b, 1.0);
+}
+```
