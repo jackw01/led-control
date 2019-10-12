@@ -4,6 +4,7 @@
 import json
 import atexit
 from recordclass import recordclass
+from threading import Timer
 from pathlib import Path
 from flask import Flask, render_template, request, jsonify
 from ledcontrol.animationcontroller import AnimationController
@@ -45,7 +46,8 @@ FormItem = recordclass('FormItem', fields, defaults=defaults)
 def create_app(led_count, refresh_rate,
                led_pin, led_data_rate, led_dma_channel,
                led_strip_type, led_pixel_order,
-               led_color_correction):
+               led_color_correction,
+               save_interval):
     app = Flask(__name__)
     leds = LEDController(led_count, led_pin,
                          led_data_rate, led_dma_channel, led_strip_type, led_pixel_order)
@@ -97,7 +99,7 @@ def create_app(led_count, refresh_rate,
     @app.route('/')
     def index():
         """
-        Returns web app page.
+        Returns web app page
         """
         for item in form:
             if (item.key in controller.params):
@@ -110,7 +112,7 @@ def create_app(led_count, refresh_rate,
     @app.route('/setparam')
     def set_param():
         """
-        Sets a key/value pair in controller parameters.
+        Sets a key/value pair in controller parameters
         """
         key = request.args.get('key', type=str)
         value = request.args.get('value')
@@ -120,7 +122,7 @@ def create_app(led_count, refresh_rate,
     @app.route('/getpatternsources')
     def get_pattern_sources():
         """
-        Returns pattern sources in JSON dict form.
+        Returns pattern sources in JSON dict form
         """
         return jsonify(sources=controller.pattern_sources,
                        names=pattern_names,
@@ -130,7 +132,7 @@ def create_app(led_count, refresh_rate,
     @app.route('/compilepattern')
     def compile_pattern():
         """
-        Compiles a pattern, returns errors and warnings in JSON array form.
+        Compiles a pattern, returns errors and warnings in JSON array form
         """
         key = request.args.get('key', type=int)
         source = request.args.get('source', type=str)
@@ -140,7 +142,7 @@ def create_app(led_count, refresh_rate,
     @app.route('/setpatternname')
     def set_pattern_name():
         """
-        Sets a pattern name for the given key.
+        Sets a pattern name for the given key
         """
         key = request.args.get('key', type=int)
         name = request.args.get('name', type=str)
@@ -172,7 +174,7 @@ def create_app(led_count, refresh_rate,
 
     def save_settings():
         """
-        Save controller settings on shutdown.
+        Save controller settings
         """
         data = {
             'params': controller.params,
@@ -189,9 +191,18 @@ def create_app(led_count, refresh_rate,
             except Exception:
                 print('Could not save settings to {}'.format(filename))
 
+    def auto_save_settings():
+        """
+        Timer for automatically saving settings
+        """
+        t = Timer(save_interval, auto_save_settings)
+        t.daemon = True
+        t.start()
+
     controller.begin_animation_thread()
     atexit.register(save_settings)
     atexit.register(leds.clear)
     atexit.register(controller.end_animation_thread)
+    auto_save_settings()
 
     return app
