@@ -195,6 +195,7 @@ def create_app(led_count, refresh_rate,
         """
         Timer for automatically saving settings
         """
+        save_settings()
         t = Timer(save_interval, auto_save_settings)
         t.daemon = True
         t.start()

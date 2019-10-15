@@ -7,7 +7,7 @@ Advanced WS2812/SK6812 LED controller with Python pattern shader programming and
 * Animation patterns are defined as Python functions that work similarly to fragment shaders
 * Supports cheap and readily available WS281x and SK6812 LED strips and strings
 * Capable of achieving up to 380 FPS on 60 LEDs and 160 FPS on 150 LEDs on a Raspberry Pi Zero (see note below)
-* Web backend written in Python using the [Flask](https://github.com/pallets/flask) web framework
+* Web backend and animation code written in Python using the [Flask](https://github.com/pallets/flask) web framework for ease of development
 * Color conversions, color correction, and final rendering steps are done in a C extension module for maximum performance
 
 ### Framerate Note
