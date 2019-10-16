@@ -98,7 +98,7 @@ default_names = {
     10: 'RGB Octave Plasma (Fire) 1D',
 }
 
-# Secondary animations that transform finalized colors to add brightness-based effects
+# Secondary animations that transform finalized colors to add brightness effects
 # return brightness, colorRGB
 
 def sine_1d(t, dt, x, y, prev_state, in_color):

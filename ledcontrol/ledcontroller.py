@@ -6,7 +6,8 @@ import ledcontrol.utils as utils
 
 class LEDController:
     def __init__(self, led_count, led_pin,
-                 led_data_rate, led_dma_channel, led_strip_type, led_pixel_order):
+                 led_data_rate, led_dma_channel,
+                 led_strip_type, led_pixel_order):
         # This is bad but it's the only way
         px_order = rpi_ws281x.rpi_ws281x.WS2811_STRIP_GRB
         if led_strip_type == 'WS2812':

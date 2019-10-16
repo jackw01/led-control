@@ -50,9 +50,11 @@ def create_app(led_count, refresh_rate,
                save_interval):
     app = Flask(__name__)
     leds = LEDController(led_count, led_pin,
-                         led_data_rate, led_dma_channel, led_strip_type, led_pixel_order)
+                         led_data_rate, led_dma_channel,
+                         led_strip_type, led_pixel_order)
     controller = AnimationController(leds, refresh_rate, led_count,
-                                     pixelmappings.line(led_count), led_color_correction)
+                                     pixelmappings.line(led_count),
+                                     led_color_correction)
 
     pattern_names = dict(patterns.default_names)
 
@@ -68,18 +70,19 @@ def create_app(led_count, refresh_rate,
             controller.calculate_color_correction()
             controller.calculate_mappings()
             for k, v in settings['pattern_sources'].items():
-                controller.set_pattern_function(int(k), v) # JSON keys are always strings
+                # JSON keys are always strings
+                controller.set_pattern_function(int(k), v)
             for k, v in settings['pattern_names'].items():
                 pattern_names[int(k)] = v
             controller.colors = settings['colors']
-            print('Loaded saved settings from {}'.format(filename))
+            print(f'Loaded saved settings from {filename}.')
         except Exception:
-            print('Could not open saved settings at {}, ignoring.'.format(filename))
+            print(f'Could not open saved settings at {filename}, ignoring.')
 
     # Define form and create user-facing labels based on keys
     form = [
         FormItem('range', 'master_brightness', float, 0, 1),
-        FormItem('range', 'master_color_temp', float, 1000, 12000, 10, unit='K'),
+        FormItem('range', 'master_color_temp', int, 1000, 12000, 10, unit='K'),
         FormItem('range', 'master_gamma', float, 0.01, 3),
         FormItem('range', 'master_saturation', float, 0, 1),
         FormItem('select', 'primary_pattern', int),
@@ -98,9 +101,7 @@ def create_app(led_count, refresh_rate,
 
     @app.route('/')
     def index():
-        """
-        Returns web app page
-        """
+        'Returns web app page'
         for item in form:
             if (item.key in controller.params):
                 item.val = item.type(controller.params[item.key])
@@ -111,19 +112,16 @@ def create_app(led_count, refresh_rate,
 
     @app.route('/setparam')
     def set_param():
-        """
-        Sets a key/value pair in controller parameters
-        """
+        'Sets a key/value pair in controller parameters'
         key = request.args.get('key', type=str)
         value = request.args.get('value')
-        controller.set_param(key, next(filter(lambda i: i.key == key, form)).type(value))
+        controller.set_param(key, next(filter(lambda i: i.key == key, form))
+                                      .type(value))
         return jsonify(result='')
 
     @app.route('/getpatternsources')
     def get_pattern_sources():
-        """
-        Returns pattern sources in JSON dict form
-        """
+        'Returns pattern sources in JSON dict form'
         return jsonify(sources=controller.pattern_sources,
                        names=pattern_names,
                        defaults=list(patterns.default.keys()),
@@ -131,9 +129,7 @@ def create_app(led_count, refresh_rate,
 
     @app.route('/compilepattern')
     def compile_pattern():
-        """
-        Compiles a pattern, returns errors and warnings in JSON array form
-        """
+        'Compiles a pattern, returns errors and warnings in JSON array form'
         key = request.args.get('key', type=int)
         source = request.args.get('source', type=str)
         errors, warnings = controller.set_pattern_function(key, source)
@@ -141,9 +137,7 @@ def create_app(led_count, refresh_rate,
 
     @app.route('/setpatternname')
     def set_pattern_name():
-        """
-        Sets a pattern name for the given key
-        """
+        'Sets a pattern name for the given key'
         key = request.args.get('key', type=int)
         name = request.args.get('name', type=str)
         pattern_names[key] = name
@@ -151,9 +145,7 @@ def create_app(led_count, refresh_rate,
 
     @app.route('/setcolor')
     def set_color():
-        """
-        Sets a color in the palette
-        """
+        'Sets a color in the palette'
         index = request.args.get('index', type=int)
         h = round(request.args.get('h', type=float), 3)
         s = round(request.args.get('s', type=float), 3)
@@ -163,9 +155,7 @@ def create_app(led_count, refresh_rate,
 
     @app.route('/setcolorcomponent')
     def set_color_component():
-        """
-        Sets a component of a color in the palette
-        """
+        'Sets a component of a color in the palette'
         index = request.args.get('index', type=int)
         component = request.args.get('component', type=int)
         value = request.args.get('value', type=float)
@@ -173,9 +163,7 @@ def create_app(led_count, refresh_rate,
         return jsonify(result = '')
 
     def save_settings():
-        """
-        Save controller settings
-        """
+        'Save controller settings'
         data = {
             'params': controller.params,
             'pattern_sources':
@@ -186,15 +174,14 @@ def create_app(led_count, refresh_rate,
         }
         with open(str(filename), 'w') as data_file:
             try:
-                json.dump(data, data_file, sort_keys=True, indent=4, separators=(',', ': '))
-                print('Saved settings to {}'.format(filename))
+                json.dump(data, data_file,
+                          sort_keys=True, indent=4, separators=(',', ': '))
+                print(f'Saved settings to {filename}.')
             except Exception:
-                print('Could not save settings to {}'.format(filename))
+                print(f'Could not save settings to {filename}.')
 
     def auto_save_settings():
-        """
-        Timer for automatically saving settings
-        """
+        'Timer for automatically saving settings'
         save_settings()
         t = Timer(save_interval, auto_save_settings)
         t.daemon = True
