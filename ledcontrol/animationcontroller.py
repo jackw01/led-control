@@ -14,9 +14,7 @@ import ledcontrol.rpi_ws281x as rpi_ws281x
 import ledcontrol.utils as utils
 
 class RepeatedTimer:
-    """
-    Repeat function call at a regular interval
-    """
+    'Repeat function call at a regular interval'
 
     def __init__(self, interval, function, *args, **kwargs):
         self.interval = interval
@@ -26,41 +24,39 @@ class RepeatedTimer:
         self.count = 0
         self.wait_time = 0
         self.last_frame = time.perf_counter()
-        self.last_render_start = time.perf_counter()
-        self.last_render_end = time.perf_counter()
+        self.last_start = time.perf_counter()
+        self.last_end = time.perf_counter()
         self.delta_t = interval
         self.event = Event()
         self.thread = Thread(target=self.target, daemon=True)
         self.thread.start()
 
     def target(self):
-        """
-        Waits until ready and executes target function
-        """
+        'Waits until ready and executes target function'
         while not self.event.wait(self.wait_time):
-            self.last_render_start = time.perf_counter() # get start time
+            self.last_start = time.perf_counter() # get start time
             if self.count % 100 == 0:
                 print('FPS: {}'.format(1.0 / self.delta_t)) # print fps
-            self.delta_t = self.last_render_start - self.last_frame # recalculate frame delta_t
-            self.last_frame = self.last_render_start
+            self.delta_t = self.last_start - self.last_frame
+            self.last_frame = self.last_start
             self.function(*self.args, **self.kwargs) # call target function
             self.count += 1
-            self.last_render_end = time.perf_counter() # get end time
+            self.last_end = time.perf_counter() # get end time
 
             # Calculate wait for next iteration
-            self.wait_time = self.interval - (self.last_render_end - self.last_render_start)
+            self.wait_time = self.interval - (self.last_end - self.last_start)
             if (self.wait_time < 0):
                 self.wait_time = 0
 
     def stop(self):
-        """
-        Stops the timer thread
-        """
+        'Stops the timer thread'
         self.event.set()
         self.thread.join()
 
 class AnimationController:
-    def __init__(self, led_controller, refresh_rate, led_count, mapping_func, led_color_correction):
+    def __init__(self, led_controller, refresh_rate, led_count,
+                 mapping_func,
+                 led_color_correction):
         self.led_controller = led_controller
         self.refresh_rate = refresh_rate
         self.led_count = led_count
@@ -99,7 +95,7 @@ class AnimationController:
 
         # Source code for patterns
         self.pattern_sources = {}
-        # Lookup dictionary for pattern functions - keys are used to generate select menu
+        # Lookup dictionary for pattern functions used to generate select menu
         self.pattern_functions = {}
 
         # Initialize primary patterns
@@ -125,9 +121,7 @@ class AnimationController:
         self.render_perf_avg = 0
 
     def compile_pattern(self, source):
-        """
-        Compiles source string to a pattern function using restricted globals
-        """
+        'Compiles source string to a pattern function with restricted globals'
         def getitem(obj, index):
             if obj is not None and type(obj) in (list, tuple, dict):
                 return obj[index]
@@ -164,13 +158,12 @@ class AnimationController:
         arg_names = ['t', 'dt', 'x', 'y', 'prev_state']
 
         name_error = False
-        results = RestrictedPython.compile_restricted_exec(source, filename='<inline code>')
-        print(results)
+        results = RestrictedPython.compile_restricted_exec(source)
         warnings = list(results.warnings)
         for name in results.used_names:
             if name not in restricted_globals and name not in arg_names:
                 name_error = True
-                warnings.append('NameError: name \'{}\' is not defined'.format(name))
+                warnings.append(f'NameError: name \'{name}\' is not defined')
 
         if results.code:
             exec(results.code, restricted_globals, restricted_locals)
@@ -179,32 +172,27 @@ class AnimationController:
             return results.errors, warnings, None
 
     def reset_prev_states(self):
-        """
-        Reset previous animation state lists
-        """
-        self.primary_prev_state = [((0, 0, 0), 0) for i in range(self.led_count)]
-        self.secondary_prev_state = [((0, 0, 0), 0) for i in range(self.led_count)]
+        'Reset previous animation state lists'
+        blank = [((0, 0, 0), 0) for i in range(self.led_count)]
+        self.primary_prev_state = blank[:]
+        self.secondary_prev_state = blank[:]
 
     def calculate_color_correction(self):
-        """
-        Calculate and store color temperature correction
-        """
-        rgb = [int(x * 255) for x in rpi_ws281x.blackbody_to_rgb(self.params['master_color_temp'])]
-        c = [self.correction_original[0] * rgb[0] // 255,
-             self.correction_original[1] * rgb[1] // 255,
-             self.correction_original[2] * rgb[2] // 255]
+        'Calculate and store color temperature correction'
+        rgb = rpi_ws281x.blackbody_to_rgb(self.params['master_color_temp'])
+        c = [self.correction_original[0] * int(rgb[0] * 255) // 255,
+             self.correction_original[1] * int(rgb[1] * 255) // 255,
+             self.correction_original[2] * int(rgb[2] * 255) // 255]
         self.correction = (c[0] << 16) | (c[1] << 8) | c[2]
 
     def calculate_mappings(self):
-        """
-        Calculate and store spatial mapping values with current scale
-        """
+        'Calculate and store spatial mapping values with current scale'
         p = []
         s = []
         if self.params['primary_scale'] != 0:
             for i in range(self.led_count):
                 # Calculate scale components to determine animation position
-                # scale component = position (max size) / scale (pattern length in units)
+                # scale component = position / scale (pattern length in units)
                 # One cycle is a normalized input value's transition from 0 to 1
                 p.append((
                     (self.mapped[i][0] / self.params['primary_scale']) % 1,
@@ -215,9 +203,6 @@ class AnimationController:
 
         if self.params['secondary_scale'] != 0:
             for i in range(self.led_count):
-                # Calculate scale components to determine animation position
-                # scale component = position (max size) / scale (pattern length in units)
-                # One cycle is a normalized input value's transition from 0 to 1
                 s.append((
                     (self.mapped[i][0] / self.params['secondary_scale']) % 1,
                     (self.mapped[i][1] / self.params['secondary_scale']) % 1
@@ -229,9 +214,7 @@ class AnimationController:
         self.secondary_mapping = s
 
     def set_param(self, key, value):
-        """
-        Set an animation parameter
-        """
+        'Set an animation parameter'
         self.params[key] = value
         if key == 'master_color_temp':
             self.calculate_color_correction()
@@ -239,9 +222,7 @@ class AnimationController:
             self.calculate_mappings()
 
     def set_pattern_function(self, key, source):
-        """
-        Update the source code and recompile a pattern function
-        """
+        'Update the source code and recompile a pattern function'
         errors, warnings, pattern = self.compile_pattern(source)
         if len(errors) == 0:
             self.pattern_sources[key] = source
@@ -249,21 +230,19 @@ class AnimationController:
         return errors, warnings
 
     def set_color(self, index, value):
+        'Set an HSV color in the palette'
         self.colors[index] = value
 
     def set_color_component(self, index, component, value):
+        'Set one component of an HSV color'
         self.colors[index][component] = value
 
     def begin_animation_thread(self):
-        """
-        Start animating
-        """
+        'Start animating'
         self.timer = RepeatedTimer(1.0 / self.refresh_rate, self.update_leds)
 
     def update_leds(self):
-        """
-        Determine time, render frame, and display
-        """
+        'Determine time, render frame, and display'
         self.time = self.timer.last_frame - self.start
         t0 = time.perf_counter()
 
@@ -285,36 +264,36 @@ class AnimationController:
         try:
             # Run primary pattern to determine initial color
             # State is an array of (color, secondary_value) pairs
-            state_1 = [(pattern_1(primary_time,
-                                  primary_delta_t,
-                                  self.primary_mapping[i][0],
-                                  self.primary_mapping[i][1],
-                                  self.primary_prev_state[i][0],
-                                  self.colors)[0], 1) for i in range(self.led_count)]
-            self.primary_prev_state = state_1
+            s_1 = [(pattern_1(primary_time,
+                              primary_delta_t,
+                              self.primary_mapping[i][0],
+                              self.primary_mapping[i][1],
+                              self.primary_prev_state[i][0],
+                              self.colors)[0],
+                    1) for i in range(self.led_count)]
+            self.primary_prev_state = s_1
 
-            # Run secondary pattern to determine new brightness and possibly modify color
+            # Run secondary pattern to get new brightness and modify color
             if pattern_2 is None:
-                state_2 = state_1
+                s_2 = s_1
             else:
-                state_2 = [pattern_2(secondary_time,
-                                     secondary_delta_t,
-                                     self.secondary_mapping[i][0],
-                                     self.secondary_mapping[i][1],
-                                     self.secondary_prev_state[i],
-                                     state_1[i][0]) for i in range(self.led_count)]
-                self.secondary_prev_state = state_2
+                s_2 = [pattern_2(secondary_time,
+                                 secondary_delta_t,
+                                 self.secondary_mapping[i][0],
+                                 self.secondary_mapping[i][1],
+                                 self.secondary_prev_state[i],
+                                 s_1[i][0]) for i in range(self.led_count)]
+                self.secondary_prev_state = s_2
 
         except Exception as e:
-            print('Pattern execution: {}'.format(traceback.format_exception(type(e),
-                                                                            e,
-                                                                            e.__traceback__)))
-            state_2 = [((0, 0, 0), 0) for i in range(self.led_count)]
+            msg = traceback.format_exception(type(e), e, e.__traceback__)
+            print(f'Pattern execution: {msg}')
+            s_2 = [((0, 0, 0), 0) for i in range(self.led_count)]
 
         # Write colors to LEDs
         if mode == patterns.ColorMode.hsv:
             self.led_controller.leds.set_all_pixels_hsv_float(
-                [(c[0][0], c[0][1], c[0][2] * c[1]) for c in state_2],
+                [(c[0][0], c[0][1], c[0][2] * c[1]) for c in s_2],
                 self.correction,
                 self.params['master_saturation'],
                 self.params['master_brightness'],
@@ -322,7 +301,7 @@ class AnimationController:
             )
         elif mode == patterns.ColorMode.rgb:
             self.led_controller.leds.set_all_pixels_rgb_float(
-                [(c[0][0] * c[1], c[0][1] * c[1], c[0][2] * c[1]) for c in state_2],
+                [(c[0][0] * c[1], c[0][1] * c[1], c[0][2] * c[1]) for c in s_2],
                 self.correction,
                 self.params['master_saturation'],
                 self.params['master_brightness'],
@@ -338,7 +317,5 @@ class AnimationController:
             self.render_perf_avg = 0
 
     def end_animation_thread(self):
-        """
-        Stop rendering in the animation thread
-        """
+        'Stop rendering in the animation thread'
         self.timer.stop()
