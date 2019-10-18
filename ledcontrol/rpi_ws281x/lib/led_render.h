@@ -59,12 +59,12 @@ color_rgb_float blackbody_to_rgb(float kelvin) {
   if (tmp_internal <= 66) {
     float xg = tmp_internal - 2.0;
     r_out = 1.0;
-    g_out = clamp((-155.25485 - 0.44596 * xg + 104.49216 * logf(xg)) / 255.0, 0, 1);
+    g_out = clamp((-155.255 - 0.446 * xg + 104.492 * logf(xg)) / 255.0, 0, 1);
   } else {
     float xr = tmp_internal - 55.0;
     float xg = tmp_internal - 50.0;
-    r_out = clamp((351.97691 + 0.11421 * xr - 40.25366 * logf(xr)) / 255.0, 0, 1);
-    g_out = clamp((325.44941 + 0.07943 * xg - 28.08529 * logf(xg)) / 255.0, 0, 1);
+    r_out = clamp((351.977 + 0.114 * xr - 40.254 * logf(xr)) / 255.0, 0, 1);
+    g_out = clamp((325.449 + 0.079 * xg - 28.085 * logf(xg)) / 255.0, 0, 1);
   }
 
   if (tmp_internal >= 66) {
@@ -73,15 +73,15 @@ color_rgb_float blackbody_to_rgb(float kelvin) {
     b_out = 0.0;
   } else {
     float xb = tmp_internal - 10.0;
-    b_out = clamp((-254.76935 + 0.82740 * xb + 115.67994 * logf(xb)) / 255.0, 0, 1);
+    b_out = clamp((-254.769 + 0.827 * xb + 115.680 * logf(xb)) / 255.0, 0, 1);
   }
 
   return (color_rgb_float){r_out, g_out, b_out};
 }
 
 color_rgb_float blackbody_correction_rgb(color_rgb_float rgb, float kelvin) {
-  color_rgb_float blackbody = blackbody_to_rgb(kelvin);
-  return (color_rgb_float){blackbody.r * rgb.r, blackbody.g * rgb.g, blackbody.b * rgb.b};
+  color_rgb_float bb = blackbody_to_rgb(kelvin);
+  return (color_rgb_float){bb.r * rgb.r, bb.g * rgb.g, bb.b * rgb.b};
 }
 
 // Render float HSV to LEDs with "Rainbow" color transform from FastLED
@@ -248,8 +248,9 @@ int ws2811_hsv_render_array_float(ws2811_t *ws, ws2811_channel_t *channel,
   if (count > channel->count) return -1;
   color_rgb corr_rgb = unpack_rgb(correction);
   for (int i = 0; i < count; i++) {
-    channel->leds[i] = render_hsv2rgb_rainbow_float(values[i], corr_rgb, saturation,
-                                                    brightness, gamma);
+    channel->leds[i] = render_hsv2rgb_rainbow_float(values[i], corr_rgb,
+                                                    saturation, brightness,
+                                                    gamma);
   }
   ws2811_render(ws);
   return 1;
@@ -263,7 +264,9 @@ int ws2811_rgb_render_array_float(ws2811_t *ws, ws2811_channel_t *channel,
   if (count > channel->count) return -1;
   color_rgb corr_rgb = unpack_rgb(correction);
   for (int i = 0; i < count; i++) {
-    channel->leds[i] = render_rgb_float(values[i], corr_rgb, saturation, brightness, gamma);
+    channel->leds[i] = render_rgb_float(values[i], corr_rgb,
+                                        saturation, brightness,
+                                        gamma);
   }
   ws2811_render(ws);
   return 1;

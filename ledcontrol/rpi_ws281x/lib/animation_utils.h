@@ -7,7 +7,8 @@
 #include <math.h>
 
 // Optimized C utility functions
-// Waveforms for pattern generation. All have a period of 1 time unit and range from 0-1.
+// Waveforms for pattern generation.
+// All have a period of 1 time unit and range from 0-1.
 
 // Pulse with duty cycle
 float wave_pulse(float t, float duty_cycle) {
@@ -38,7 +39,8 @@ float wave_cubic(float t) {
 // Sum of sines for creating RGB plasma shader effects
 // See https://www.bidouille.org/prog/plasma
 float plasma_sines(float x, float y, float t,
-                   float coeff_x, float coeff_y, float coeff_x_y, float coeff_dist_xy) {
+                   float coeff_x, float coeff_y,
+                   float coeff_x_y, float coeff_dist_xy) {
   float v = 0.0;
   v += sin((x + t) * coeff_x);
   v += sin((y + t) * coeff_y);
