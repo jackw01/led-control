@@ -14,12 +14,25 @@ Advanced WS2812/SK6812 LED controller with Python pattern shader programming and
 Only very simple shaders will run this fast. More complex shaders will run slower, but framerates should stay comfortably above 24FPS even with large numbers of LEDs (150). This should not be an issue unless you are trying to display very fast-moving animations on long LED strips. All of the framerate numbers here were obtained from testing on a Raspberry Pi Zero, and almost any other Raspberry Pi will be able to run animations faster.
 
 ## Install
+### Hardware Setup
+1. Obtain a Raspberry Pi (any model), a WS2812B LED strip, and a suitable 5V power supply.
+2. Read [this Adafruit guide](https://learn.adafruit.com/neopixels-on-raspberry-pi) and follow the directions to connect the LED strip to your Raspberry Pi. Installing the Python library and testing the LED strip with an example program is optional.
+
+Know what you're doing with electricity. WS2812B LEDs can draw a lot of current, especially in long strips. You should budget [at least 50mA for each LED at full brightness](https://www.pjrc.com/how-much-current-do-ws2812-neopixel-leds-really-use/), which means 7.5A for 150 LEDs (5 meters of 30 LED/m strip, 2.5m of 60LED/m strip, ~1m of 144LED/m strip...). In practice, your LED strips probably won't draw this much current, but it's good to have a power supply capable of handling it.
+
+The flexible PCBs and connectors used in these LED strips are not really designed to handle these currents, and begin to heat up when passing as little as 2-3A. The voltage drop is pretty significant (I measured a 0.6v drop across each power rail along the length of a 3m strip drawing about 3A), but at least in my testing it does not impact color or brightness in individual strips under 5m long.
+
+For long strips (~150 LEDs) at high brightness and/or total current draw over 5A, I would recommend powering each strip from both ends with adequately sized (18AWG) wires to mitigate any issues with voltage drop. WS2812B strips usually come with seriously undersized power wires and barrel jacks or JST SM connectors rated for only 3A, and it would be a good idea to replace these appropriately in any case.
+
+For installations with over 150 LEDs, don't expect to get good or safe results by daisy chaining strips together. See [this guide](https://learn.adafruit.com/1500-neopixel-led-curtain-with-raspberry-pi-fadecandy/power-topology) for good information on powering hundreds or thousands of LEDs.
+
+More information on connecting LED strips and PWM/DMA usage is available [here](https://github.com/jgarff/rpi_ws281x).
+
 ### Software Setup
-1. Read [this Adafruit guide](https://learn.adafruit.com/neopixels-on-raspberry-pi) and follow the directions to connect an LED strip to your Raspberry Pi, install the Python library, and test the strip. More information on connecting LED strips and PWM/DMA usage is available [here](https://github.com/jgarff/rpi_ws281x).
-2. `git clone https://github.com/jackw01/led-control.git`
-3. `cd led-control`
-4. `python3 setup.py install`. Python 3.6 or newer is required.
-5. `sudo ledcontrol --port 8080 --strip 150 --fps 60`
+1. `git clone https://github.com/jackw01/led-control.git`
+2. `cd led-control`
+3. `python3 setup.py install`. Python 3.6 or newer is required.
+4. `sudo ledcontrol --port 8080 --strip 150 --fps 60`
 
 ### Command Line Configuration Arguments
 Web server and LED hardware parameters must be specified as command line arguments when running ledcontrol.
@@ -108,20 +121,20 @@ Returns the instantaneous value of a 1Hz triangle wave at time `t`.
 Returns the instantaneous value of a 1Hz pulse wave of the specified duty cycle (range 0 to 1) at time `t`.
 
 #### `plasma_sines_octave(x, y, t, octaves, temporal_freq_persistence, amplitude_persistence)`
-Custom optimized "plasma" implementation that returns a sum of several octaves of sinusoid-based waveforms. This creates more detailed and better looking plasma effects than simpler implementations. For each successive octave, the spatial frequency of the wave is multiplied by 2, the temporal frequency (how fast the wave changes with time) is multiplied by `temporal_freq_persistence`, and the amplitude is multiplied by `amplitude_persistence`. Returns a value from 0 to 1. `octaves` must be an integer. See the usage notes below.
+Custom optimized "plasma" implementation that returns a sum of several octaves of sinusoid-based waveforms creating a non-random noise effect. This creates more detailed and better looking plasma effects than simpler implementations. For each successive octave, the spatial frequency of the wave is multiplied by 2, the temporal frequency (how fast the wave changes with time) is multiplied by `temporal_freq_persistence`, and the amplitude is multiplied by `amplitude_persistence`. Returns a value from 0 to 1. `octaves` must be an integer. See the usage notes below.
 
 #### `perlin_noise_3d(x, y, z)`
 Standard 3D perlin noise. Use time as one of the arguments to make the noise vary with time. Returns a value from 0 to 1.
 
 #### `plasma_sines(x, y, t, coeff_x, coeff_y, coeff_x_y, coeff_mag_xy)`
-Basic optimized function for creating RGB plasma animations (see https://www.bidouille.org/prog/plasma). Returns `sin((x + t) * coeff_x) + sin((y + t) * coeff_y) + sin((x + y + t) * coeff_x_y) + sin((sqrt(x * x + y * y) + t) * coeff_mag_xy)`. Returns a value from 0 to 1. Not recommended unless you need it, `plasma_sines_octave` generally looks better.
+Basic optimized function for creating RGB plasma animations (see https://www.bidouille.org/prog/plasma). Returns `sin((x + t) * coeff_x) + sin((y + t) * coeff_y) + sin((x + y + t) * coeff_x_y) + sin((sqrt(x * x + y * y) + t) * coeff_mag_xy)`. Returns a value from 0 to 1. Not recommended unless you want it, `plasma_sines_octave` generally looks better.
 
 ### Additional Utility Functions
 #### `clamp(x, min, max)`
-Returns `min` if `x < min` and max if `x > max`, otherwise returns `x`
+Returns `min` if `x < min` and max if `x > max`, otherwise returns `x`.
 
 #### `fract(x)`
-Returns the floating point component of `x` (`x - floor(x)`)
+Returns the floating point component of `x` (`x - floor(x)`).
 
 #### `impulse_exp(t)`
 Asymmetrical exponential "impulse" wave function. Peaks at `t=1`.
