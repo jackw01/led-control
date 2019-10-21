@@ -46,7 +46,7 @@ FormItem = recordclass('FormItem', fields, defaults=defaults)
 def create_app(led_count, refresh_rate,
                led_pin, led_data_rate, led_dma_channel,
                led_strip_type, led_pixel_order,
-               led_color_correction,
+               led_color_correction, led_brightness_limit,
                save_interval):
     app = Flask(__name__)
     leds = LEDController(led_count, led_pin,
@@ -67,6 +67,9 @@ def create_app(led_count, refresh_rate,
         try:
             settings = json.load(data_file)
             controller.params = settings['params']
+            # Enforce brightness limit
+            controller.params['master_brightness'] = min(
+                controller.params['master_brightness'], led_brightness_limit)
             controller.calculate_color_correction()
             controller.calculate_mappings()
             for k, v in settings['pattern_sources'].items():
@@ -81,7 +84,8 @@ def create_app(led_count, refresh_rate,
 
     # Define form and create user-facing labels based on keys
     form = [
-        FormItem('range', 'master_brightness', float, 0, 1),
+        FormItem('range', 'master_brightness', float, 0, led_brightness_limit,
+                 0.05),
         FormItem('range', 'master_color_temp', int, 1000, 12000, 10, unit='K'),
         FormItem('range', 'master_gamma', float, 0.01, 3),
         FormItem('range', 'master_saturation', float, 0, 1),
@@ -90,8 +94,8 @@ def create_app(led_count, refresh_rate,
         FormItem('range', 'primary_scale', float, -10, 10),
         FormItem('code', 'pattern_source', str),
         FormItem('select', 'secondary_pattern', int,
-            options=list(patterns.default_secondary_names.values()),
-            val=controller.params['secondary_pattern']),
+                 options=list(patterns.default_secondary_names.values()),
+                 val=controller.params['secondary_pattern']),
         FormItem('range', 'secondary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'secondary_scale', float, -10, 10),
     ]

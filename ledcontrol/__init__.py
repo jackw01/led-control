@@ -29,6 +29,8 @@ def main():
                         help='LED color channel order. Any combination of RGB with or without a W at the end. Default: GRB')
     parser.add_argument('--led_color_correction', default='#FFB0F0',
                         help='LED color correction in RGB hex form. Use #FFB0F0 for 5050 package LEDs on strips and arrays and #FFE08C for through-hole package LEDs or light strings. Default: #FFB0F0')
+    parser.add_argument('--led_brightness_limit', type=float, default=1.0,
+                        help='LED maximum brightness limit for the web UI. Float from 0.0-1.0. Default: 1.0')
     parser.add_argument('--save_interval', type=int, default=60,
                         help='Interval for automatically saving settings in seconds. Default: 60')
     args = parser.parse_args()
@@ -39,6 +41,7 @@ def main():
                      args.led_pin, args.led_data_rate, args.led_dma_channel,
                      args.led_strip_type, args.led_pixel_order,
                      [int(color_correction_hex[i:i + 2], 16) for i in (0, 2, 4)],
+                     args.led_brightness_limit,
                      args.save_interval)
     run_simple(args.host, args.port, app,
                use_reloader=False,

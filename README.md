@@ -2,16 +2,17 @@
 Advanced WS2812/SK6812 LED controller with Python pattern shader programming and web code editor/control interface for Raspberry Pi
 
 ## Features
-* Lightweight, responsive web interface works on both desktop and mobile devices
+* Lightweight responsive web interface works on both desktop and mobile devices
 * In-browser code editor with smart indentation, syntax highlighting, and syntax error detection makes creating animation patterns easy
 * Animation patterns are defined as Python functions that work similarly to fragment shaders
+* Builtin secondary patterns make it possible to quickly create more complex effects
 * Supports cheap and readily available WS281x and SK6812 LED strips and strings
 * Capable of achieving up to 380 FPS on 60 LEDs and 160 FPS on 150 LEDs on a Raspberry Pi Zero (see note below)
 * Web backend and animation code written in Python using the [Flask](https://github.com/pallets/flask) web framework for ease of development
 * Color conversions, color correction, and final rendering steps are done in a C extension module for maximum performance
 
 ### Framerate Note
-Only very simple shaders will run this fast. More complex shaders will run slower, but framerates should stay comfortably above 24FPS even with large numbers of LEDs (150). This should not be an issue unless you are trying to display very fast-moving animations on long LED strips. All of the framerate numbers here were obtained from testing on a Raspberry Pi Zero, and almost any other Raspberry Pi will be able to run animations faster.
+Complex shaders will run slower, but framerates should stay comfortably above 24FPS even with large numbers of LEDs. This should not be an issue unless you are trying to display very fast-moving animations on long LED strips. All of the framerate numbers here were obtained from testing on a Raspberry Pi Zero, and almost any other Pi will run animations faster. The framerate is limited to 60FPS by default to reduce CPU usage.
 
 ## Install
 ### Hardware Setup
@@ -20,7 +21,7 @@ Only very simple shaders will run this fast. More complex shaders will run slowe
 
 Know what you're doing with electricity. WS2812B LEDs can draw a lot of current, especially in long strips. You should budget [at least 50mA for each LED at full brightness](https://www.pjrc.com/how-much-current-do-ws2812-neopixel-leds-really-use/), which means 7.5A for 150 LEDs (5 meters of 30 LED/m strip, 2.5m of 60LED/m strip, ~1m of 144LED/m strip...). In practice, your LED strips probably won't draw this much current, but it's good to have a power supply capable of handling it.
 
-The flexible PCBs and connectors used in these LED strips are not really designed to handle these currents, and begin to heat up when passing as little as 2-3A. The voltage drop is pretty significant (I measured a 0.6v drop across each power rail along the length of a 3m strip drawing about 3A), but at least in my testing it does not impact color or brightness in individual strips under 5m long.
+The flexible PCBs and connectors used in these LED strips are not really designed to handle these currents, and begin to heat up when passing as little as 2-3A. The voltage drop is significant (I measured a 0.6v drop across each power rail along the length of a 3m strip drawing about 3A), but it does not seem to impact color or brightness in individual strips under 5m long.
 
 For long strips (~150 LEDs) at high brightness and/or total current draw over 5A, I would recommend powering each strip from both ends with adequately sized (18AWG) wires to mitigate any issues with voltage drop. WS2812B strips usually come with seriously undersized power wires and barrel jacks or JST SM connectors rated for only 3A, and it would be a good idea to replace these appropriately in any case.
 
@@ -43,13 +44,16 @@ usage: ledcontrol [-h] [--port PORT] [--host HOST] [--strip STRIP] [--fps FPS]
                   [--led_strip_type LED_STRIP_TYPE]
                   [--led_pixel_order LED_PIXEL_ORDER]
                   [--led_color_correction LED_COLOR_CORRECTION]
+                  [--led_brightness_limit LED_BRIGHTNESS_LIMIT]
+                  [--save_interval SAVE_INTERVAL]
 optional arguments:
   -h, --help            show this help message and exit
   --port PORT           Port to use for web interface. Default: 80
   --host HOST           Hostname to use for web interface. Default: 0.0.0.0
-  --led_count LED_COUNT Length of the LED strip.
+  --led_count LED_COUNT Number of LEDs.
   --fps FPS             Refresh rate limit for LEDs, in FPS. Default: 60
-  --led_pin LED_PIN     Pin for LEDs (GPIO10, GPIO12, GPIO18 or GPIO21). Default: 18
+  --led_pin LED_PIN     Pin for LEDs (GPIO10, GPIO12, GPIO18 or GPIO21). Default:
+                        18
   --led_data_rate LED_DATA_RATE
                         Data rate for LEDs. Default: 800000 Hz
   --led_dma_channel LED_DMA_CHANNEL
@@ -65,6 +69,12 @@ optional arguments:
                         5050 package LEDs on strips and arrays and #FFE08C for
                         through-hole package LEDs or light strings. Default:
                         #FFB0F0
+  --led_brightness_limit LED_BRIGHTNESS_LIMIT
+                        LED maximum brightness limit for the web UI. Float from
+                        0.0-1.0. Default: 1.0
+  --save_interval SAVE_INTERVAL
+                        Interval for automatically saving settings in seconds.
+                        Default: 60
 ```
 
 ## Pattern Editing
@@ -98,7 +108,7 @@ Previous color state of the current LED as an HSV or RGB tuple. Initialized to `
 User-selectable color as an array containing one HSV tuple. Only contains one color.
 
 #### Return Values
-Pattern functions must return a color in tuple form and either `hsv` or `rgb` depending on the format of the color. All values must be in the 0 to 1 range, except for hue. Hue values less than 0 or greater than 1 will wrap. RGB will be clamped to the 0-1 range.
+Pattern functions must return a color in tuple form and either `hsv` or `rgb` depending on the format of the color. All values are expected to be in the 0 to 1 range, except for hue. Hue values less than 0 or greater than 1 will wrap. RGB will be clamped to the 0-1 range.
 
 ### Supported Python Globals
 * Builtins: `None`, `False`, `True`, `abs`, `bool`, `callable`, `chr`, `complex`, `divmod`, `float`, `hash`, `hex`, `id`, `int`, `isinstance`, `issubclass`, `len`, `oct`, `ord`, `pow`, `range`, `repr`, `round`, `slice`, `str`, `tuple`, `zip`
@@ -106,7 +116,7 @@ Pattern functions must return a color in tuple form and either `hsv` or `rgb` de
 * All functions from the [`random` module](https://docs.python.org/3/library/random.html)
 
 ### Wave Functions
-All waveforms have a period of 1 time unit, a range from 0 to 1, and a peak (`f(t)=1`) at `t=0`. These wave functions are implemented in C which gives a suprisingly significant performance improvement over Python.
+All waveforms have a period of 1 time unit, a range from 0 to 1, and a peak (`f(t)=1`) at `t=0`. These wave functions are implemented in C which gives a suprisingly significant performance improvement over Python's builtins.
 
 #### `wave_sine(t)`
 Returns the instantaneous value of a 1Hz sine wave at time `t`.
@@ -131,7 +141,7 @@ Basic optimized function for creating RGB plasma animations (see https://www.bid
 
 ### Additional Utility Functions
 #### `clamp(x, min, max)`
-Returns `min` if `x < min` and max if `x > max`, otherwise returns `x`.
+Returns `min` if `x < min` and `max` if `x > max`, otherwise returns `x`.
 
 #### `fract(x)`
 Returns the floating point component of `x` (`x - floor(x)`).
