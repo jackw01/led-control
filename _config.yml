@@ -1,0 +1,7 @@
+remote_theme: jackw01/summer-night-jekyll
+title: LED Control
+hide_first_h1: true
+nav_items:
+  - 1:
+    url: ./index
+    text: Readme

@@ -1,5 +1,7 @@
-# led-control
+# LED Control
 Advanced WS2812/SK6812 LED controller with Python pattern shader programming and web code editor/control interface for Raspberry Pi
+
+![screenshot.png](screenshot.png)
 
 ## Features
 * Lightweight responsive web interface works on both desktop and mobile devices
