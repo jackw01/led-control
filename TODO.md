@@ -58,7 +58,23 @@
 - [x] automatically save settings
 - [x] general code cleanup and documentation
 - [x] master brightness limiting
+- [ ] password protection
+- [ ] patterns - ripple
+- [ ] patterns - random wipe
+- [ ] patterns - random single color scan/waves
+- [ ] patterns - meteor trail
+- [ ] patterns - fireworks / blob twinkle
+- [ ] patterns - noise sparkle
+- [ ] secondary patterns - wipe in/out permutations
 
 ### Extras
 #### 2019-10
 - [ ] auto timer function - dim at night
+- [ ] gradient/palette based patterns
+- [ ] palette based - multi color wipe
+- [ ] palette based - noise
+- [ ] multiple palette storage and editing
+- [ ] twinkle effect improvement - scalable and with bg color
+- [ ] twinkle effect improvement - more LEDs at once
+- [ ] time of day in pattern function
+- [ ] realtime audio reactive effects
