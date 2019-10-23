@@ -131,6 +131,21 @@ def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
     else:
         return (0, 0, 0), v
 
+def wipe_across_1d(t, dt, x, y, prev_state, in_color):
+    return in_color, ((t + x) % 1 > 0.5) * 1.0
+
+def wipe_from_center_1d(t, dt, x, y, prev_state, in_color):
+    if x < 0.5:
+        return in_color, ((t + x) % 1 < 0.5) * 1.0
+    else:
+        return in_color, ((x - t) % 1 < 0.5) * 1.0
+
+def wipe_from_ends_1d(t, dt, x, y, prev_state, in_color):
+    if x < 0.5:
+        return in_color, ((x - t) % 1 < 0.5) * 1.0
+    else:
+        return in_color, ((t + x) % 1 < 0.5) * 1.0
+
 def sector_pulse_1d(t, dt, x, y, prev_state, in_color):
     part = rpi_ws281x.perlin_noise_3d(0, 0, t)
     v = 1 - utils.clamp(abs(x - part) * 10, 0, 1)
@@ -151,8 +166,11 @@ default_secondary = {
     6: bounce_cubic_1d,
     6: perlin_noise_2d,
     7: twinkle_pulse_1d,
-    8: sector_pulse_1d,
-    9: sector_pulse_2_1d,
+    8: wipe_across_1d,
+    9: wipe_from_center_1d,
+    10: wipe_from_ends_1d,
+    11: sector_pulse_1d,
+    12: sector_pulse_2_1d,
 }
 
 default_secondary_names = {

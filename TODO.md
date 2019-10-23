@@ -58,6 +58,7 @@
 - [x] automatically save settings
 - [x] general code cleanup and documentation
 - [x] master brightness limiting
+- [x] secondary patterns - wipe
 - [ ] password protection
 - [ ] patterns - ripple
 - [ ] patterns - random wipe
@@ -65,7 +66,6 @@
 - [ ] patterns - meteor trail
 - [ ] patterns - fireworks / blob twinkle
 - [ ] patterns - noise sparkle
-- [ ] secondary patterns - wipe in/out permutations
 
 ### Extras
 #### 2019-10
