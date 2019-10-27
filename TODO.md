@@ -60,7 +60,7 @@
 - [x] master brightness limiting
 - [x] secondary patterns - wipe
 - [ ] password protection
-- [ ] patterns - ripple
+- [x] patterns - ripple
 - [x] patterns - hsv waves
 - [ ] patterns - random wipe
 - [ ] patterns - random single color scan/waves
@@ -72,6 +72,7 @@
 #### 2019-10
 - [ ] auto timer function - dim at night
 - [ ] gradient/palette based patterns
+- [ ] remap hsv patterns to custom palette
 - [ ] palette based - multi color wipe
 - [ ] palette based - noise
 - [ ] multiple palette storage and editing

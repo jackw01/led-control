@@ -258,10 +258,10 @@ class AnimationController:
         secondary_time = self.time * self.params['secondary_speed']
         secondary_delta_t = self.timer.delta_t * self.params['secondary_speed']
 
-        # Determine current pattern mode
-        c, mode = pattern_1(0, 0.1, 0, 0, (0, 0, 0), [(0, 0, 0)])
-
         try:
+            # Determine current pattern mode
+            c, mode = pattern_1(0, 0.1, 0, 0, (0, 0, 0), [(0, 0, 0)])
+
             # Run primary pattern to determine initial color
             # State is an array of (color, secondary_value) pairs
             s_1 = [(pattern_1(primary_time,

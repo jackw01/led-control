@@ -87,6 +87,13 @@ def pattern(t, dt, x, y, prev_state, colors):
     h = (x + t) * 0.5 % .5 + x + wave_sine(t)
     return (h, 1, wave_sine(h + t)), hsv
 ''',
+    12: '''
+def pattern(t, dt, x, y, prev_state, colors):
+    wave1 = wave_sine(t + x)
+    wave2 = wave_sine(t * 2 - x)
+    wave3 = wave_sine(x + wave1 + wave2)
+    return (wave3 % 0.4 + t, 1, wave1 + wave3), hsv
+''',
 }
 
 default_names = {
@@ -97,11 +104,12 @@ default_names = {
     4: 'RGB Cubics 1D',
     5: 'Cycle Blackbody 1D',
     6: 'Bounce Hue 1D',
-    7: 'RGB Ripples 1D',
+    7: 'RGB Ripples 1 1D',
     8: 'RGB Plasma (Spectrum) 1D',
     9: 'RGB Plasma (Fire) 1D',
     10: 'RGB Octave Plasma (Fire) 1D',
-    11: 'HSV Waves',
+    11: 'HSV Waves 1D',
+    12: 'HSV Ripples 1 1D',
 }
 
 # Secondary animations that transform finalized colors to add brightness effects
