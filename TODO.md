@@ -61,6 +61,7 @@
 - [x] secondary patterns - wipe
 - [ ] password protection
 - [ ] patterns - ripple
+- [x] patterns - hsv waves
 - [ ] patterns - random wipe
 - [ ] patterns - random single color scan/waves
 - [ ] patterns - meteor trail

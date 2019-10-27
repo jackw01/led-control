@@ -82,6 +82,11 @@ def pattern(t, dt, x, y, prev_state, colors):
             wave_sine(v + 0.333) - 0.1,
             0.9 - wave_sine(v + 0.666)), rgb
 ''',
+    11: '''
+def pattern(t, dt, x, y, prev_state, colors):
+    h = (x + t) * 0.5 % .5 + x + wave_sine(t)
+    return (h, 1, wave_sine(h + t)), hsv
+''',
 }
 
 default_names = {
@@ -96,6 +101,7 @@ default_names = {
     8: 'RGB Plasma (Spectrum) 1D',
     9: 'RGB Plasma (Fire) 1D',
     10: 'RGB Octave Plasma (Fire) 1D',
+    11: 'HSV Waves',
 }
 
 # Secondary animations that transform finalized colors to add brightness effects
