@@ -67,6 +67,7 @@
 - [ ] patterns - meteor trail
 - [ ] patterns - fireworks / blob twinkle
 - [ ] patterns - noise sparkle
+- [ ] web UI - update code after changing patterns
 
 ### Extras
 #### 2019-10

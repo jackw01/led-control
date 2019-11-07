@@ -89,8 +89,8 @@ def pattern(t, dt, x, y, prev_state, colors):
 ''',
     12: '''
 def pattern(t, dt, x, y, prev_state, colors):
-    wave1 = wave_sine(t + x)
-    wave2 = wave_sine(t * 2 - x)
+    wave1 = wave_sine(t / 4 + x)
+    wave2 = wave_sine(t / 8 - x)
     wave3 = wave_sine(x + wave1 + wave2)
     return (wave3 % 0.4 + t, 1, wave1 + wave3), hsv
 ''',
