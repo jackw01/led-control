@@ -103,6 +103,7 @@ venv.bak/
 .mypy_cache/
 
 notes.md
+notes2.md
 .vscode/
 
 ledcontrol.json

@@ -142,7 +142,7 @@ Custom optimized "plasma" implementation that returns a sum of several octaves o
 Standard 3D perlin noise. Use time as one of the arguments to make the noise vary with time. Returns a value from 0 to 1.
 
 ##### `plasma_sines(x, y, t, coeff_x, coeff_y, coeff_x_y, coeff_mag_xy)`
-Basic optimized function for creating RGB plasma animations (see https://www.bidouille.org/prog/plasma). Returns `sin((x + t) * coeff_x) + sin((y + t) * coeff_y) + sin((x + y + t) * coeff_x_y) + sin((sqrt(x * x + y * y) + t) * coeff_mag_xy)`. Returns a value from 0 to 1. Not recommended unless you want it, `plasma_sines_octave` generally looks better.
+Basic optimized function for creating RGB plasma animations (see [https://www.bidouille.org/prog/plasma](https://www.bidouille.org/prog/plasma)). Returns `sin((x + t) * coeff_x) + sin((y + t) * coeff_y) + sin((x + y + t) * coeff_x_y) + sin((sqrt(x * x + y * y) + t) * coeff_mag_xy)`. Returns a value from 0 to 1. Not recommended unless you want it, `plasma_sines_octave` generally looks better.
 
 ### Additional Utility Functions
 ##### `clamp(x, min, max)`
@@ -172,7 +172,8 @@ float wave_sine(float t) {
 }
 
 float plasma_sines(float x, float y, float t,
-                   float coeff_x, float coeff_y, float coeff_x_y, float coeff_dist_xy) {
+                   float coeff_x, float coeff_y,
+                   float coeff_x_y, float coeff_dist_xy) {
   float v = 0.0;
   v += sin((x + t) * coeff_x);
   v += sin((y + t) * coeff_y);
@@ -181,17 +182,57 @@ float plasma_sines(float x, float y, float t,
   return v;
 }
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
-    // Normalized pixel coordinates (from 0 to 1)
-    vec2 uv = fragCoord / iResolution.xy;
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+  // Normalized pixel coordinates (from 0 to 1)
+  vec2 uv = fragCoord / iResolution.xy;
 
-    float v = plasma_sines(uv.x, uv.y, iTime, 1.0, 0.5, 0.5, 1.0);
+  float v = plasma_sines(uv.x, uv.y, iTime, 1.0, 0.5, 0.5, 1.0);
 
-    float r = 0.8 - wave_sine(v);
-    float g = wave_sine(v + 0.333) - 0.2;
-    float b = 0.8 - wave_sine(v + 0.666);
+  float r = 0.8 - wave_sine(v);
+  float g = wave_sine(v + 0.333) - 0.2;
+  float b = 0.8 - wave_sine(v + 0.666);
 
-    fragColor = vec4(r, g, b, 1.0);
+  fragColor = vec4(r, g, b, 1.0);
+}
+```
+
+##### `plasma_sines_octave`
+```GLSL
+float wave_sine(float t) {
+  return cos(6.283 * t) / 2.0 + 0.5;
+}
+
+float plasma_sines_octave(float x, float y, float t,
+                          int octaves,
+                          float temporal_freq_persistence,
+                          float amplitude_persistence) {
+  float vx = x;
+  float vy = y;
+  float spatial_freq = 1.0;
+  float temporal_freq = 1.0;
+  float amplitude = 1.0;
+  for (int i = 0; i < octaves; i++) {
+    float vx1 = vx;
+    vx += cos(vy * spatial_freq + t * temporal_freq) * amplitude;
+    vy += sin(vx1 * spatial_freq + t * temporal_freq) * amplitude;
+    spatial_freq *= 2.0;
+    temporal_freq *= temporal_freq_persistence;
+    amplitude *= amplitude_persistence;
+  }
+  return vx / 2.0;
+}
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+  // Normalized pixel coordinates (from 0 to 1)
+  vec2 uv = fragCoord / iResolution.xy;
+
+  float v = plasma_sines_octave(uv.x, uv.y, iTime, 8, 1.5, 0.5);
+
+  float r = 0.8 - wave_sine(v);
+  float g = wave_sine(v + 0.333) - 0.2;
+  float b = 0.8 - wave_sine(v + 0.666);
+
+  fragColor = vec4(r, g, b, 1.0);
 }
 ```
 
