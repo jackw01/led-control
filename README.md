@@ -33,10 +33,15 @@ More information on connecting LED strips and PWM/DMA usage is available [here](
 ### Software Setup
 Python 3.6 or newer is required.
 
-1. `git clone https://github.com/jackw01/led-control.git`
-2. `cd led-control`
-3. `python3 setup.py install`
-4. `sudo ledcontrol --led_count 150`
+1. `sudo apt-get install scons swig`
+2. `git clone --recurse-submodules https://github.com/jackw01/led-control.git`
+3. `cd led-control`
+4. `cd ledcontrol/rpi_ws281x/lib/c/rpi_ws281x/`
+5. `scons`
+6. `cd ../../../../..`
+7. `swig -python ./ledcontrol/rpi_ws281x/lib/rpi_ws281x.i`
+8. `sudo python3 setup.py develop`
+9. `sudo ledcontrol --led_count 150`
 
 ### Command Line Configuration Arguments
 Web server and LED hardware parameters must be specified as command line arguments when running ledcontrol.
