@@ -33,7 +33,7 @@ More information on connecting LED strips and PWM/DMA usage is available [here](
 ### Software Setup
 Python 3.6 or newer is required.
 
-1. `git clone https://github.com/jackw01/led-control.git`
+1. `git clone --recurse-submodules https://github.com/jackw01/led-control.git`
 2. `cd led-control`
 3. `python3 setup.py install`
 4. `sudo ledcontrol --led_count 150`
