@@ -1,0 +1,16 @@
+{
+  "background_color": "#16181a",
+  "description": "LED Control web interface",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "mobile-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "name": "LED Control",
+  "short_name": "LED Control",
+  "start_url": "../"
+}

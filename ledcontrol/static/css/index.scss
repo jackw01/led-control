@@ -343,7 +343,7 @@ input[type="range"] {
   margin: 0;
   background: $input-bg;
   border-radius: $border-radius;
-  box-shadow: inset 10px 0 $body-bg, inset -10px 0 $body-bg;
+  box-shadow: inset 10px 0 black, inset -10px 0 black;
   @include transition();
 
   &:focus {
@@ -391,7 +391,6 @@ input[type="range"] {
   @include transition();
 
   &:hover {
-    //background: lighten($body-bg, 7%);
     color: $body-color;
     border: 1px solid $input-border-focus;
   }
