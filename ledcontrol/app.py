@@ -1,6 +1,7 @@
 # led-control WS2812B LED Controller Server
 # Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
+import os
 import json
 import atexit
 from recordclass import recordclass
@@ -59,7 +60,7 @@ def create_app(led_count, refresh_rate,
     pattern_names = dict(patterns.default_names)
 
     # Create file if it doesn't exist already
-    filename = Path.cwd() / 'ledcontrol.json'
+    filename = Path('/etc') / 'ledcontrol.json'
     filename.touch(exist_ok=True)
 
     # Init controller params and custom patterns from settings file
@@ -170,8 +171,8 @@ def create_app(led_count, refresh_rate,
         'Save controller settings'
         data = {
             'params': controller.params,
-            'pattern_sources':
-                {k: v for k, v in controller.pattern_sources.items() if k not in patterns.default},
+            'patterns':
+                {k: 'name': v for k, v in controller.pattern_sources.items() if k not in patterns.default},
             'pattern_names':
                 {k: v for k, v in pattern_names.items() if k not in patterns.default_names},
             'colors': controller.colors,

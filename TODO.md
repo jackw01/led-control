@@ -67,10 +67,9 @@
 - [ ] patterns - meteor trail
 - [ ] patterns - fireworks / blob twinkle
 - [ ] patterns - noise sparkle
-- [ ] web UI - update code after changing patterns
+- [x] web UI - update code after changing patterns
 
 ### Extras
-#### 2019-10
 - [ ] auto timer function - dim at night
 - [ ] gradient/palette based patterns
 - [ ] remap hsv patterns to custom palette
@@ -81,3 +80,4 @@
 - [ ] twinkle effect improvement - more LEDs at once
 - [ ] time of day in pattern function
 - [ ] realtime audio reactive effects
+- [ ] per-preset speed/scale

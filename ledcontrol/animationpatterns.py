@@ -17,42 +17,42 @@ def blank(t, dt, x, y, prev_state, colors):
     return (0, 0, 0), ColorMode.hsv
 
 default = {
-    0: '''
+    0: {name: 'Solid Color', primary_speed: 0.2, primary_scale: 1.0, source: '''
 def pattern(t, dt, x, y, prev_state, colors):
     return colors[0], hsv
-''',
-    1: '''
+'''},
+    1: {name: 'Cycle Hue 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
 def pattern(t, dt, x, y, prev_state, colors):
     return (t + x, 1, 1), hsv
-''',
-    2: '''
+'''},
+    2: {name: 'Cycle Hue Bands 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
 def pattern(t, dt, x, y, prev_state, colors):
     hue = (t + x) % 1
     return (hue - (hue % 0.1666), 1, 1), hsv
-''',
-    3: '''
+'''},
+    3: {name: 'RGB Sines 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
 def pattern(t, dt, x, y, prev_state, colors):
     return (wave_sine(t + x),
             wave_sine((t + x) * 1.2),
             wave_sine((t + x) * 1.4)), rgb
-''',
-    4: '''
+'''},
+    4: {name: 'RGB Cubics 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
 def pattern(t, dt, x, y, prev_state, colors):
     return (wave_cubic(t + x),
             wave_cubic((t + x) * 1.2),
             wave_cubic((t + x) * 1.4)), rgb
-''',
-    5: '''
+'''},
+    5: {name: 'Cycle Blackbody 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
 def pattern(t, dt, x, y, prev_state, colors):
     v = (t + x) % 1
     c = blackbody_to_rgb(v * v * 5500 + 1000)
     return (c[0] * v, c[1] * v, c[2] * v), rgb
-''',
-    6: '''
+'''},
+    6: {name: 'Bounce Hue 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
 def pattern(t, dt, x, y, prev_state, colors):
     return (math.fabs((2 * t) % 2 - 1) + x, 1, 1), hsv
-''',
-    7: '''
+'''},
+    7: {name: 'RGB Ripples 1 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
 def pattern(t, dt, x, y, prev_state, colors):
     color = [0, 0, 0]
     for i in range(3):
@@ -60,56 +60,40 @@ def pattern(t, dt, x, y, prev_state, colors):
         v = x + (wave_sine(t + delay)) + wave_sine(x + 0.666 * t + delay)
         color[i] = 0.005 / wave_triangle(v)
     return color, rgb
-''',
-    8: '''
+'''},
+    8: {name: 'RGB Plasma (Spectrum) 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
 def pattern(t, dt, x, y, prev_state, colors):
     v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
     return (wave_sine(v),
             wave_sine(v + 0.333),
             wave_sine(v + 0.666)), rgb
-''',
-    9: '''
+'''},
+    9: {name: 'RGB Plasma (Fire) 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
 def pattern(t, dt, x, y, prev_state, colors):
     v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
     return (0.9 - wave_sine(v),
             wave_sine(v + 0.333) - 0.1,
             0.9 - wave_sine(v + 0.666)), rgb
-''',
-    10: '''
+'''},
+    10: {name: 'RGB Octave Plasma (Fire) 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
 def pattern(t, dt, x, y, prev_state, colors):
     v = plasma_sines_octave(x, y, t, 7, 1.5, 0.5)
     return (0.9 - wave_sine(v),
             wave_sine(v + 0.333) - 0.1,
             0.9 - wave_sine(v + 0.666)), rgb
-''',
-    11: '''
+'''},
+    11: {name: 'HSV Waves 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
 def pattern(t, dt, x, y, prev_state, colors):
     h = (x + t) * 0.5 % .5 + x + wave_sine(t)
     return (h, 1, wave_sine(h + t)), hsv
-''',
-    12: '''
+'''},
+    12: {name: 'HSV Ripples 1 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
 def pattern(t, dt, x, y, prev_state, colors):
     wave1 = wave_sine(t / 4 + x)
     wave2 = wave_sine(t / 8 - x)
     wave3 = wave_sine(x + wave1 + wave2)
     return (wave3 % 0.4 + t, 1, wave1 + wave3), hsv
-''',
-}
-
-default_names = {
-    0: 'Solid Color',
-    1: 'Cycle Hue 1D',
-    2: 'Cycle Hue Bands 1D',
-    3: 'RGB Sines 1D',
-    4: 'RGB Cubics 1D',
-    5: 'Cycle Blackbody 1D',
-    6: 'Bounce Hue 1D',
-    7: 'RGB Ripples 1 1D',
-    8: 'RGB Plasma (Spectrum) 1D',
-    9: 'RGB Plasma (Fire) 1D',
-    10: 'RGB Octave Plasma (Fire) 1D',
-    11: 'HSV Waves 1D',
-    12: 'HSV Ripples 1 1D',
+'''}
 }
 
 # Secondary animations that transform finalized colors to add brightness effects
