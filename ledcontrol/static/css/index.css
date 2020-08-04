@@ -238,7 +238,6 @@ input[type="range"] {
   margin: 0;
   background: #343639;
   border-radius: 3px;
-  box-shadow: inset 10px 0 black, inset -10px 0 black;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important; }
   input[type="range"]:focus {
     outline: none; }

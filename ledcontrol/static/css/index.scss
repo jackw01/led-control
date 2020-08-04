@@ -343,7 +343,6 @@ input[type="range"] {
   margin: 0;
   background: $input-bg;
   border-radius: $border-radius;
-  box-shadow: inset 10px 0 black, inset -10px 0 black;
   @include transition();
 
   &:focus {

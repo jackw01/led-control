@@ -36,7 +36,7 @@ function handleNewPattern() {
   // Set new source and name, add option
   const key = getCurrentPatternKey();
   const newKey = Date.now();
-  sources[newKey] = sources[key];
+  sources[newKey] = codeMirror.getValue();
   names[newKey] = names[key] + ' (Copy)';
   $('select[data-id="primary_pattern"]')
     .append(`<option value="${newKey}">${names[newKey]}</option>`)
