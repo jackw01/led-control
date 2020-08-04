@@ -12,7 +12,7 @@ from ledcontrol.animationcontroller import AnimationController
 from ledcontrol.ledcontroller import LEDController
 
 import ledcontrol.pixelmappings as pixelmappings
-import ledcontrol.animationpatterns as patterns
+import ledcontrol.animationpatterns as animpatterns
 import ledcontrol.utils as utils
 
 # Record class for form items
@@ -57,7 +57,7 @@ def create_app(led_count, refresh_rate,
                                      pixelmappings.line(led_count),
                                      led_color_correction)
 
-    pattern_names = dict(patterns.default_names)
+    patterns = dict(animpatterns.default)
 
     # Create file if it doesn't exist already
     filename = Path('/etc') / 'ledcontrol.json'
@@ -73,11 +73,10 @@ def create_app(led_count, refresh_rate,
                 controller.params['master_brightness'], led_brightness_limit)
             controller.calculate_color_correction()
             controller.calculate_mappings()
-            for k, v in settings['pattern_sources'].items():
+            for k, v in settings['patterns'].items():
                 # JSON keys are always strings
-                controller.set_pattern_function(int(k), v)
-            for k, v in settings['pattern_names'].items():
-                pattern_names[int(k)] = v
+                patterns[int(k)] = v
+                controller.set_pattern_function(int(k), v['source'])
             controller.colors = settings['colors']
             print(f'Loaded saved settings from {filename}.')
         except Exception:
@@ -95,7 +94,7 @@ def create_app(led_count, refresh_rate,
         FormItem('range', 'primary_scale', float, -10, 10),
         FormItem('code', 'pattern_source', str),
         FormItem('select', 'secondary_pattern', int,
-                 options=list(patterns.default_secondary_names.values()),
+                 options=list(animpatterns.default_secondary_names.values()),
                  val=controller.params['secondary_pattern']),
         FormItem('range', 'secondary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'secondary_scale', float, -10, 10),
@@ -127,9 +126,9 @@ def create_app(led_count, refresh_rate,
     @app.route('/getpatternsources')
     def get_pattern_sources():
         'Returns pattern sources in JSON dict form'
-        return jsonify(sources=controller.pattern_sources,
-                       names=pattern_names,
-                       defaults=list(patterns.default.keys()),
+        return jsonify(sources={k: v['source'] for k, v in patterns.items()},
+                       names={k: v['name'] for k, v in patterns.items()},
+                       defaults=list(animpatterns.default.keys()),
                        current=controller.params['primary_pattern'])
 
     @app.route('/compilepattern')
@@ -137,6 +136,13 @@ def create_app(led_count, refresh_rate,
         'Compiles a pattern, returns errors and warnings in JSON array form'
         key = request.args.get('key', type=int)
         source = request.args.get('source', type=str)
+        if key not in patterns:
+            patterns[key] = {
+                'name': key,
+                'primary_speed': controller.params['primary_speed'],
+                'primary_scale': controller.params['primary_scale']
+            }
+        patterns[key]['source'] = source
         errors, warnings = controller.set_pattern_function(key, source)
         return jsonify(errors=errors, warnings=warnings)
 
@@ -145,7 +151,7 @@ def create_app(led_count, refresh_rate,
         'Sets a pattern name for the given key'
         key = request.args.get('key', type=int)
         name = request.args.get('name', type=str)
-        pattern_names[key] = name
+        patterns[key]['name'] = name
         return jsonify(result='')
 
     @app.route('/setcolor')
@@ -171,10 +177,7 @@ def create_app(led_count, refresh_rate,
         'Save controller settings'
         data = {
             'params': controller.params,
-            'patterns':
-                {k: 'name': v for k, v in controller.pattern_sources.items() if k not in patterns.default},
-            'pattern_names':
-                {k: v for k, v in pattern_names.items() if k not in patterns.default_names},
+            'patterns': {k: v for k, v in patterns.items() if k not in animpatterns.default},
             'colors': controller.colors,
         }
         with open(str(filename), 'w') as data_file:

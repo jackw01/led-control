@@ -17,42 +17,42 @@ def blank(t, dt, x, y, prev_state, colors):
     return (0, 0, 0), ColorMode.hsv
 
 default = {
-    0: {name: 'Solid Color', primary_speed: 0.2, primary_scale: 1.0, source: '''
+    0: {'name': 'Solid Color', 'primary_speed': 0.2, 'primary_scale': 1.0, 'source': '''
 def pattern(t, dt, x, y, prev_state, colors):
     return colors[0], hsv
 '''},
-    1: {name: 'Cycle Hue 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
+    1: {'name': 'Cycle Hue 1D', 'primary_speed': 0.2, 'primary_scale': 1.0, 'source': '''
 def pattern(t, dt, x, y, prev_state, colors):
     return (t + x, 1, 1), hsv
 '''},
-    2: {name: 'Cycle Hue Bands 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
+    2: {'name': 'Cycle Hue Bands 1D', 'primary_speed': 0.2, 'primary_scale': 1.0, 'source': '''
 def pattern(t, dt, x, y, prev_state, colors):
     hue = (t + x) % 1
     return (hue - (hue % 0.1666), 1, 1), hsv
 '''},
-    3: {name: 'RGB Sines 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
+    3: {'name': 'RGB Sines 1D', 'primary_speed': 0.2, 'primary_scale': 1.0, 'source': '''
 def pattern(t, dt, x, y, prev_state, colors):
     return (wave_sine(t + x),
             wave_sine((t + x) * 1.2),
             wave_sine((t + x) * 1.4)), rgb
 '''},
-    4: {name: 'RGB Cubics 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
+    4: {'name': 'RGB Cubics 1D', 'primary_speed': 0.2, 'primary_scale': 1.0, 'source': '''
 def pattern(t, dt, x, y, prev_state, colors):
     return (wave_cubic(t + x),
             wave_cubic((t + x) * 1.2),
             wave_cubic((t + x) * 1.4)), rgb
 '''},
-    5: {name: 'Cycle Blackbody 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
+    5: {'name': 'Cycle Blackbody 1D', 'primary_speed': 0.2, 'primary_scale': 1.0, 'source': '''
 def pattern(t, dt, x, y, prev_state, colors):
     v = (t + x) % 1
     c = blackbody_to_rgb(v * v * 5500 + 1000)
     return (c[0] * v, c[1] * v, c[2] * v), rgb
 '''},
-    6: {name: 'Bounce Hue 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
+    6: {'name': 'Bounce Hue 1D', 'primary_speed': 0.2, 'primary_scale': 1.0, 'source': '''
 def pattern(t, dt, x, y, prev_state, colors):
     return (math.fabs((2 * t) % 2 - 1) + x, 1, 1), hsv
 '''},
-    7: {name: 'RGB Ripples 1 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
+    7: {'name': 'RGB Ripples 1 1D', 'primary_speed': 0.2, 'primary_scale': 1.0, 'source': '''
 def pattern(t, dt, x, y, prev_state, colors):
     color = [0, 0, 0]
     for i in range(3):
@@ -61,33 +61,33 @@ def pattern(t, dt, x, y, prev_state, colors):
         color[i] = 0.005 / wave_triangle(v)
     return color, rgb
 '''},
-    8: {name: 'RGB Plasma (Spectrum) 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
+    8: {'name': 'RGB Plasma (Spectrum) 1D', 'primary_speed': 0.2, 'primary_scale': 1.0, 'source': '''
 def pattern(t, dt, x, y, prev_state, colors):
     v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
     return (wave_sine(v),
             wave_sine(v + 0.333),
             wave_sine(v + 0.666)), rgb
 '''},
-    9: {name: 'RGB Plasma (Fire) 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
+    9: {'name': 'RGB Plasma (Fire) 1D', 'primary_speed': 0.2, 'primary_scale': 1.0, 'source': '''
 def pattern(t, dt, x, y, prev_state, colors):
     v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
     return (0.9 - wave_sine(v),
             wave_sine(v + 0.333) - 0.1,
             0.9 - wave_sine(v + 0.666)), rgb
 '''},
-    10: {name: 'RGB Octave Plasma (Fire) 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
+    10: {'name': 'RGB Octave Plasma (Fire) 1D', 'primary_speed': 0.2, 'primary_scale': 1.0, 'source': '''
 def pattern(t, dt, x, y, prev_state, colors):
     v = plasma_sines_octave(x, y, t, 7, 1.5, 0.5)
     return (0.9 - wave_sine(v),
             wave_sine(v + 0.333) - 0.1,
             0.9 - wave_sine(v + 0.666)), rgb
 '''},
-    11: {name: 'HSV Waves 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
+    11: {'name': 'HSV Waves 1D', 'primary_speed': 0.2, 'primary_scale': 1.0, 'source': '''
 def pattern(t, dt, x, y, prev_state, colors):
     h = (x + t) * 0.5 % .5 + x + wave_sine(t)
     return (h, 1, wave_sine(h + t)), hsv
 '''},
-    12: {name: 'HSV Ripples 1 1D', primary_speed: 0.2, primary_scale: 1.0, source: '''
+    12: {'name': 'HSV Ripples 1 1D', 'primary_speed': 0.2, 'primary_scale': 1.0, 'source': '''
 def pattern(t, dt, x, y, prev_state, colors):
     wave1 = wave_sine(t / 4 + x)
     wave2 = wave_sine(t / 8 - x)

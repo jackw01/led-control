@@ -44,9 +44,11 @@ function handleNewPattern() {
 
   // Update code and button states, send everything to the server
   updateCodeView(newKey);
-  handleCompile(); // Compile first
-  $.getJSON('/setpatternname', { key: newKey, name: names[newKey] }, () => {}); // Set name
-  $.getJSON('/setparam', { key: 'primary_pattern', value: newKey }, () => {}); // Select
+  handleCompile(() => { // Compile first
+    $.getJSON('/setpatternname', { key: newKey, name: names[newKey] }, () => { }); // Set name
+    $.getJSON('/setparam', { key: 'primary_pattern', value: newKey }, () => { }); // Select
+  });
+
 }
 
 // Rename current pattern
@@ -59,7 +61,7 @@ function handleRenamePattern() {
 }
 
 // Compile selected pattern
-function handleCompile() {
+function handleCompile(callback) {
   $.getJSON('/compilepattern', {
     key: getCurrentPatternKey(),
     source: codeMirror.getValue(),
@@ -76,6 +78,7 @@ function handleCompile() {
         status = result.errors.join(', ');
       }
       updateSourceStatus();
+      if (callback) callback();
   });
 }
 

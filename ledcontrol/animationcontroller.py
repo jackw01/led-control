@@ -9,7 +9,7 @@ import RestrictedPython
 import copy
 from threading import Event, Thread
 
-import ledcontrol.animationpatterns as patterns
+import ledcontrol.animationpatterns as animpatterns
 import ledcontrol.rpi_ws281x as rpi_ws281x
 import ledcontrol.utils as utils
 
@@ -93,17 +93,15 @@ class AnimationController:
             'secondary_scale': 1.0,
         }
 
-        # Source code for patterns
-        self.pattern_sources = {}
         # Lookup dictionary for pattern functions used to generate select menu
         self.pattern_functions = {}
 
         # Initialize primary patterns
-        for k, v in patterns.default.items():
-            self.set_pattern_function(k, v)
+        for k, v in animpatterns.default.items():
+            self.set_pattern_function(k, v['source'])
 
         # Lookup dictionary for secondary pattern functions
-        self.secondary_pattern_functions = patterns.default_secondary
+        self.secondary_pattern_functions = animpatterns.default_secondary
 
         # Color palette used for animations
         self.colors = [(0, 0, 1)]
@@ -139,8 +137,8 @@ class AnimationController:
             '_write_': RestrictedPython.Guards.full_write_guard,
             'math': math,
             'random': random,
-            'hsv': patterns.ColorMode.hsv,
-            'rgb': patterns.ColorMode.rgb,
+            'hsv': animpatterns.ColorMode.hsv,
+            'rgb': animpatterns.ColorMode.rgb,
             'clamp': utils.clamp,
             'wave_pulse': rpi_ws281x.wave_pulse,
             'wave_triangle': rpi_ws281x.wave_triangle,
@@ -225,8 +223,9 @@ class AnimationController:
         'Update the source code and recompile a pattern function'
         errors, warnings, pattern = self.compile_pattern(source)
         if len(errors) == 0:
-            self.pattern_sources[key] = source
             self.pattern_functions[key] = pattern
+        elif key not in self.pattern_functions:
+            self.pattern_functions[key] = animpatterns.blank
         return errors, warnings
 
     def set_color(self, index, value):
@@ -258,7 +257,7 @@ class AnimationController:
         secondary_time = self.time * self.params['secondary_speed']
         secondary_delta_t = self.timer.delta_t * self.params['secondary_speed']
 
-        mode = patterns.ColorMode.hsv
+        mode = animpatterns.ColorMode.hsv
 
         try:
             # Determine current pattern mode
@@ -293,7 +292,7 @@ class AnimationController:
             s_2 = [((0, 0, 0), 0) for i in range(self.led_count)]
 
         # Write colors to LEDs
-        if mode == patterns.ColorMode.hsv:
+        if mode == animpatterns.ColorMode.hsv:
             self.led_controller.leds.set_all_pixels_hsv_float(
                 [(c[0][0], c[0][1], c[0][2] * c[1]) for c in s_2],
                 self.correction,
@@ -301,7 +300,7 @@ class AnimationController:
                 self.params['master_brightness'],
                 self.params['master_gamma']
             )
-        elif mode == patterns.ColorMode.rgb:
+        elif mode == animpatterns.ColorMode.rgb:
             self.led_controller.leds.set_all_pixels_rgb_float(
                 [(c[0][0] * c[1], c[0][1] * c[1], c[0][2] * c[1]) for c in s_2],
                 self.correction,
