@@ -57,7 +57,19 @@ function handleNewPattern() {
     $.getJSON('/setpatternname', { key: newKey, name: names[newKey] }, () => { }); // Set name
     $.getJSON('/setparam', { key: 'primary_pattern', value: newKey }, () => { }); // Select
   });
+}
 
+// Delete current pattern
+function handleDeletePattern() {
+  if (confirm(`Delete pattern "${$('#pattern-name').val()}?"`)) {
+    const key = getCurrentPatternKey();
+    $('select[data-id="primary_pattern"]').val(0);
+    $(`select[data-id="primary_pattern"] option[value="${key}"]`).remove();
+    handleInputChange($('select[data-id="primary_pattern"]'));
+    $.getJSON('/setparam', { key: 'primary_pattern', value: 0 }, () => {
+      $.getJSON('/deletepattern', { key: key }, () => { });
+    });
+  }
 }
 
 // Rename current pattern
@@ -108,9 +120,11 @@ function updateCodeView(newKey) {
     code = defaultCodeComment + code;
     codeMirror.setOption('readOnly', true);
     $('#pattern-name').prop('disabled', true);
+    $('#delete-pattern').hide();
   } else {
     codeMirror.setOption('readOnly', false);
     $('#pattern-name').prop('disabled', false);
+    $('#delete-pattern').show();
   }
   codeMirror.setValue(code);
 }
@@ -128,6 +142,7 @@ window.onload = function() {
   $('input[type=range].update-on-change').on('mousemove touchmove', handleParamAdjust);
   $('.update-on-change').on('change', handleParamUpdate);
   $('#new-pattern').on('click', handleNewPattern);
+  $('#delete-pattern').on('click', handleDeletePattern);
   $('#pattern-name').on('change', handleRenamePattern);
   $('#compile').on('click', handleCompile);
 

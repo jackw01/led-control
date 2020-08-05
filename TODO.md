@@ -71,6 +71,8 @@
 ### Extras
 - [ ] password protection
 - [ ] auto timer function - dim at night
+- [x] per-pattern speed/scale
+- [x] delete pattern
 - [ ] gradient/palette based patterns
 - [ ] remap hsv patterns to custom palette
 - [ ] palette based - multi color wipe
@@ -80,4 +82,3 @@
 - [ ] twinkle effect improvement - more LEDs at once
 - [ ] time of day in pattern function
 - [ ] realtime audio reactive effects
-- [ ] per-preset speed/scale

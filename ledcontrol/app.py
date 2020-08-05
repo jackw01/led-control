@@ -159,6 +159,13 @@ def create_app(led_count, refresh_rate,
         errors, warnings = controller.set_pattern_function(key, source)
         return jsonify(errors=errors, warnings=warnings)
 
+    @app.route('/deletepattern')
+    def delete_pattern():
+        'Deletes a pattern'
+        key = request.args.get('key', type=int)
+        del patterns[key]
+        return jsonify(result='')
+
     @app.route('/setpatternname')
     def set_pattern_name():
         'Sets a pattern name for the given key'
