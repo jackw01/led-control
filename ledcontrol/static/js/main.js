@@ -1,6 +1,8 @@
 // led-control WS2812B LED Controller Server
 // Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
+defaultCodeComment = '# Code editing and renaming disabled on default patterns.Click "New Pattern" to create and edit a copy of this pattern.\n\n';
+
 function handleInputChange(elem) {
   const key = elem.data('id');
   let val = parseFloat(elem.val(), 10);
@@ -12,7 +14,14 @@ function handleInputChange(elem) {
     if (elem.attr('type') == 'range') $('input[type=number][data-id=' + key + ']').val(val);
     else $('input[type=range][data-id=' + key + ']').val(val);
   }
-  if (key === 'primary_pattern') updateCodeView(val); // On primary pattern change, update code
+  // On primary pattern change, update code and speed/scale
+  if (key === 'primary_pattern') {
+    $.getJSON('/getpatternparams', { key: val }, (result) => {
+      $('input[data-id=primary_speed]').val(result.speed);
+      $('input[data-id=primary_scale]').val(result.scale);
+      updateCodeView(val);
+    });
+  }
   return { key: key, value: val };
 }
 
@@ -36,7 +45,7 @@ function handleNewPattern() {
   // Set new source and name, add option
   const key = getCurrentPatternKey();
   const newKey = Date.now();
-  sources[newKey] = codeMirror.getValue();
+  sources[newKey] = codeMirror.getValue().replace(defaultCodeComment, '');
   names[newKey] = names[key] + ' (Copy)';
   $('select[data-id="primary_pattern"]')
     .append(`<option value="${newKey}">${names[newKey]}</option>`)
@@ -96,7 +105,7 @@ function updateCodeView(newKey) {
   $('#pattern-name').val(names[newKey]);
   let code = sources[newKey].trim();
   if (defaultSourceKeys.indexOf(newKey) >= 0) { // Prevent editing default patterns
-    code = '# Code editing and renaming disabled on default patterns. Click "New Pattern" to create and edit a copy of this pattern.\n\n' + code;
+    code = defaultCodeComment + code;
     codeMirror.setOption('readOnly', true);
     $('#pattern-name').prop('disabled', true);
   } else {

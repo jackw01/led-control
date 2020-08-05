@@ -75,8 +75,11 @@ def create_app(led_count, refresh_rate,
             controller.calculate_mappings()
             for k, v in settings['patterns'].items():
                 # JSON keys are always strings
-                patterns[int(k)] = v
-                controller.set_pattern_function(int(k), v['source'])
+                if int(k) not in animpatterns.default:
+                    patterns[int(k)] = v
+                    controller.set_pattern_function(int(k), v['source'])
+                else:
+                    patterns[int(k)].update(v)
             controller.colors = settings['colors']
             print(f'Loaded saved settings from {filename}.')
         except Exception:
@@ -119,9 +122,19 @@ def create_app(led_count, refresh_rate,
         'Sets a key/value pair in controller parameters'
         key = request.args.get('key', type=str)
         value = request.args.get('value')
-        controller.set_param(key, next(filter(lambda i: i.key == key, form))
-                                      .type(value))
+        if key == 'primary_pattern':
+            save_current_pattern_params()
+            controller.set_param('primary_speed', patterns[int(value)]['primary_speed'])
+            controller.set_param('primary_scale', patterns[int(value)]['primary_scale'])
+        controller.set_param(key, next(filter(lambda i: i.key == key, form)).type(value))
         return jsonify(result='')
+
+    @app.route('/getpatternparams')
+    def get_pattern_params():
+        'Returns pattern parameters for the given key in JSON dict form'
+        key = request.args.get('key', type=int)
+        return jsonify(speed=patterns[key]['primary_speed'],
+                       scale=patterns[key]['primary_scale'])
 
     @app.route('/getpatternsources')
     def get_pattern_sources():
@@ -173,11 +186,25 @@ def create_app(led_count, refresh_rate,
         controller.set_color_component(index, component, value)
         return jsonify(result = '')
 
+    def save_current_pattern_params():
+        'Remembers speed and scale for current pattern'
+        patterns[controller.params['primary_pattern']]['primary_speed']\
+            = controller.params['primary_speed']
+        patterns[controller.params['primary_pattern']]['primary_scale']\
+            = controller.params['primary_scale']
+
     def save_settings():
         'Save controller settings'
+        save_current_pattern_params()
+        patterns_save = {}
+        for k,v in patterns.items():
+            if k not in animpatterns.default:
+                patterns_save[k] = v
+            else:
+                patterns_save[k] = {n: v[n] for n in ('primary_speed', 'primary_scale')}
         data = {
             'params': controller.params,
-            'patterns': {k: v for k, v in patterns.items() if k not in animpatterns.default},
+            'patterns': patterns_save,
             'colors': controller.colors,
         }
         with open(str(filename), 'w') as data_file:

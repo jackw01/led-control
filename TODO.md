@@ -59,7 +59,7 @@
 - [x] general code cleanup and documentation
 - [x] master brightness limiting
 - [x] secondary patterns - wipe
-- [ ] password protection
+- [x] web UI - update code after changing patterns
 - [x] patterns - ripple
 - [x] patterns - hsv waves
 - [ ] patterns - random wipe
@@ -67,9 +67,9 @@
 - [ ] patterns - meteor trail
 - [ ] patterns - fireworks / blob twinkle
 - [ ] patterns - noise sparkle
-- [x] web UI - update code after changing patterns
 
 ### Extras
+- [ ] password protection
 - [ ] auto timer function - dim at night
 - [ ] gradient/palette based patterns
 - [ ] remap hsv patterns to custom palette
