@@ -70,7 +70,6 @@
 
 ### Extras
 - [ ] password protection
-- [ ] auto timer function - dim at night
 - [x] per-pattern speed/scale
 - [x] delete pattern
 - [ ] gradient/palette based patterns
@@ -78,7 +77,4 @@
 - [ ] palette based - multi color wipe
 - [ ] palette based - noise
 - [ ] multiple palette storage and editing
-- [ ] twinkle effect improvement - scalable and with bg color
-- [ ] twinkle effect improvement - more LEDs at once
-- [ ] time of day in pattern function
 - [ ] realtime audio reactive effects

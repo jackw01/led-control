@@ -13,6 +13,7 @@ from ledcontrol.ledcontroller import LEDController
 
 import ledcontrol.pixelmappings as pixelmappings
 import ledcontrol.animationpatterns as animpatterns
+import ledcontrol.colorpalettes as colorpalettes
 import ledcontrol.utils as utils
 
 # Record class for form items
@@ -58,6 +59,7 @@ def create_app(led_count, refresh_rate,
                                      led_color_correction)
 
     patterns = dict(animpatterns.default)
+    palettes = dict(colorpalettes.default)
 
     # Create file if it doesn't exist already
     filename = Path('/etc') / 'ledcontrol.json'
@@ -67,12 +69,14 @@ def create_app(led_count, refresh_rate,
     with open(str(filename), mode='r') as data_file:
         try:
             settings = json.load(data_file)
-            controller.params = settings['params']
             # Enforce brightness limit
-            controller.params['master_brightness'] = min(
-                controller.params['master_brightness'], led_brightness_limit)
+            settings['params']['master_brightness'] = min(
+                settings['params']['master_brightness'], led_brightness_limit)
+            # Set controller params, recalculate things that depend on params
+            controller.params.update(settings['params'])
             controller.calculate_color_correction()
             controller.calculate_mappings()
+            # Read custom patterns and changed params for default patterns
             for k, v in settings['patterns'].items():
                 # JSON keys are always strings
                 if int(k) not in animpatterns.default:
@@ -80,6 +84,9 @@ def create_app(led_count, refresh_rate,
                     controller.set_pattern_function(int(k), v['source'])
                 else:
                     patterns[int(k)].update(v)
+            # Read color palettes
+            palettes.update(settings['palettes'])
+            controller.set_color_palette(palettes[controller.params['palette']])
             controller.colors = settings['colors']
             print(f'Loaded saved settings from {filename}.')
         except Exception:
@@ -212,6 +219,7 @@ def create_app(led_count, refresh_rate,
         data = {
             'params': controller.params,
             'patterns': patterns_save,
+            'palettes': {k: v for k, v in palettes.items() if k not in colorpalettes.default},
             'colors': controller.colors,
         }
         with open(str(filename), 'w') as data_file:

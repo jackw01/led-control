@@ -1,7 +1,7 @@
 // led-control WS2812B LED Controller Server
 // Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
-defaultCodeComment = '# Code editing and renaming disabled on default patterns.Click "New Pattern" to create and edit a copy of this pattern.\n\n';
+defaultCodeComment = '# Code editing and renaming disabled on default patterns. Click "New Pattern" to create and edit a copy of this pattern.\n\n';
 
 function handleInputChange(elem) {
   const key = elem.data('id');

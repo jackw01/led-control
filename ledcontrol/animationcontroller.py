@@ -10,6 +10,7 @@ import copy
 from threading import Event, Thread
 
 import ledcontrol.animationpatterns as animpatterns
+import ledcontrol.colorpalettes as colorpalettes
 import ledcontrol.rpi_ws281x as rpi_ws281x
 import ledcontrol.utils as utils
 
@@ -91,6 +92,7 @@ class AnimationController:
             'secondary_pattern': 0,
             'secondary_speed': 0.2,
             'secondary_scale': 1.0,
+            'palette': 0,
         }
 
         # Lookup dictionary for pattern functions used to generate select menu
@@ -105,6 +107,8 @@ class AnimationController:
 
         # Color palette used for animations
         self.colors = [(0, 0, 1)]
+        self.palette_table_size = 1000
+        self.set_color_palette(colorpalettes.default[0])
 
         # Set default color temp
         self.correction_original = led_color_correction
@@ -137,6 +141,7 @@ class AnimationController:
             '_write_': RestrictedPython.Guards.full_write_guard,
             'math': math,
             'random': random,
+            'palette': self.get_palette_color,
             'hsv': animpatterns.ColorMode.hsv,
             'rgb': animpatterns.ColorMode.rgb,
             'clamp': utils.clamp,
@@ -227,6 +232,16 @@ class AnimationController:
         elif key not in self.pattern_functions:
             self.pattern_functions[key] = animpatterns.blank
         return errors, warnings
+
+    def set_color_palette(self, palette):
+        'Set the color palette and recalculate the lookup table'
+        self.palette_table = []
+        for i in range(self.palette_table_size):
+            self.palette_table.append((0, 0, 0))
+
+    def get_palette_color(self, i):
+        'Get color from current palette corresponding to index between 0 and 1'
+        return self.palette_table[int((i % 1) * self.palette_table_size)]
 
     def set_color(self, index, value):
         'Set an HSV color in the palette'
