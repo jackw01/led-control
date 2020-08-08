@@ -236,12 +236,16 @@ class AnimationController:
     def set_color_palette(self, palette):
         'Set the color palette and recalculate the lookup table'
         self.palette_table = []
+        sector_size = 1.0 / (len(palette['colors']) - 1)
         for i in range(self.palette_table_size):
-            self.palette_table.append((0, 0, 0))
+            factor = i / self.palette_table_size
+            sector = math.floor(factor / sector_size)
+            c1, c2 = palette['colors'][sector], palette['colors'][sector + 1]
+            self.palette_table.append([factor * (c2[i] - c1[i]) + c1[i] for i in range(3)])
 
     def get_palette_color(self, i):
         'Get color from current palette corresponding to index between 0 and 1'
-        return self.palette_table[int((i % 1) * self.palette_table_size)]
+        return self.palette_table[int(i * self.palette_table_size) % self.palette_table_size]
 
     def set_color(self, index, value):
         'Set an HSV color in the palette'
