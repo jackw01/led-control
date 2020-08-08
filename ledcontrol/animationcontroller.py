@@ -238,10 +238,17 @@ class AnimationController:
         self.palette_table = []
         sector_size = 1.0 / (len(palette['colors']) - 1)
         for i in range(self.palette_table_size):
-            factor = i / self.palette_table_size
-            sector = math.floor(factor / sector_size)
+            f = i / self.palette_table_size
+            sector = math.floor(f / sector_size)
+            f = f % sector_size / sector_size
             c1, c2 = palette['colors'][sector], palette['colors'][sector + 1]
-            self.palette_table.append([factor * (c2[i] - c1[i]) + c1[i] for i in range(3)])
+            h1, h2 = c2[0] - c1[0], c2[0] - 1.0 - c1[0]
+            self.palette_table.append((
+                f * (h1 if abs(h1) < abs(h2) else h2) + c1[0],
+                f * (c2[1] - c1[1]) + c1[1],
+                f * (c2[2] - c1[2]) + c1[2],
+            ))
+        #print(self.palette_table)
 
     def get_palette_color(self, i):
         'Get color from current palette corresponding to index between 0 and 1'
@@ -313,7 +320,7 @@ class AnimationController:
         # Write colors to LEDs
         if mode == animpatterns.ColorMode.hsv:
             self.led_controller.leds.set_all_pixels_hsv_float(
-                [(c[0][0], c[0][1], c[0][2] * c[1]) for c in s_2],
+                [(c[0][0] % 1, c[0][1], c[0][2] * c[1]) for c in s_2],
                 self.correction,
                 self.params['master_saturation'],
                 self.params['master_brightness'],

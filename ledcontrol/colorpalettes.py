@@ -5,6 +5,11 @@ from ledcontrol.animationpatterns import ColorMode
 
 default = {
     0: {
+        'name': 'Sunset',
+        'mode': ColorMode.hsv,
+        'colors': [(0.114, 1, 1), (0.005, 1, 1), (0.925, 1, 0.66), (0.883, 1, 0.28)]
+    },
+    1: {
         'name': 'Spectrum',
         'mode': ColorMode.hsv,
         'colors': [(0, 1, 1), (1, 1, 1)]
