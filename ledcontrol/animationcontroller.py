@@ -108,7 +108,8 @@ class AnimationController:
         # Color palette used for animations
         self.colors = [(0, 0, 1)]
         self.palette_table_size = 1000
-        self.set_color_palette(colorpalettes.default[0])
+        self.palettes = dict(colorpalettes.default)
+        self.calculate_palette_table()
 
         # Set default color temp
         self.correction_original = led_color_correction
@@ -223,6 +224,8 @@ class AnimationController:
             self.calculate_color_correction()
         elif key == 'primary_scale' or key == 'secondary_scale':
             self.calculate_mappings()
+        elif key == 'palette':
+            self.calculate_palette_table()
 
     def set_pattern_function(self, key, source):
         'Update the source code and recompile a pattern function'
@@ -233,8 +236,9 @@ class AnimationController:
             self.pattern_functions[key] = animpatterns.blank
         return errors, warnings
 
-    def set_color_palette(self, palette):
+    def calculate_palette_table(self):
         'Set the color palette and recalculate the lookup table'
+        palette = self.palettes[self.params['palette']]
         self.palette_table = []
         sector_size = 1.0 / (len(palette['colors']) - 1)
         for i in range(self.palette_table_size):
@@ -253,6 +257,9 @@ class AnimationController:
     def get_palette_color(self, i):
         'Get color from current palette corresponding to index between 0 and 1'
         return self.palette_table[int(i * self.palette_table_size) % self.palette_table_size]
+
+    def set_palette(self, key, value):
+        self.palettes[key] = value
 
     def set_color(self, index, value):
         'Set an HSV color in the palette'

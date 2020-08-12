@@ -59,7 +59,6 @@ def create_app(led_count, refresh_rate,
                                      led_color_correction)
 
     patterns = dict(animpatterns.default)
-    palettes = dict(colorpalettes.default)
 
     # Create file if it doesn't exist already
     filename = Path('/etc') / 'ledcontrol.json'
@@ -85,8 +84,8 @@ def create_app(led_count, refresh_rate,
                 else:
                     patterns[int(k)].update(v)
             # Read color palettes
-            palettes.update(settings['palettes'])
-            controller.set_color_palette(palettes[controller.params['palette']])
+            controller.palettes.update(settings['palettes'])
+            controller.calculate_palette_table()
             controller.colors = settings['colors']
             print(f'Loaded saved settings from {filename}.')
         except Exception:
@@ -138,7 +137,7 @@ def create_app(led_count, refresh_rate,
 
     @app.route('/getpatternparams')
     def get_pattern_params():
-        'Returns pattern parameters for the given key in JSON dict form'
+        'Returns pattern parameters for the given pattern in JSON dict form'
         key = request.args.get('key', type=int)
         return jsonify(speed=patterns[key]['primary_speed'],
                        scale=patterns[key]['primary_scale'])
@@ -181,6 +180,20 @@ def create_app(led_count, refresh_rate,
         patterns[key]['name'] = name
         return jsonify(result='')
 
+    @app.route('/getpalettes')
+    def get_palettes():
+        'Returns palettes in JSON dict form'
+        return jsonify(palettes=controller.palettes)
+
+    @app.route('/setpalette')
+    def set_palette():
+        'Sets a palette'
+        key = request.args.get('key', type=str)
+        value = request.args.get('value')
+        controller.set_palette(key, value)
+        controller.calculate_palette_table()
+        return jsonify(result='')
+
     @app.route('/setcolor')
     def set_color():
         'Sets a color in the palette'
@@ -210,16 +223,19 @@ def create_app(led_count, refresh_rate,
     def save_settings():
         'Save controller settings'
         save_current_pattern_params()
-        patterns_save = {}
-        for k,v in patterns.items():
+        patterns_save, palettes_save = {}, {}
+        for k, v in patterns.items():
             if k not in animpatterns.default:
                 patterns_save[k] = v
             else:
                 patterns_save[k] = {n: v[n] for n in ('primary_speed', 'primary_scale')}
+        for k, v in controller.palettes.items():
+            if k not in colorpalettes.default:
+                palettes_save[k] = v
         data = {
             'params': controller.params,
             'patterns': patterns_save,
-            'palettes': {k: v for k, v in palettes.items() if k not in colorpalettes.default},
+            'palettes': palettes_save,
             'colors': controller.colors,
         }
         with open(str(filename), 'w') as data_file:

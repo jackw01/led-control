@@ -171,6 +171,7 @@ window.onload = function() {
     });
     updateCodeView(result.current);
 
+    /*
     const count = $('.color-picker').length;
     for (let i = 0; i < count; i++) {
       const color = $(`#color-picker-${i}`).data('value');
@@ -206,6 +207,10 @@ window.onload = function() {
           v: color.v / 100,
         }, () => {});
       })
-    }
+    }*/
+  });
+
+  $.getJSON('/getpalettes', {}, (result) => {
+    console.log(result.palettes);
   });
 };
