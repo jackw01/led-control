@@ -91,6 +91,20 @@
       {% endfor %}
       <hr>
       <h4>Colors</h4>
+      <div class="input-row input-row-top-margin">
+        <span class="label select-label">Palette:</span>
+        <span class="select-container">
+          <select
+            class="update-on-change"
+            autocomplete="off"
+            data-id="palette"
+            data-value="{{params['palette']}}">
+          </select>
+        </span>
+      </div>
+      <div id="color-picker-container">
+
+      </div>
       {% for color in colors %}
       <div class="input-row input-row-top-margin">
         <span class="label">Color {{ loop.index }}:</span>

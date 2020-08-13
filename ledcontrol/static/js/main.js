@@ -129,11 +129,48 @@ function updateCodeView(newKey) {
   codeMirror.setValue(code);
 }
 
+// Update color pickers for selected palette
+function updateColorPickers() {
+  const palette = palettes[getCurrentPaletteKey()];
+  const container = $('#color-picker-container');
+  container.empty();
+
+  for (let i = 0; i < palette.colors.length; i++) {
+    container.append(`<div class="input-row input-row-top-margin"><span class="label"> Color ${i}:</span></div><span class="color-picker" id="color-picker-${i}"></span>`);
+
+    const pickr = Pickr.create({
+      el: `#color-picker-${i}`,
+      theme: 'classic',
+      showAlways: true,
+      inline: true,
+      lockOpacity: true,
+      comparison: true,
+      default: `hsv(${palette.colors[i][0] * 360}, ${palette.colors[i][1] * 100}%, ${palette.colors[i][2] * 100}%)`,
+      swatches: null,
+      components: {
+        preview: true,
+        opacity: false,
+        hue: true,
+        interaction: { hex: true, rgba: true, hsla: true, hsva: true, input: true },
+      },
+    });
+    pickr.index = i;
+    pickr.on('changestop', (instance) => {
+      const color = instance.getColor();
+
+    })
+  }
+}
+
 function getCurrentPatternKey() {
   return parseInt($('select[data-id="primary_pattern"]').val(), 10);
 }
 
-let codeMirror, sources, names, defaultSourceKeys;
+function getCurrentPaletteKey() {
+  return parseInt($('select[data-id="palette"]').val(), 10);
+}
+
+let codeMirror, sources, names, defaultSourceKeys, palettes;
 const statusClasses = ['none', 'success', 'warning', 'error'];
 let statusClass = 'none';
 let status = 'Pattern not compiled yet';
@@ -170,47 +207,18 @@ window.onload = function() {
       theme: 'summer-night',
     });
     updateCodeView(result.current);
-
-    /*
-    const count = $('.color-picker').length;
-    for (let i = 0; i < count; i++) {
-      const color = $(`#color-picker-${i}`).data('value');
-      const pickr = Pickr.create({
-        el: `#color-picker-${i}`,
-        theme: 'classic',
-        showAlways: true,
-        inline: true,
-        lockOpacity: true,
-        comparison: false,
-        default: `hsv(${color[0] * 360}, ${color[1] * 100}%, ${color[2] * 100}%)`,
-        swatches: null,
-        components: {
-          preview: false,
-          opacity: false,
-          hue: true,
-          interaction: { // Input / output Options
-            hex: true,
-            rgba: true,
-            hsla: true,
-            hsva: true,
-            input: true,
-          },
-        },
-      });
-      pickr.index = i;
-      pickr.on('changestop', (instance) => {
-        const color = instance.getColor();
-        $.getJSON('/setcolor', {
-          index: instance.index,
-          h: color.h / 360,
-          s: color.s / 100,
-          v: color.v / 100,
-        }, () => {});
-      })
-    }*/
   });
 
   $.getJSON('/getpalettes', {}, (result) => {
-    console.log(result.palettes);
+    console.log('Palettes:', result);
+    // Set selected palette to current value
+    palettes = result.palettes;
+    Object.entries(palettes).forEach(([k, v]) => {
+      $('select[data-id="palette"]').append(`<option value="${k}">${v.name}</option>`);
+    });
+    $('select[data-id="palette"]').val($('select[data-id="palette"]').data('value'));
+
+    // Generate color pickers
+    updateColorPickers();
   });
 };
