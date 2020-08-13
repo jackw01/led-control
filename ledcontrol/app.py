@@ -84,7 +84,7 @@ def create_app(led_count, refresh_rate,
                 else:
                     patterns[int(k)].update(v)
             # Read color palettes
-            controller.palettes.update(settings['palettes'])
+            controller.palettes.update({int(k): v for k, v in settings['palettes'].items()})
             controller.calculate_palette_table()
             controller.colors = settings['colors']
             print(f'Loaded saved settings from {filename}.')
@@ -188,8 +188,8 @@ def create_app(led_count, refresh_rate,
     @app.route('/setpalette')
     def set_palette():
         'Sets a palette'
-        key = request.args.get('key', type=str)
-        value = request.args.get('value')
+        key = request.args.get('key', type=int)
+        value = json.loads(request.args.get('value', type=str))
         controller.set_palette(key, value)
         controller.calculate_palette_table()
         return jsonify(result='')

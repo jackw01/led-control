@@ -239,7 +239,7 @@ class AnimationController:
     def calculate_palette_table(self):
         'Set the color palette and recalculate the lookup table'
         palette = self.palettes[self.params['palette']]
-        self.palette_table = []
+        palette_table = []
         sector_size = 1.0 / (len(palette['colors']) - 1)
         for i in range(self.palette_table_size):
             f = i / self.palette_table_size
@@ -247,12 +247,12 @@ class AnimationController:
             f = f % sector_size / sector_size
             c1, c2 = palette['colors'][sector], palette['colors'][sector + 1]
             h1, h2 = c2[0] - c1[0], c2[0] - 1.0 - c1[0]
-            self.palette_table.append((
+            palette_table.append((
                 f * (h1 if abs(h1) < abs(h2) else h2) + c1[0],
                 f * (c2[1] - c1[1]) + c1[1],
                 f * (c2[2] - c1[2]) + c1[2],
             ))
-        #print(self.palette_table)
+        self.palette_table = palette_table
 
     def get_palette_color(self, i):
         'Get color from current palette corresponding to index between 0 and 1'

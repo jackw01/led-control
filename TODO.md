@@ -72,7 +72,9 @@
 - [ ] password protection
 - [x] per-pattern speed/scale
 - [x] delete pattern
-- [ ] gradient/palette based patterns
+- [X] gradient/palette based patterns
+- [X] web UI pattern picker
+- [ ] web UI pattern selection
 - [ ] remap hsv patterns to custom palette
 - [ ] palette based - multi color wipe
 - [ ] palette based - noise

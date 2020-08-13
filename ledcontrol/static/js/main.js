@@ -59,8 +59,8 @@ function handleNewPattern() {
   // Update code and button states, send everything to the server
   updateCodeView(newKey);
   handleCompile(() => { // Compile first
-    $.getJSON('/setpatternname', { key: newKey, name: names[newKey] }, () => { }); // Set name
-    $.getJSON('/setparam', { key: 'primary_pattern', value: newKey }, () => { }); // Select
+    $.getJSON('/setpatternname', { key: newKey, name: names[newKey] }, () => {}); // Set name
+    $.getJSON('/setparam', { key: 'primary_pattern', value: newKey }, () => {}); // Select
   });
 }
 
@@ -72,7 +72,7 @@ function handleDeletePattern() {
     $(`select[data-id="primary_pattern"] option[value="${key}"]`).remove();
     handleInputChange($('select[data-id="primary_pattern"]'));
     $.getJSON('/setparam', { key: 'primary_pattern', value: 0 }, () => {
-      $.getJSON('/deletepattern', { key: key }, () => { });
+      $.getJSON('/deletepattern', { key: key }, () => {});
     });
   }
 }
@@ -149,7 +149,7 @@ function updateColorPickers() {
       showAlways: true,
       inline: true,
       lockOpacity: true,
-      comparison: true,
+      comparison: false,
       default: `hsv(${palette.colors[i][0] * 360}, ${palette.colors[i][1] * 100}%, ${palette.colors[i][2] * 100}%)`,
       swatches: null,
       components: {
@@ -162,7 +162,9 @@ function updateColorPickers() {
     pickr.index = i;
     pickr.on('changestop', (instance) => {
       const color = instance.getColor();
-
+      const key = getCurrentPaletteKey();
+      palettes[key].colors[instance.index] = [color.h / 360, color.s / 100, color.v / 100];
+      $.getJSON('/setpalette', { key: key, value: JSON.stringify(palettes[key]) }, () => {});
     })
   }
 }
