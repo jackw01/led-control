@@ -14,6 +14,7 @@ function handleInputChange(elem) {
     if (elem.attr('type') == 'range') $('input[type=number][data-id=' + key + ']').val(val);
     else $('input[type=range][data-id=' + key + ']').val(val);
   }
+
   // On primary pattern change, update code and speed/scale
   if (key === 'primary_pattern') {
     $.getJSON('/getpatternparams', { key: val }, (result) => {
@@ -22,6 +23,10 @@ function handleInputChange(elem) {
       updateCodeView(val);
     });
   }
+
+  // On palette change, update color pickers
+  if (key === 'palette') updateColorPickers();
+
   return { key: key, value: val };
 }
 
