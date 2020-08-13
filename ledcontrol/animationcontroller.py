@@ -6,7 +6,6 @@ import random
 import time
 import traceback
 import RestrictedPython
-import copy
 from threading import Event, Thread
 
 import ledcontrol.animationpatterns as animpatterns
@@ -160,12 +159,10 @@ class AnimationController:
         restricted_locals = {}
         arg_names = ['t', 'dt', 'x', 'y', 'prev_state']
 
-        name_error = False
         results = RestrictedPython.compile_restricted_exec(source)
         warnings = list(results.warnings)
         for name in results.used_names:
             if name not in restricted_globals and name not in arg_names:
-                name_error = True
                 warnings.append(f'NameError: name \'{name}\' is not defined')
 
         if results.code:

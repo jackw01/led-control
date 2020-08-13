@@ -1,7 +1,6 @@
 # led-control WS2812B LED Controller Server
 # Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
-import math
 from random import random
 from enum import Enum
 
@@ -15,6 +14,7 @@ ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
 
 def blank(t, dt, x, y, prev_state):
     return (0, 0, 0), ColorMode.hsv
+
 
 default = {
     0: {
@@ -219,6 +219,7 @@ def sector_pulse_2_1d(t, dt, x, y, prev_state, in_color):
     v = 1 - utils.clamp(abs(x - part) * 10, 0, 1)
     return in_color, v
 
+
 default_secondary = {
     0: None,
     1: sine_1d,
@@ -227,13 +228,13 @@ default_secondary = {
     4: bounce_linear_1d,
     5: bounce_sine_1d,
     6: bounce_cubic_1d,
-    6: perlin_noise_2d,
-    7: twinkle_pulse_1d,
-    8: wipe_across_1d,
-    9: wipe_from_center_1d,
-    10: wipe_from_ends_1d,
-    11: sector_pulse_1d,
-    12: sector_pulse_2_1d,
+    7: perlin_noise_2d,
+    8: twinkle_pulse_1d,
+    9: wipe_across_1d,
+    10: wipe_from_center_1d,
+    11: wipe_from_ends_1d,
+    12: sector_pulse_1d,
+    13: sector_pulse_2_1d,
 }
 
 default_secondary_names = {

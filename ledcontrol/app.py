@@ -1,7 +1,6 @@
 # led-control WS2812B LED Controller Server
 # Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
-import os
 import json
 import atexit
 from recordclass import recordclass
@@ -17,35 +16,13 @@ import ledcontrol.colorpalettes as colorpalettes
 import ledcontrol.utils as utils
 
 # Record class for form items
-fields = [
-    'control',
-    'key',
-    'type',
-    'min',
-    'max',
-    'step',
-    'options',
-    'val',
-    'label',
-    'unit',
-    'hide',
-]
-
-defaults = [
-    'range',
-    None,
-    None,
-    0,
-    1,
-    0.01,
-    [],
-    0,
-    '',
-    '',
-    False,
-]
-
-FormItem = recordclass('FormItem', fields, defaults=defaults)
+FormItem = recordclass('FormItem', [
+    'control', 'key', 'type', 'min', 'max', 'step', 'options', 'val',
+    'label', 'unit', 'hide',
+], defaults=[
+    'range', None, None, 0, 1, 0.01, [], 0,
+    '', '', False,
+])
 
 def create_app(led_count, refresh_rate,
                led_pin, led_data_rate, led_dma_channel,
