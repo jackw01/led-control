@@ -106,7 +106,6 @@ class AnimationController:
         self.secondary_pattern_functions = animpatterns.default_secondary
 
         # Color palette used for animations
-        self.colors = [(0, 0, 1)]
         self.palette_table_size = 1000
         self.palettes = dict(colorpalettes.default)
         self.calculate_palette_table()
@@ -254,20 +253,12 @@ class AnimationController:
             ))
         self.palette_table = palette_table
 
-    def get_palette_color(self, i):
+    def get_palette_color(self, t):
         'Get color from current palette corresponding to index between 0 and 1'
-        return self.palette_table[int(i * self.palette_table_size) % self.palette_table_size]
+        return self.palette_table[int(t * self.palette_table_size) % self.palette_table_size]
 
     def set_palette(self, key, value):
         self.palettes[key] = value
-
-    def set_color(self, index, value):
-        'Set an HSV color in the palette'
-        self.colors[index] = value
-
-    def set_color_component(self, index, component, value):
-        'Set one component of an HSV color'
-        self.colors[index][component] = value
 
     def begin_animation_thread(self):
         'Start animating'
@@ -294,7 +285,7 @@ class AnimationController:
 
         try:
             # Determine current pattern mode
-            c, mode = pattern_1(0, 0.1, 0, 0, (0, 0, 0), [(0, 0, 0)])
+            c, mode = pattern_1(0, 0.1, 0, 0, (0, 0, 0))
 
             # Run primary pattern to determine initial color
             # State is an array of (color, secondary_value) pairs
@@ -302,8 +293,7 @@ class AnimationController:
                               primary_delta_t,
                               self.primary_mapping[i][0],
                               self.primary_mapping[i][1],
-                              self.primary_prev_state[i][0],
-                              self.colors)[0],
+                              self.primary_prev_state[i][0])[0],
                     1) for i in range(self.led_count)]
             self.primary_prev_state = s_1
 

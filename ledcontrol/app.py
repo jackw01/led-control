@@ -28,6 +28,7 @@ fields = [
     'val',
     'label',
     'unit',
+    'hide',
 ]
 
 defaults = [
@@ -41,6 +42,7 @@ defaults = [
     0,
     '',
     '',
+    False,
 ]
 
 FormItem = recordclass('FormItem', fields, defaults=defaults)
@@ -48,7 +50,7 @@ FormItem = recordclass('FormItem', fields, defaults=defaults)
 def create_app(led_count, refresh_rate,
                led_pin, led_data_rate, led_dma_channel,
                led_strip_type, led_pixel_order,
-               led_color_correction, led_brightness_limit,
+               led_color_correction, led_v_limit,
                save_interval):
     app = Flask(__name__)
     leds = LEDController(led_count, led_pin,
@@ -70,7 +72,7 @@ def create_app(led_count, refresh_rate,
             settings = json.load(data_file)
             # Enforce brightness limit
             settings['params']['master_brightness'] = min(
-                settings['params']['master_brightness'], led_brightness_limit)
+                settings['params']['master_brightness'], led_v_limit)
             # Set controller params, recalculate things that depend on params
             controller.params.update(settings['params'])
             controller.calculate_color_correction()
@@ -86,15 +88,13 @@ def create_app(led_count, refresh_rate,
             # Read color palettes
             controller.palettes.update({int(k): v for k, v in settings['palettes'].items()})
             controller.calculate_palette_table()
-            controller.colors = settings['colors']
             print(f'Loaded saved settings from {filename}.')
         except Exception:
             print(f'Could not open saved settings at {filename}, ignoring.')
 
     # Define form and create user-facing labels based on keys
     form = [
-        FormItem('range', 'master_brightness', float, 0, led_brightness_limit,
-                 0.05),
+        FormItem('range', 'master_brightness', float, 0, led_v_limit, 0.05),
         FormItem('range', 'master_color_temp', int, 1000, 12000, 10, unit='K'),
         FormItem('range', 'master_gamma', float, 0.01, 3),
         FormItem('range', 'master_saturation', float, 0, 1),
@@ -107,6 +107,7 @@ def create_app(led_count, refresh_rate,
                  val=controller.params['secondary_pattern']),
         FormItem('range', 'secondary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'secondary_scale', float, -10, 10),
+        FormItem('select', 'palette', int, hide=True),
     ]
 
     for item in form:
@@ -120,8 +121,7 @@ def create_app(led_count, refresh_rate,
                 item.val = item.type(controller.params[item.key])
         return render_template('index.html',
                                form=form,
-                               params=controller.params,
-                               colors=controller.colors)
+                               params=controller.params)
 
     @app.route('/setparam')
     def set_param():
@@ -194,25 +194,6 @@ def create_app(led_count, refresh_rate,
         controller.calculate_palette_table()
         return jsonify(result='')
 
-    @app.route('/setcolor')
-    def set_color():
-        'Sets a color in the palette'
-        index = request.args.get('index', type=int)
-        h = round(request.args.get('h', type=float), 3)
-        s = round(request.args.get('s', type=float), 3)
-        v = round(request.args.get('v', type=float), 3)
-        controller.set_color(index, (h, s, v))
-        return jsonify(result = '')
-
-    @app.route('/setcolorcomponent')
-    def set_color_component():
-        'Sets a component of a color in the palette'
-        index = request.args.get('index', type=int)
-        component = request.args.get('component', type=int)
-        value = request.args.get('value', type=float)
-        controller.set_color_component(index, component, value)
-        return jsonify(result = '')
-
     def save_current_pattern_params():
         'Remembers speed and scale for current pattern'
         patterns[controller.params['primary_pattern']]['primary_speed']\
@@ -236,12 +217,10 @@ def create_app(led_count, refresh_rate,
             'params': controller.params,
             'patterns': patterns_save,
             'palettes': palettes_save,
-            'colors': controller.colors,
         }
         with open(str(filename), 'w') as data_file:
             try:
-                json.dump(data, data_file,
-                          sort_keys=True, indent=4, separators=(',', ': '))
+                json.dump(data, data_file, sort_keys=True, indent=4)
                 print(f'Saved settings to {filename}.')
             except Exception:
                 print(f'Could not save settings to {filename}.')

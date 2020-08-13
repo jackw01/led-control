@@ -13,7 +13,7 @@ ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
 # Primary animations that generate patterns in HSV or RGB color spaces
 # return color, mode
 
-def blank(t, dt, x, y, prev_state, colors):
+def blank(t, dt, x, y, prev_state):
     return (0, 0, 0), ColorMode.hsv
 
 default = {
@@ -22,8 +22,8 @@ default = {
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state, colors):
-    return colors[0], hsv
+def pattern(t, dt, x, y, prev_state):
+    return palette(0), hsv
 '''
     },
     1: {
@@ -31,7 +31,7 @@ def pattern(t, dt, x, y, prev_state, colors):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state, colors):
+def pattern(t, dt, x, y, prev_state):
     return (t + x, 1, 1), hsv
 '''
     },
@@ -40,7 +40,7 @@ def pattern(t, dt, x, y, prev_state, colors):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state, colors):
+def pattern(t, dt, x, y, prev_state):
     hue = (t + x) % 1
     return (hue - (hue % 0.1666), 1, 1), hsv
 '''
@@ -50,7 +50,7 @@ def pattern(t, dt, x, y, prev_state, colors):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state, colors):
+def pattern(t, dt, x, y, prev_state):
     return (wave_sine(t + x),
             wave_sine((t + x) * 1.2),
             wave_sine((t + x) * 1.4)), rgb
@@ -61,7 +61,7 @@ def pattern(t, dt, x, y, prev_state, colors):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state, colors):
+def pattern(t, dt, x, y, prev_state):
     return (wave_cubic(t + x),
             wave_cubic((t + x) * 1.2),
             wave_cubic((t + x) * 1.4)), rgb
@@ -72,7 +72,7 @@ def pattern(t, dt, x, y, prev_state, colors):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state, colors):
+def pattern(t, dt, x, y, prev_state):
     v = (t + x) % 1
     c = blackbody_to_rgb(v * v * 5500 + 1000)
     return (c[0] * v, c[1] * v, c[2] * v), rgb
@@ -83,7 +83,7 @@ def pattern(t, dt, x, y, prev_state, colors):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state, colors):
+def pattern(t, dt, x, y, prev_state):
     return (math.fabs((2 * t) % 2 - 1) + x, 1, 1), hsv
 '''
     },
@@ -92,7 +92,7 @@ def pattern(t, dt, x, y, prev_state, colors):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state, colors):
+def pattern(t, dt, x, y, prev_state):
     color = [0, 0, 0]
     for i in range(3):
         delay = 0.05 * i
@@ -106,7 +106,7 @@ def pattern(t, dt, x, y, prev_state, colors):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state, colors):
+def pattern(t, dt, x, y, prev_state):
     v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
     return (wave_sine(v),
             wave_sine(v + 0.333),
@@ -118,7 +118,7 @@ def pattern(t, dt, x, y, prev_state, colors):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state, colors):
+def pattern(t, dt, x, y, prev_state):
     v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
     return (0.9 - wave_sine(v),
             wave_sine(v + 0.333) - 0.1,
@@ -130,7 +130,7 @@ def pattern(t, dt, x, y, prev_state, colors):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state, colors):
+def pattern(t, dt, x, y, prev_state):
     v = plasma_sines_octave(x, y, t, 7, 1.5, 0.5)
     return (0.9 - wave_sine(v),
             wave_sine(v + 0.333) - 0.1,
@@ -142,7 +142,7 @@ def pattern(t, dt, x, y, prev_state, colors):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state, colors):
+def pattern(t, dt, x, y, prev_state):
     h = (x + t) * 0.5 % .5 + x + wave_sine(t)
     return (h, 1, wave_sine(h + t)), hsv
 '''
@@ -152,7 +152,7 @@ def pattern(t, dt, x, y, prev_state, colors):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state, colors):
+def pattern(t, dt, x, y, prev_state):
     wave1 = wave_sine(t / 4 + x)
     wave2 = wave_sine(t / 8 - x)
     wave3 = wave_sine(x + wave1 + wave2)
