@@ -142,7 +142,6 @@ function updateColorPickers() {
 
   for (let i = 0; i < palette.colors.length; i++) {
     container.append(`<div class="input-row input-row-top-margin"><span class="label"> Color ${i}:</span></div><span class="color-picker" id="color-picker-${i}"></span>`);
-
     const pickr = Pickr.create({
       el: `#color-picker-${i}`,
       theme: 'classic',

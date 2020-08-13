@@ -97,7 +97,7 @@ Each animation frame, the pattern function is called once per LED/pixel with tim
 
 ```python
 # cycle_hue_1d
-def pattern(t, dt, x, y, prev_state, colors):
+def pattern(t, dt, x, y, prev_state):
     return (t + x, 1, 1), hsv
 ```
 
@@ -114,9 +114,6 @@ Normalized (0 to 1) value representing the position of the current LED in arbitr
 ##### `prev_state`
 Previous color state of the current LED as an HSV or RGB tuple. Initialized to `(0, 0, 0)` on the first animation frame.
 
-##### `colors`
-User-selectable color as an array containing one HSV tuple. Only contains one color.
-
 #### Return Values
 Pattern functions must return a color in tuple form and either `hsv` or `rgb` depending on the format of the color. All values are expected to be in the 0 to 1 range, except for hue. Hue values less than 0 or greater than 1 will wrap. RGB values will be clamped to the 0 to 1 range.
 
@@ -124,6 +121,11 @@ Pattern functions must return a color in tuple form and either `hsv` or `rgb` de
 * Builtins: `None`, `False`, `True`, `abs`, `bool`, `callable`, `chr`, `complex`, `divmod`, `float`, `hash`, `hex`, `id`, `int`, `isinstance`, `issubclass`, `len`, `oct`, `ord`, `pow`, `range`, `repr`, `round`, `slice`, `str`, `tuple`, `zip`
 * All functions and constants from the [`math` module](https://docs.python.org/3/library/math.html)
 * All functions from the [`random` module](https://docs.python.org/3/library/random.html)
+
+### Color Palette Access
+
+##### `palette(t)`
+Returns the color from the current palette (stored in a lookup table) corresponding to a value `t` between 0 and 1. Values of `t` less than 0 or greater than 1 will wrap.
 
 ### Wave Functions
 All waveforms have a period of 1 time unit, a range from 0 to 1, and a peak (`f(t)=1`) at `t=0`. These wave functions are implemented in C which gives a suprisingly significant performance improvement over Python's builtins.

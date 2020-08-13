@@ -24,7 +24,7 @@
     <main id="main">
       <h2 class="header-stylized-text">LED Control Center</h2>
       <br/>
-      {% for input in form %}
+      {% for input in form if not input.hide %}
       {% if input.control == 'select' %}
       <div class="input-row input-row-top-margin">
         <span class="label select-label">{{ input.label }}:</span>
@@ -90,9 +90,8 @@
       {% endif %}
       {% endfor %}
       <hr>
-      <h4>Colors</h4>
       <div class="input-row input-row-top-margin">
-        <span class="label select-label">Palette:</span>
+        <span class="label select-label">Color Palette:</span>
         <span class="select-container">
           <select
             class="update-on-change"
@@ -105,13 +104,6 @@
       <div id="color-picker-container">
 
       </div>
-      {% for color in colors %}
-      <div class="input-row input-row-top-margin">
-        <span class="label">Color {{ loop.index }}:</span>
-      </div>
-      <span class="color-picker" data-value="{{ color }}" id="color-picker-{{ loop.index0 }}">
-      </span>
-      {% endfor %}
     </main>
     <footer>
       <small>
