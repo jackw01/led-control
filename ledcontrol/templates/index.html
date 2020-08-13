@@ -82,28 +82,23 @@
           <a class="button" id="delete-pattern">Delete</a>
           <input type="text" id="pattern-name">
         </div>
-        <div class="input-row input-row-top-margin">
+        <div class="input-row input-row-top-margin input-row-bottom-margin">
           <span class="infotext" id="source-status">{{ input.label }}</span>
           <a class="button" id="compile">Compile Pattern</a>
         </div>
       </div>
+      {% elif input.control == 'colors' %}
+      <div id="colors">
+        <div class="input-row input-row-top-margin input-row-bottom-margin">
+          <a class="button" id="new-palette">New Palette</a>
+          <a class="button" id="delete-palette">Delete</a>
+          <input type="text" id="palette-name">
+        </div>
+        <div id="color-picker-container">
+        </div>
+      </div>
       {% endif %}
       {% endfor %}
-      <hr>
-      <div class="input-row input-row-top-margin">
-        <span class="label select-label">Color Palette:</span>
-        <span class="select-container">
-          <select
-            class="update-on-change"
-            autocomplete="off"
-            data-id="palette"
-            data-value="{{params['palette']}}">
-          </select>
-        </span>
-      </div>
-      <div id="color-picker-container">
-
-      </div>
     </main>
     <footer>
       <small>

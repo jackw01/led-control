@@ -20,7 +20,7 @@ FormItem = recordclass('FormItem', [
     'control', 'key', 'type', 'min', 'max', 'step', 'options', 'val',
     'label', 'unit', 'hide',
 ], defaults=[
-    'range', None, None, 0, 1, 0.01, [], 0,
+    'range', 'None', None, 0, 1, 0.01, [], 0,
     '', '', False,
 ])
 
@@ -78,13 +78,14 @@ def create_app(led_count, refresh_rate,
         FormItem('select', 'primary_pattern', int),
         FormItem('range', 'primary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'primary_scale', float, -10, 10),
-        FormItem('code', 'pattern_source', str),
+        FormItem('code'),
         FormItem('select', 'secondary_pattern', int,
                  options=list(animpatterns.default_secondary_names.values()),
                  val=controller.params['secondary_pattern']),
         FormItem('range', 'secondary_speed', float, 0.01, 2, unit='Hz'),
         FormItem('range', 'secondary_scale', float, -10, 10),
-        FormItem('select', 'palette', int, hide=True),
+        FormItem('select', 'palette', int),
+        FormItem('colors'),
     ]
 
     for item in form:
@@ -97,8 +98,7 @@ def create_app(led_count, refresh_rate,
             if (item.key in controller.params):
                 item.val = item.type(controller.params[item.key])
         return render_template('index.html',
-                               form=form,
-                               params=controller.params)
+                               form=form)
 
     @app.route('/setparam')
     def set_param():
@@ -160,7 +160,9 @@ def create_app(led_count, refresh_rate,
     @app.route('/getpalettes')
     def get_palettes():
         'Returns palettes in JSON dict form'
-        return jsonify(palettes=controller.palettes)
+        return jsonify(palettes=controller.palettes,
+                       defaults=list(colorpalettes.default.keys()),
+                       current=controller.params['palette'])
 
     @app.route('/setpalette')
     def set_palette():

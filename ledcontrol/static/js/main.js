@@ -168,6 +168,21 @@ function updateColorPickers() {
   }
 }
 
+// Create copy of current palette
+function handleNewPalette() {
+
+}
+
+// Delete current palette
+function handleDeletePalette() {
+
+}
+
+// Rename current palette
+function handleRenamePalette() {
+
+}
+
 function getCurrentPatternKey() {
   return parseInt($('select[data-id="primary_pattern"]').val(), 10);
 }
@@ -176,7 +191,7 @@ function getCurrentPaletteKey() {
   return parseInt($('select[data-id="palette"]').val(), 10);
 }
 
-let codeMirror, sources, names, defaultSourceKeys, palettes;
+let codeMirror, sources, names, defaultSourceKeys, palettes, defaultPaletteKeys;
 const statusClasses = ['none', 'success', 'warning', 'error'];
 let statusClass = 'none';
 let status = 'Pattern not compiled yet';
@@ -188,6 +203,9 @@ window.onload = function() {
   $('#delete-pattern').on('click', handleDeletePattern);
   $('#pattern-name').on('change', handleRenamePattern);
   $('#compile').on('click', handleCompile);
+  $('#new-palette').on('click', handleNewPalette);
+  $('#delete-palette').on('click', handleDeletePalette);
+  $('#palette-name').on('change', handleRenamePalette);
 
   $.getJSON('/getpatternsources', {}, (result) => {
     console.log('Sources:', result);
@@ -219,10 +237,11 @@ window.onload = function() {
     console.log('Palettes:', result);
     // Set selected palette to current value
     palettes = result.palettes;
+    defaultPaletteKeys = result.defaults;
     Object.entries(palettes).forEach(([k, v]) => {
       $('select[data-id="palette"]').append(`<option value="${k}">${v.name}</option>`);
     });
-    $('select[data-id="palette"]').val($('select[data-id="palette"]').data('value'));
+    $('select[data-id="palette"]').val(result.current);
 
     // Generate color pickers
     updateColorPickers();

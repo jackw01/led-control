@@ -220,7 +220,6 @@ textarea {
   }
 
   & .select-container {
-    margin-left: 1rem;
     flex-basis: 100%;
   }
 
@@ -232,10 +231,26 @@ textarea {
     white-space: nowrap;
     flex-basis: content;
   }
+
+  & input[type='text'] {
+    flex-basis: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 22px;
+    padding: 4px 6px 5px;
+  }
+
+  &>*:not(:last-child) {
+    margin-right: 0.5rem;
+  }
 }
 
 .input-row-top-margin {
-  margin-top: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.input-row-bottom-margin {
+  margin-bottom: 0.5rem;
 }
 
 @mixin button-color {
@@ -382,7 +397,7 @@ input[type="range"] {
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.4rem;
   text-decoration: none;
   background: transparent;
   color: $body-color;
@@ -448,22 +463,6 @@ option {
 }
 
 #code {
-  & .input-row {
-    margin: 0.5rem 0;
-
-    & input[type='text'] {
-      flex-basis: 100%;
-      margin-top: 0;
-      margin-bottom: 0;
-      line-height: 22px;
-      padding: 4px 6px 5px;
-    }
-
-    &>*:not(:last-child) {
-      margin-right: 0.5rem;
-    }
-  }
-
   margin-bottom: 1rem;
 }
 
