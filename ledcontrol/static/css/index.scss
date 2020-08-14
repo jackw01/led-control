@@ -88,7 +88,7 @@ body {
 main {
   flex: 1;
 
-  & *:first-child {
+  &>*:first-child {
     margin-top: 0;
   }
 }
@@ -206,7 +206,6 @@ textarea {
 .input-row {
   display: flex;
   align-items: flex-start;
-  padding-bottom: 0.1rem;
 
   & .input-slider-container {
     padding-top: 0.35rem;
@@ -397,7 +396,7 @@ input[type="range"] {
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
   text-decoration: none;
   background: transparent;
   color: $body-color;
@@ -463,7 +462,7 @@ option {
 }
 
 #code {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 #main {

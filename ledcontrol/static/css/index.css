@@ -74,7 +74,7 @@ body {
 main {
   flex: 1;
 }
-main *:first-child {
+main > *:first-child {
   margin-top: 0;
 }
 
@@ -185,7 +185,6 @@ textarea {
 .input-row {
   display: flex;
   align-items: flex-start;
-  padding-bottom: 0.1rem;
 }
 .input-row .input-slider-container {
   padding-top: 0.35rem;
@@ -355,7 +354,7 @@ input[type=range]::-moz-range-thumb:hover {
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
   text-decoration: none;
   background: transparent;
   color: #e6e8ec;
@@ -417,7 +416,7 @@ option:hover, option:active {
 }
 
 #code {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 #main .pcr-button {
