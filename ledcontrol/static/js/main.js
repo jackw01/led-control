@@ -154,6 +154,7 @@ function handleNewPalette() {
     .val(newKey);
   updateColorPickers(newKey);
   updateCurrentPalette();
+  $.getJSON('/setparam', { key: 'palette', value: newKey }, () => { });
 }
 
 // Delete current palette
@@ -183,7 +184,8 @@ function handleRenamePalette() {
 function updateColorPickers(newKey) {
   const palette = palettes[newKey];
   $('#palette-name').val(palette.name);
-  if (defaultPaletteKeys.indexOf(newKey) >= 0) { // Prevent editing default palettes
+  const disabled = defaultPaletteKeys.indexOf(newKey) >= 0;
+  if (disabled) { // Prevent editing default palettes
     $('#palette-name').prop('disabled', true);
     $('#delete-palette').hide();
   } else {
@@ -206,20 +208,22 @@ function updateColorPickers(newKey) {
       default: `hsv(${palette.colors[i][0] * 360}, ${palette.colors[i][1] * 100}%, ${palette.colors[i][2] * 100}%)`,
       swatches: null,
       components: {
-        preview: true,
+        preview: false,
         opacity: false,
         hue: true,
         interaction: { hex: true, rgba: true, hsla: true, hsva: true, input: true },
       },
     });
     pickr.index = i;
-    pickr.on('changestop', (instance) => {
-      const color = instance.getColor();
-      palettes[getCurrentPaletteKey()].colors[instance.index] = [
-        color.h / 360, color.s / 100, color.v / 100
-      ];
-      updateCurrentPalette();
-    })
+    if (!disabled) {
+      pickr.on('changestop', (instance) => {
+        const color = instance.getColor();
+        palettes[getCurrentPaletteKey()].colors[instance.index] = [
+          color.h / 360, color.s / 100, color.v / 100
+        ];
+        updateCurrentPalette();
+      });
+    }
   }
 }
 
