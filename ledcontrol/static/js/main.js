@@ -25,7 +25,7 @@ function handleInputChange(elem) {
   }
 
   // On palette change, update color pickers
-  if (key === 'palette') updateColorPickers();
+  if (key === 'palette') updateColorPickers(val);
 
   return { key: key, value: val };
 }
@@ -134,9 +134,54 @@ function updateCodeView(newKey) {
   codeMirror.setValue(code);
 }
 
+// Send the current palette to the server
+function updateCurrentPalette() {
+  const key = getCurrentPaletteKey();
+  $.getJSON('/setpalette', {
+    key: key, value: JSON.stringify(palettes[key])
+  }, () => { });
+}
+
+// Create copy of current palette
+function handleNewPalette() {
+  // Set new source and name, add option
+  const key = getCurrentPaletteKey();
+  const newKey = Date.now();
+  palettes[newKey] = JSON.parse(JSON.stringify(palettes[key])); // This a hack but it works
+  palettes[newKey].name = palettes[key].name + ' (Copy)';
+  $('select[data-id="palette"]')
+    .append(`<option value="${newKey}">${palettes[newKey].name}</option>`)
+    .val(newKey);
+  updateColorPickers(newKey);
+  updateCurrentPalette();
+}
+
+// Delete current palette
+function handleDeletePalette() {
+
+}
+
+// Rename current palette
+function handleRenamePalette() {
+  const key = getCurrentPaletteKey();
+  const newName = $('#palette-name').val();
+  palettes[key].name = newName;
+  $('select[data-id="palette"] option[value=' + key + ']').html(newName);
+  updateCurrentPalette();
+}
+
 // Update color pickers for selected palette
-function updateColorPickers() {
-  const palette = palettes[getCurrentPaletteKey()];
+function updateColorPickers(newKey) {
+  const palette = palettes[newKey];
+  $('#palette-name').val(palette.name);
+  if (defaultPaletteKeys.indexOf(newKey) >= 0) { // Prevent editing default palettes
+    $('#palette-name').prop('disabled', true);
+    $('#delete-palette').hide();
+  } else {
+    $('#palette-name').prop('disabled', false);
+    $('#delete-palette').show();
+  }
+
   const container = $('#color-picker-container');
   container.empty();
 
@@ -161,26 +206,12 @@ function updateColorPickers() {
     pickr.index = i;
     pickr.on('changestop', (instance) => {
       const color = instance.getColor();
-      const key = getCurrentPaletteKey();
-      palettes[key].colors[instance.index] = [color.h / 360, color.s / 100, color.v / 100];
-      $.getJSON('/setpalette', { key: key, value: JSON.stringify(palettes[key]) }, () => {});
+      palettes[getCurrentPaletteKey()].colors[instance.index] = [
+        color.h / 360, color.s / 100, color.v / 100
+      ];
+      updateCurrentPalette();
     })
   }
-}
-
-// Create copy of current palette
-function handleNewPalette() {
-
-}
-
-// Delete current palette
-function handleDeletePalette() {
-
-}
-
-// Rename current palette
-function handleRenamePalette() {
-
 }
 
 function getCurrentPatternKey() {
@@ -244,6 +275,6 @@ window.onload = function() {
     $('select[data-id="palette"]').val(result.current);
 
     // Generate color pickers
-    updateColorPickers();
+    updateColorPickers(result.current);
   });
 };
