@@ -1,6 +1,9 @@
 // led-control WS2812B LED Controller Server
 // Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
+// Really should have used React or Vue for this but from my experience it would likely not build on a Raspberry Pi Zero due to the RAM limit
+// Enjoy my jquery spaghetti code lol
+
 defaultCodeComment = '# Code editing and renaming disabled on default patterns. Click "New Pattern" to create and edit a copy of this pattern.\n\n';
 
 function handleInputChange(elem) {
@@ -188,16 +191,18 @@ function updateColorPickers(newKey) {
   if (disabled) { // Prevent editing default palettes
     $('#palette-name').prop('disabled', true);
     $('#delete-palette').hide();
+    $('#color-picker-container').css('pointer-events', 'none');
   } else {
     $('#palette-name').prop('disabled', false);
     $('#delete-palette').show();
+    $('#color-picker-container').css('pointer-events', 'auto');
   }
 
   const container = $('#color-picker-container');
   container.empty();
 
   for (let i = 0; i < palette.colors.length; i++) {
-    container.append(`<div class="input-row input-row-top-margin"><span class="label"> Color ${i}:</span></div><span class="color-picker" id="color-picker-${i}"></span>`);
+    container.append(`<div class="input-row input-row-top-margin"><span class="label"> Color ${i + 1}:</span><a class="button button-inline" id="add-color-${i}">+</a><a class="button button-inline" id="delete-color-${i}">-</a></div><span class="color-picker" id="color-picker-${i}"></span>`);
     const pickr = Pickr.create({
       el: `#color-picker-${i}`,
       theme: 'classic',
@@ -215,6 +220,7 @@ function updateColorPickers(newKey) {
       },
     });
     pickr.index = i;
+
     if (!disabled) {
       pickr.on('changestop', (instance) => {
         const color = instance.getColor();
@@ -222,6 +228,22 @@ function updateColorPickers(newKey) {
           color.h / 360, color.s / 100, color.v / 100
         ];
         updateCurrentPalette();
+      });
+
+      $(`#add-color-${i}`).on('click', () => {
+        const key = getCurrentPaletteKey();
+        palettes[key].colors.splice(i + 1, 0, palettes[key].colors[i].slice());
+        updateColorPickers(key);
+        updateCurrentPalette();
+      });
+
+      $(`#delete-color-${i}`).on('click', () => {
+        const key = getCurrentPaletteKey();
+        if (palettes[key].colors.length > 2) {
+          palettes[key].colors.splice(i, 1);
+          updateColorPickers(key);
+          updateCurrentPalette();
+        }
       });
     }
   }

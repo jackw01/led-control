@@ -271,6 +271,10 @@ textarea {
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
+
+  &.button-inline {
+    padding: 0px 6px 3px;
+  }
 }
 
 .infotext {
