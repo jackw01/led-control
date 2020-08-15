@@ -73,8 +73,10 @@
 - [x] per-pattern speed/scale
 - [x] delete pattern
 - [X] gradient/palette based patterns
-- [X] web UI pattern picker
-- [ ] web UI pattern selection
+- [X] web UI palette picker
+- [x] web UI palette selection
+- [x] web UI palette create/rename
+- [x] web UI palette delete
 - [ ] remap hsv patterns to custom palette
 - [ ] palette based - multi color wipe
 - [ ] palette based - noise

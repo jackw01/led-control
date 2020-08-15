@@ -158,7 +158,16 @@ function handleNewPalette() {
 
 // Delete current palette
 function handleDeletePalette() {
-
+  if (confirm(`Delete palette "${$('#palette-name').val()}?"`)) {
+    const key = getCurrentPaletteKey();
+    delete palettes[key];
+    $('select[data-id="palette"]').val(0);
+    $(`select[data-id="palette"] option[value="${key}"]`).remove();
+    handleInputChange($('select[data-id="palette"]'));
+    $.getJSON('/setparam', { key: 'palette', value: 0 }, () => {
+      $.getJSON('/deletepalette', { key: key }, () => { });
+    });
+  }
 }
 
 // Rename current palette

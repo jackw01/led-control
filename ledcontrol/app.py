@@ -142,19 +142,19 @@ def create_app(led_count, refresh_rate,
         errors, warnings = controller.set_pattern_function(key, source)
         return jsonify(errors=errors, warnings=warnings)
 
-    @app.route('/deletepattern')
-    def delete_pattern():
-        'Deletes a pattern'
-        key = request.args.get('key', type=int)
-        del patterns[key]
-        return jsonify(result='')
-
     @app.route('/setpatternname')
     def set_pattern_name():
         'Sets a pattern name for the given key'
         key = request.args.get('key', type=int)
         name = request.args.get('name', type=str)
         patterns[key]['name'] = name
+        return jsonify(result='')
+
+    @app.route('/deletepattern')
+    def delete_pattern():
+        'Deletes a pattern'
+        key = request.args.get('key', type=int)
+        del patterns[key]
         return jsonify(result='')
 
     @app.route('/getpalettes')
@@ -171,6 +171,13 @@ def create_app(led_count, refresh_rate,
         value = json.loads(request.args.get('value', type=str))
         controller.set_palette(key, value)
         controller.calculate_palette_table()
+        return jsonify(result='')
+
+    @app.route('/deletepalette')
+    def delete_palette():
+        'Deletes a palette'
+        key = request.args.get('key', type=int)
+        controller.delete_palette(key)
         return jsonify(result='')
 
     def save_current_pattern_params():

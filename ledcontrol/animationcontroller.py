@@ -257,6 +257,9 @@ class AnimationController:
     def set_palette(self, key, value):
         self.palettes[key] = value
 
+    def delete_palette(self, key):
+        del self.palettes[key]
+
     def begin_animation_thread(self):
         'Start animating'
         self.timer = RepeatedTimer(1.0 / self.refresh_rate, self.update_leds)
