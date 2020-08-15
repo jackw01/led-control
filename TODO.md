@@ -77,8 +77,8 @@
 - [x] web UI palette selection
 - [x] web UI palette create/rename
 - [x] web UI palette delete
-- [ ] remap hsv patterns to custom palette
+- [x] web UI palette add/remove colors
+- [x] update hsv patterns to palettes
 - [ ] palette based - multi color wipe
-- [ ] palette based - noise
-- [ ] multiple palette storage and editing
+- [x] palette based - ripples
 - [ ] realtime audio reactive effects

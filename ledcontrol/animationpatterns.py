@@ -26,7 +26,7 @@ def pattern(t, dt, x, y, prev_state):
     return palette(0), hsv
 '''
     },
-    1: {
+    10: {
         'name': 'Cycle Hue 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -35,7 +35,7 @@ def pattern(t, dt, x, y, prev_state):
     return (t + x, 1, 1), hsv
 '''
     },
-    2: {
+    20: {
         'name': 'Cycle Hue Bands 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -45,7 +45,25 @@ def pattern(t, dt, x, y, prev_state):
     return (hue - (hue % 0.1666), 1, 1), hsv
 '''
     },
-    3: {
+    30: {
+        'name': 'Cycle Palette 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, prev_state):
+    return palette(t + x), hsv
+'''
+    },
+    31: {
+        'name': 'Cycle Palette Mirrored 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, prev_state):
+    return palette(wave_triangle(t + x)), hsv
+'''
+    },
+    40: {
         'name': 'RGB Sines 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -56,7 +74,7 @@ def pattern(t, dt, x, y, prev_state):
             wave_sine((t + x) * 1.4)), rgb
 '''
     },
-    4: {
+    50: {
         'name': 'RGB Cubics 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -67,7 +85,7 @@ def pattern(t, dt, x, y, prev_state):
             wave_cubic((t + x) * 1.4)), rgb
 '''
     },
-    5: {
+    60: {
         'name': 'Cycle Blackbody 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -78,16 +96,25 @@ def pattern(t, dt, x, y, prev_state):
     return (c[0] * v, c[1] * v, c[2] * v), rgb
 '''
     },
-    6: {
+    70: {
         'name': 'Bounce Hue 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
-    return (math.fabs((2 * t) % 2 - 1) + x, 1, 1), hsv
+    return (wave_triangle(t) + x, 1, 1), hsv
 '''
     },
-    7: {
+    71: {
+        'name': 'Bounce Palette 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, prev_state):
+    return palette(wave_triangle(t) + x), hsv
+'''
+    },
+    80: {
         'name': 'RGB Ripples 1 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -101,7 +128,7 @@ def pattern(t, dt, x, y, prev_state):
     return color, rgb
 '''
     },
-    8: {
+    90: {
         'name': 'RGB Plasma (Spectrum) 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -113,7 +140,7 @@ def pattern(t, dt, x, y, prev_state):
             wave_sine(v + 0.666)), rgb
 '''
     },
-    9: {
+    100: {
         'name': 'RGB Plasma (Fire) 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -125,7 +152,7 @@ def pattern(t, dt, x, y, prev_state):
             0.9 - wave_sine(v + 0.666)), rgb
 '''
     },
-    10: {
+    110: {
         'name': 'RGB Octave Plasma (Fire) 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -137,7 +164,7 @@ def pattern(t, dt, x, y, prev_state):
             0.9 - wave_sine(v + 0.666)), rgb
 '''
     },
-    11: {
+    120: {
         'name': 'HSV Waves 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -147,7 +174,17 @@ def pattern(t, dt, x, y, prev_state):
     return (h, 1, wave_sine(h + t)), hsv
 '''
     },
-    12: {
+    121: { # Performance isn't as good as it could be
+        'name': 'Palette Waves 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, prev_state):
+    h = (x + t) * 0.5 % .5 + x + wave_sine(t)
+    return (palette(h)[0], 1, wave_sine(h + t)), hsv
+'''
+    },
+    130: {
         'name': 'HSV Ripples 1 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -157,6 +194,18 @@ def pattern(t, dt, x, y, prev_state):
     wave2 = wave_sine(t / 8 - x)
     wave3 = wave_sine(x + wave1 + wave2)
     return (wave3 % 0.4 + t, 1, wave1 + wave3), hsv
+'''
+    },
+    131: { # Tweak for more even colors like 130
+        'name': 'Palette Ripples 1 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, prev_state):
+    wave1 = wave_sine(t / 4 + x)
+    wave2 = wave_sine(t / 8 - x)
+    wave3 = wave_sine(x + wave1 + wave2)
+    return (palette(wave3 % 0.4 + t)[0], 1, wave1 + wave3), hsv
 '''
     }
 }
