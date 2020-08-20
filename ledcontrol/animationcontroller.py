@@ -141,6 +141,7 @@ class AnimationController:
             'math': math,
             'random': random,
             'palette': self.get_palette_color,
+            'palette_length': self.get_palette_length,
             'hsv': animpatterns.ColorMode.hsv,
             'rgb': animpatterns.ColorMode.rgb,
             'clamp': utils.clamp,
@@ -251,10 +252,15 @@ class AnimationController:
                 f * (c2[2] - c1[2]) + c1[2],
             ))
         self.palette_table = palette_table
+        self.palette_length = len(palette['colors'])
 
     def get_palette_color(self, t):
         'Get color from current palette corresponding to index between 0 and 1'
         return self.palette_table[int(t * self.palette_table_size) % self.palette_table_size]
+
+    def get_palette_length(self):
+        'Get length of current palette color array'
+        return self.palette_length
 
     def set_palette(self, key, value):
         self.palettes[key] = value
