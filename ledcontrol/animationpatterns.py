@@ -36,7 +36,7 @@ def pattern(t, dt, x, y, prev_state):
 '''
     },
     20: {
-        'name': 'Cycle Hue Bands 1D',
+        'name': 'Cycle Hue Quantized 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
@@ -61,6 +61,16 @@ def pattern(t, dt, x, y, prev_state):
         'source': '''
 def pattern(t, dt, x, y, prev_state):
     return palette(wave_triangle(t + x)), hsv
+'''
+    },
+    32: {
+        'name': 'Cycle Palette Quantized 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, prev_state):
+    t = (t + x) % 1
+    return palette(t - (t % (1 / palette_length()))), hsv
 '''
     },
     40: {

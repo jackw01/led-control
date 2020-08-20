@@ -79,6 +79,6 @@
 - [x] web UI palette delete
 - [x] web UI palette add/remove colors
 - [x] update hsv patterns to palettes
-- [ ] palette based - multi color wipe
+- [x] palette based - multi color wipe/bands
 - [x] palette based - ripples
 - [ ] realtime audio reactive effects
