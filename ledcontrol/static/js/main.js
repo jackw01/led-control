@@ -91,9 +91,12 @@ function handleRenamePattern() {
 
 // Compile selected pattern
 function handleCompile(callback) {
+  const key = getCurrentPatternKey();
+  const source = codeMirror.getValue();
+  sources[key] = source;
   $.getJSON('/compilepattern', {
-    key: getCurrentPatternKey(),
-    source: codeMirror.getValue(),
+    key: key,
+    source: source,
   }, (result) => {
       console.log('Compile errors/warnings:', result.errors, result.warnings);
       if (result.errors.length === 0) { // && result.warnings.length === 0) {
