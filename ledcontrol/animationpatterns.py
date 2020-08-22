@@ -78,13 +78,10 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-random.seed(0)
-numbers = [random.random() for i in range(100)]
-
 def pattern(t, dt, x, y, prev_state):
-    global numbers
-    t = (t + x) % 1
-    return palette(numbers[int((t - (t % 0.2)) * 100)]), hsv
+    t = t + x
+    i = (t - (t % 0.2)) / 0.2
+    return palette(i * 0.618034), hsv
 '''
     },
     40: {
@@ -183,9 +180,9 @@ def pattern(t, dt, x, y, prev_state):
         'source': '''
 def pattern(t, dt, x, y, prev_state):
     v = plasma_sines_octave(x, y, t, 7, 1.5, 0.5)
-    return (0.9 - wave_sine(v),
-            wave_sine(v + 0.333) - 0.1,
-            0.9 - wave_sine(v + 0.666)), rgb
+    return (1.0 - wave_sine(v),
+            wave_sine(v + 0.333),
+            1.0 - wave_sine(v + 0.666)), rgb
 '''
     },
     120: {
@@ -205,7 +202,8 @@ def pattern(t, dt, x, y, prev_state):
         'source': '''
 def pattern(t, dt, x, y, prev_state):
     h = (x + t) * 0.5 % .5 + x + wave_sine(t)
-    return (palette(h)[0], 1, wave_sine(h + t)), hsv
+    c = palette(h)
+    return (c[0], c[1], wave_sine(h + t)), hsv
 '''
     },
     130: {
@@ -220,7 +218,7 @@ def pattern(t, dt, x, y, prev_state):
     return (wave3 % 0.4 + t, 1, wave1 + wave3), hsv
 '''
     },
-    131: { # Tweak for more even colors like 130
+    131: {
         'name': 'Palette Ripples 1 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -229,7 +227,8 @@ def pattern(t, dt, x, y, prev_state):
     wave1 = wave_sine(t / 4 + x)
     wave2 = wave_sine(t / 8 - x)
     wave3 = wave_sine(x + wave1 + wave2)
-    return (palette(wave3 % 0.4 + t)[0], 1, wave1 + wave3), hsv
+    c = palette(wave3 % 0.2 + t)
+    return (c[0], c[1], wave1 + wave3), hsv
 '''
     }
 }
