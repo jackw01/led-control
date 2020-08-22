@@ -62,8 +62,6 @@
 - [x] web UI - update code after changing patterns
 - [x] patterns - ripple
 - [x] patterns - hsv waves
-- [ ] patterns - random wipe
-- [ ] patterns - random single color scan/waves
 - [ ] patterns - meteor trail
 - [ ] patterns - fireworks / blob twinkle
 - [ ] patterns - noise sparkle
@@ -81,4 +79,5 @@
 - [x] update hsv patterns to palettes
 - [x] palette based - multi color wipe/bands
 - [x] palette based - ripples
+- [x] palette based - random wipe
 - [ ] realtime audio reactive effects

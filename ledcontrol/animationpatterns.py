@@ -73,6 +73,20 @@ def pattern(t, dt, x, y, prev_state):
     return palette(t - (t % (1 / palette_length()))), hsv
 '''
     },
+    33: {
+        'name': 'Cycle Palette Random 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'source': '''
+random.seed(0)
+numbers = [random.random() for i in range(100)]
+
+def pattern(t, dt, x, y, prev_state):
+    global numbers
+    t = (t + x) % 1
+    return palette(numbers[int((t - (t % 0.2)) * 100)]), hsv
+'''
+    },
     40: {
         'name': 'RGB Sines 1D',
         'primary_speed': 0.2,
