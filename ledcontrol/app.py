@@ -28,7 +28,8 @@ def create_app(led_count, refresh_rate,
                led_pin, led_data_rate, led_dma_channel,
                led_strip_type, led_pixel_order,
                led_color_correction, led_v_limit,
-               save_interval):
+               save_interval,
+               allow_direct_control):
     app = Flask(__name__)
     leds = LEDController(led_count, led_pin,
                          led_data_rate, led_dma_channel,
@@ -87,6 +88,10 @@ def create_app(led_count, refresh_rate,
         FormItem('select', 'palette', int),
         FormItem('colors'),
     ]
+
+    if allow_direct_control:
+        form.append(FormItem('select', 'direct_control_mode', int,
+                             options=['Off', 'On']))
 
     for item in form:
         item.label = utils.snake_to_title(item.key)

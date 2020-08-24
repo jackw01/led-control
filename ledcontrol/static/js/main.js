@@ -8,8 +8,10 @@ defaultCodeComment = '# Code editing and renaming disabled on default patterns. 
 
 function handleInputChange(elem) {
   const key = elem.data('id');
-  let val = parseFloat(elem.val(), 10);
-  if (!elem.is('select')) { // Sliders or numbers - enforce min/max and update other input
+  let val = elem.val();
+  if (!elem.is('input[type=text]')) val = parseFloat(val, 10);
+  // Sliders or numbers - enforce min/max and update other input
+  if (!elem.is('select') && !elem.is('input[type=text]')) {
     const min = parseFloat(elem.attr('min'), 10);
     const max = parseFloat(elem.attr('max'), 10);
     if (val < min) val = min;

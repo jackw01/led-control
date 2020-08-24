@@ -7,6 +7,7 @@ import time
 import traceback
 import RestrictedPython
 from threading import Event, Thread
+from ledcontrol.controlclient import ControlClient
 
 import ledcontrol.animationpatterns as animpatterns
 import ledcontrol.colorpalettes as colorpalettes
@@ -23,28 +24,37 @@ class RepeatedTimer:
         self.kwargs = kwargs
         self.count = 0
         self.wait_time = 0
-        self.last_frame = time.perf_counter()
         self.last_start = time.perf_counter()
-        self.last_end = time.perf_counter()
-        self.delta_t = interval
+        self.last_measurement_c = 0
+        self.last_measurement_t = 0
+        self.perf_avg = 0
         self.event = Event()
         self.thread = Thread(target=self.target, daemon=True)
+
+    def start(self):
+        'Starts the timer thread'
         self.thread.start()
 
     def target(self):
         'Waits until ready and executes target function'
         while not self.event.wait(self.wait_time):
-            self.last_start = time.perf_counter() # get start time
-            if self.count % 100 == 0:
-                print('FPS: {}'.format(1.0 / self.delta_t)) # print fps
-            self.delta_t = self.last_start - self.last_frame
-            self.last_frame = self.last_start
-            self.function(*self.args, **self.kwargs) # call target function
+            self.last_start = time.perf_counter()
+            self.function(*self.args, **self.kwargs)
+            self.perf_avg += (time.perf_counter() - self.last_start)
+
             self.count += 1
-            self.last_end = time.perf_counter() # get end time
+            if self.count % 100 == 0:
+                print('Average execution time (s): {}'.format(self.perf_avg / 100))
+                print('Average speed (cycles/s): {}'.format(
+                    (self.count - self.last_measurement_c)
+                    / (self.last_start - self.last_measurement_t)
+                ))
+                self.last_measurement_c = self.count
+                self.last_measurement_t = self.last_start
+                self.perf_avg = 0
 
             # Calculate wait for next iteration
-            self.wait_time = self.interval - (self.last_end - self.last_start)
+            self.wait_time = self.interval - (time.perf_counter() - self.last_start)
             if (self.wait_time < 0):
                 self.wait_time = 0
 
@@ -92,6 +102,7 @@ class AnimationController:
             'secondary_speed': 0.2,
             'secondary_scale': 1.0,
             'palette': 0,
+            'direct_control_mode': 0,
         }
 
         # Lookup dictionary for pattern functions used to generate select menu
@@ -119,7 +130,8 @@ class AnimationController:
         # Prepare to start
         self.start = time.perf_counter()
         self.time = 0
-        self.render_perf_avg = 0
+
+        self.control_client = ControlClient()
 
     def compile_pattern(self, source):
         'Compiles source string to a pattern function with restricted globals'
@@ -263,19 +275,23 @@ class AnimationController:
         return self.palette_length
 
     def set_palette(self, key, value):
+        'Update palette'
         self.palettes[key] = value
 
     def delete_palette(self, key):
+        'Delete palette'
         del self.palettes[key]
 
     def begin_animation_thread(self):
         'Start animating'
         self.timer = RepeatedTimer(1.0 / self.refresh_rate, self.update_leds)
+        self.timer.start()
 
     def update_leds(self):
         'Determine time, render frame, and display'
-        self.time = self.timer.last_frame - self.start
-        t0 = time.perf_counter()
+        last_t = self.time
+        self.time = self.timer.last_start - self.start
+        delta_t = self.time - last_t
 
         # Begin render
         # Create local references to patterns
@@ -285,9 +301,9 @@ class AnimationController:
         # Calculate times
         # time component = time (s) * speed (cycle/s)
         primary_time = self.time * self.params['primary_speed']
-        primary_delta_t = self.timer.delta_t * self.params['primary_speed']
+        primary_delta_t = delta_t * self.params['primary_speed']
         secondary_time = self.time * self.params['secondary_speed']
-        secondary_delta_t = self.timer.delta_t * self.params['secondary_speed']
+        secondary_delta_t = delta_t * self.params['secondary_speed']
 
         mode = animpatterns.ColorMode.hsv
 
@@ -317,10 +333,17 @@ class AnimationController:
                                  s_1[i][0]) for i in range(self.led_count)]
                 self.secondary_prev_state = s_2
 
+            # Direct control mode override
+            if self.params['direct_control_mode']:
+                s_2 = self.control_client.get_frame(self.led_count)
+                mode = animpatterns.ColorMode.hsv
+
         except Exception as e:
             msg = traceback.format_exception(type(e), e, e.__traceback__)
             print(f'Pattern execution: {msg}')
             s_2 = [((0, 0, 0), 0) for i in range(self.led_count)]
+
+        print(s_2[0][0])
 
         # Write colors to LEDs
         if mode == animpatterns.ColorMode.hsv:
@@ -339,14 +362,6 @@ class AnimationController:
                 self.params['master_brightness'],
                 self.params['master_gamma']
             )
-
-        # End render
-        t1 = time.perf_counter()
-
-        self.render_perf_avg += (t1 - t0)
-        if self.timer.count % 100 == 0:
-            print('Render time (s): {}'.format(self.render_perf_avg / 100))
-            self.render_perf_avg = 0
 
     def end_animation_thread(self):
         'Stop rendering in the animation thread'

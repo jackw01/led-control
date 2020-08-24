@@ -75,6 +75,18 @@
           >
         </div>
       </div>
+      {% elif input.control == 'text' %}
+      <div class="input-row">
+        <div class="input-slider-container">
+          <span class="label">{{ input.label }}: </span>
+          <input
+            type="text"
+            value="{{ input.val }}"
+            class="update-on-change {{ input.e_class }}"
+            data-id="{{ input.key }}"
+          >
+        </div>
+      </div>
       {% elif input.control == 'code' %}
       <div id="code">
         <div class="input-row input-row-top-margin">

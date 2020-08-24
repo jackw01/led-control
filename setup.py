@@ -3,6 +3,13 @@
 
 from setuptools import find_packages, setup, Extension
 
+requirements = [
+    'recordclass>=0.12.0.1',
+    'Flask>=1.0.2',
+    'RestrictedPython>=4.0',
+    'ujson>=3.1.0',
+]
+
 setup(
     name='led-control',
     version='1.0.0',
@@ -14,11 +21,8 @@ setup(
     url='https://github.com/jackw01/led-control',
     packages=find_packages(),
     zip_safe=False,
-    install_requires=[
-        'recordclass>=0.12.0.1',
-        'Flask>=1.0.2',
-        'RestrictedPython>=4.0',
-    ],
+    install_requires=requirements,
+    setup_requires=requirements,
     ext_modules=[
         Extension('_rpi_ws281x',
                   sources=['ledcontrol/rpi_ws281x/lib/rpi_ws281x_wrap.c'],
