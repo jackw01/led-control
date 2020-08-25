@@ -343,8 +343,6 @@ class AnimationController:
             print(f'Pattern execution: {msg}')
             s_2 = [((0, 0, 0), 0) for i in range(self.led_count)]
 
-        print(s_2[0][0])
-
         # Write colors to LEDs
         if mode == animpatterns.ColorMode.hsv:
             self.led_controller.leds.set_all_pixels_hsv_float(

@@ -53,6 +53,7 @@ def create_app(led_count, refresh_rate,
                 settings['params']['master_brightness'], led_v_limit)
             # Set controller params, recalculate things that depend on params
             controller.params.update(settings['params'])
+            controller.params['direct_control_mode'] = 0
             controller.calculate_color_correction()
             controller.calculate_mappings()
             # Read custom patterns and changed params for default patterns

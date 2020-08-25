@@ -281,16 +281,6 @@ def wipe_from_ends_1d(t, dt, x, y, prev_state, in_color):
     else:
         return in_color, ((t + x) % 1 < 0.5) * 1.0
 
-def sector_pulse_1d(t, dt, x, y, prev_state, in_color):
-    part = rpi_ws281x.perlin_noise_3d(0, 0, t)
-    v = 1 - utils.clamp(abs(x - part) * 10, 0, 1)
-    return in_color, v
-
-def sector_pulse_2_1d(t, dt, x, y, prev_state, in_color):
-    part = rpi_ws281x.perlin_noise_3d(x, 0, t)
-    v = 1 - utils.clamp(abs(x - part) * 10, 0, 1)
-    return in_color, v
-
 
 default_secondary = {
     0: None,
@@ -305,8 +295,6 @@ default_secondary = {
     9: wipe_across_1d,
     10: wipe_from_center_1d,
     11: wipe_from_ends_1d,
-    12: sector_pulse_1d,
-    13: sector_pulse_2_1d,
 }
 
 default_secondary_names = {
