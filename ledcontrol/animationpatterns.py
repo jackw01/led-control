@@ -230,6 +230,22 @@ def pattern(t, dt, x, y, prev_state):
     c = palette(wave3 % 0.2 + t)
     return (c[0], c[1], wave1 + wave3), hsv
 '''
+    },
+    140: {
+        'name': 'Palette Twinkle 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, prev_state):
+    v = prev_state[2] - dt
+    if v <= 0:
+        c = palette(t + x)
+        return (c[0], c[1], random.random()), hsv
+    elif v > 0:
+        return (prev_state[0], prev_state[1], v), hsv
+    else:
+        return (0, 0, 0), hsv
+'''
     }
 }
 
