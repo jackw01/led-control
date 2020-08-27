@@ -275,7 +275,7 @@ def perlin_noise_2d(t, dt, x, y, prev_state, in_color):
 
 def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
     v = prev_state[1] - dt
-    if v <= -1:
+    if v <= -0.2:
         return in_color, random()
     elif v > 0:
         return prev_state[0], v
