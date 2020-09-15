@@ -171,7 +171,7 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
         w = 255;
       } else {
         uint8_t desat = 255 - sat;
-        desat = scale_8(desat, desat);
+        desat = scale_8(scale_8(desat, desat), desat);
         r = scale_8(r, sat);
         g = scale_8(g, sat);
         b = scale_8(b, sat);
@@ -192,7 +192,48 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
         b = scale_8(b, sat) + desat;
       }
     }
+
+    if (gamma != 1) {
+      r = pow((float)r / 255.0, gamma) * 255;
+      g = pow((float)g / 255.0, gamma) * 255;
+      b = pow((float)b / 255.0, gamma) * 255;
+    }
   }
+
+
+
+
+  /*
+  if (sat != 255) {
+    if (sat == 0) {
+      r = 255;
+      b = 255;
+      g = 255;
+    } else {
+      uint8_t desat = 255 - sat;
+      desat = scale_8(desat, desat);
+      r = scale_8(r, sat) + desat;
+      g = scale_8(g, sat) + desat;
+      b = scale_8(b, sat) + desat;
+    }
+  }
+
+  if (gamma != 1) {
+    r = pow((float)r / 255.0, gamma) * 255;
+    g = pow((float)g / 255.0, gamma) * 255;
+    b = pow((float)b / 255.0, gamma) * 255;
+  }
+
+  if (has_white) {
+    uint8_t min = r < g ? (r < b ? r : b) : (g < b ? g : b);
+    r -= min;
+    g -= min;
+    b -= min;
+    w = scale_8(min, min);
+  }
+  */
+
+
 
   // Now scale everything down if we're at value < 255.
   if (val != 255) {
@@ -207,13 +248,6 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
       b = scale_8(b, val);
       w = scale_8(w, val);
     }
-  }
-
-  if (gamma != 1) {
-    r = pow((float)r / 255.0, gamma) * 255;
-    g = pow((float)g / 255.0, gamma) * 255;
-    b = pow((float)b / 255.0, gamma) * 255;
-    w = pow((float)w / 255.0, gamma) * 255;
   }
 
   r = scale_8(r, corr_rgb.r);

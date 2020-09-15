@@ -493,8 +493,8 @@ def render_hsv2rgb_rainbow_float(hsv, corr_rgb, saturation, brightness, gamma, h
     return _rpi_ws281x.render_hsv2rgb_rainbow_float(hsv, corr_rgb, saturation, brightness, gamma, has_white)
 render_hsv2rgb_rainbow_float = _rpi_ws281x.render_hsv2rgb_rainbow_float
 
-def render_rgb_float(rgb, corr_rgb, saturation, brightness, gamma):
-    return _rpi_ws281x.render_rgb_float(rgb, corr_rgb, saturation, brightness, gamma)
+def render_rgb_float(rgb, corr_rgb, saturation, brightness, gamma, has_white):
+    return _rpi_ws281x.render_rgb_float(rgb, corr_rgb, saturation, brightness, gamma, has_white)
 render_rgb_float = _rpi_ws281x.render_rgb_float
 
 def ws2811_hsv_render_array_float(ws, channel, values, count, correction, saturation, brightness, gamma, has_white):

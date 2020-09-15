@@ -6878,6 +6878,7 @@ SWIGINTERN PyObject *_wrap_render_rgb_float(PyObject *SWIGUNUSEDPARM(self), PyOb
   float arg3 ;
   float arg4 ;
   float arg5 ;
+  uint8_t arg6 ;
   void *argp1 ;
   int res1 = 0 ;
   void *argp2 ;
@@ -6888,14 +6889,17 @@ SWIGINTERN PyObject *_wrap_render_rgb_float(PyObject *SWIGUNUSEDPARM(self), PyOb
   int ecode4 = 0 ;
   float val5 ;
   int ecode5 = 0 ;
+  unsigned char val6 ;
+  int ecode6 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
   uint32_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOO:render_rgb_float",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:render_rgb_float",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
   {
     res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_color_rgb_float,  0 );
     if (!SWIG_IsOK(res1)) {
@@ -6933,7 +6937,12 @@ SWIGINTERN PyObject *_wrap_render_rgb_float(PyObject *SWIGUNUSEDPARM(self), PyOb
     SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "render_rgb_float" "', argument " "5"" of type '" "float""'");
   } 
   arg5 = (float)(val5);
-  result = (uint32_t)render_rgb_float(arg1,arg2,arg3,arg4,arg5);
+  ecode6 = SWIG_AsVal_unsigned_SS_char(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "render_rgb_float" "', argument " "6"" of type '" "uint8_t""'");
+  } 
+  arg6 = (uint8_t)(val6);
+  result = (uint32_t)render_rgb_float(arg1,arg2,arg3,arg4,arg5,arg6);
   resultobj = SWIG_From_unsigned_SS_int((unsigned int)(result));
   return resultobj;
 fail:
