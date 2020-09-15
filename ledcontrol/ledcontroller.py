@@ -35,6 +35,7 @@ class LEDController:
         elif led_pixel_order == 'BGRW':
             px_order = rpi_ws281x.rpi_ws281x.SK6812_STRIP_BGRW
 
+        self.has_white = 1 if 'W' in led_pixel_order else 0
 
         self.count = led_count
         self.leds = rpi_ws281x.PixelStrip(led_count, led_pin,

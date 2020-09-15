@@ -77,3 +77,7 @@
 - [x] palette based - multi color wipe/bands
 - [x] palette based - ripples
 - [x] palette based - random wipe
+
+swig -python ./ledcontrol/rpi_ws281x/lib/rpi_ws281x.i && sudo python3 setup.py develop
+sudo ledcontrol --led_count 16 --led_pixel_order GRBW --led_color_correction "#FFF0FF"
+

@@ -87,13 +87,16 @@ color_rgb_float blackbody_correction_rgb(color_rgb_float rgb, float kelvin) {
 // Render float HSV to LEDs with "Rainbow" color transform from FastLED
 uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
                                       color_rgb corr_rgb, float saturation,
-                                      float brightness, float gamma) {
+                                      float brightness, float gamma,
+                                      uint8_t has_white) {
   uint8_t hue = hsv.hue * 255.0;
   uint8_t sat = hsv.sat * saturation * 255.0;
   uint8_t val = (hsv.val * hsv.val) * 255;
   if (val > 0 && val < 255) val += 1;
   val = scale_8(val, brightness * 255);
-  uint8_t r, g, b;
+  uint8_t r, g, b, w;
+
+  w = 0;
 
   uint8_t offset = hue & 0x1F; // 0..31
   uint8_t offset8 = offset << 3;
@@ -159,17 +162,35 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
 
   // Scale down colors if we're desaturated at all
   // and add the brightness_floor to r, g, and b.
-  if (sat != 255) {
-    if (sat == 0) {
-      r = 255;
-      b = 255;
-      g = 255;
-    } else {
-      uint8_t desat = 255 - sat;
-      desat = scale_8(desat, desat);
-      r = scale_8(r, sat) + desat;
-      g = scale_8(g, sat) + desat;
-      b = scale_8(b, sat) + desat;
+  if (has_white) {
+    if (sat != 255) {
+      if (sat == 0) {
+        r = 0;
+        b = 0;
+        g = 0;
+        w = 255;
+      } else {
+        uint8_t desat = 255 - sat;
+        desat = scale_8(desat, desat);
+        r = scale_8(r, sat);
+        g = scale_8(g, sat);
+        b = scale_8(b, sat);
+        w = desat;
+      }
+    }
+  } else {
+    if (sat != 255) {
+      if (sat == 0) {
+        r = 255;
+        b = 255;
+        g = 255;
+      } else {
+        uint8_t desat = 255 - sat;
+        desat = scale_8(desat, desat);
+        r = scale_8(r, sat) + desat;
+        g = scale_8(g, sat) + desat;
+        b = scale_8(b, sat) + desat;
+      }
     }
   }
 
@@ -179,10 +200,12 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
       r = 0;
       g = 0;
       b = 0;
+      w = 0;
     } else {
       r = scale_8(r, val);
       g = scale_8(g, val);
       b = scale_8(b, val);
+      w = scale_8(w, val);
     }
   }
 
@@ -190,19 +213,21 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
     r = pow((float)r / 255.0, gamma) * 255;
     g = pow((float)g / 255.0, gamma) * 255;
     b = pow((float)b / 255.0, gamma) * 255;
+    w = pow((float)w / 255.0, gamma) * 255;
   }
 
   r = scale_8(r, corr_rgb.r);
   g = scale_8(g, corr_rgb.g);
   b = scale_8(b, corr_rgb.b);
 
-  return pack_rgbw(r, g, b, 0);
+  return pack_rgbw(r, g, b, w);
 }
 
 // Render float RGB to LEDs
 uint32_t render_rgb_float(color_rgb_float rgb,
                           color_rgb corr_rgb, float saturation,
-                          float brightness, float gamma) {
+                          float brightness, float gamma,
+                          uint8_t has_white) {
   float r = clamp(rgb.r, 0, 1) * brightness;
   float g = clamp(rgb.g, 0, 1) * brightness;
   float b = clamp(rgb.b, 0, 1) * brightness;
@@ -244,13 +269,14 @@ uint32_t render_rgb_float(color_rgb_float rgb,
 int ws2811_hsv_render_array_float(ws2811_t *ws, ws2811_channel_t *channel,
                                   color_hsv_float values[], int count,
                                   uint32_t correction, float saturation,
-                                  float brightness, float gamma){
+                                  float brightness, float gamma,
+                                  uint8_t has_white){
   if (count > channel->count) return -1;
   color_rgb corr_rgb = unpack_rgb(correction);
   for (int i = 0; i < count; i++) {
     channel->leds[i] = render_hsv2rgb_rainbow_float(values[i], corr_rgb,
                                                     saturation, brightness,
-                                                    gamma);
+                                                    gamma, has_white);
   }
   ws2811_render(ws);
   return 1;
@@ -260,13 +286,14 @@ int ws2811_hsv_render_array_float(ws2811_t *ws, ws2811_channel_t *channel,
 int ws2811_rgb_render_array_float(ws2811_t *ws, ws2811_channel_t *channel,
                                   color_rgb_float values[], int count,
                                   uint32_t correction, float saturation,
-                                  float brightness, float gamma){
+                                  float brightness, float gamma,
+                                  uint8_t has_white){
   if (count > channel->count) return -1;
   color_rgb corr_rgb = unpack_rgb(correction);
   for (int i = 0; i < count; i++) {
     channel->leds[i] = render_rgb_float(values[i], corr_rgb,
                                         saturation, brightness,
-                                        gamma);
+                                        gamma, has_white);
   }
   ws2811_render(ws);
   return 1;

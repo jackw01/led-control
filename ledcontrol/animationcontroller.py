@@ -350,7 +350,8 @@ class AnimationController:
                 self.correction,
                 self.params['master_saturation'],
                 self.params['master_brightness'],
-                self.params['master_gamma']
+                self.params['master_gamma'],
+                self.led_controller.has_white
             )
         elif mode == animpatterns.ColorMode.rgb:
             self.led_controller.leds.set_all_pixels_rgb_float(
@@ -358,7 +359,8 @@ class AnimationController:
                 self.correction,
                 self.params['master_saturation'],
                 self.params['master_brightness'],
-                self.params['master_gamma']
+                self.params['master_gamma'],
+                self.led_controller.has_white
             )
 
     def end_animation_thread(self):
