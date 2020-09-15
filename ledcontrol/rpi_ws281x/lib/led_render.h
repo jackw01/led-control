@@ -192,48 +192,14 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
         b = scale_8(b, sat) + desat;
       }
     }
-
+    /*
     if (gamma != 1) {
       r = pow((float)r / 255.0, gamma) * 255;
       g = pow((float)g / 255.0, gamma) * 255;
       b = pow((float)b / 255.0, gamma) * 255;
     }
+    */
   }
-
-
-
-
-  /*
-  if (sat != 255) {
-    if (sat == 0) {
-      r = 255;
-      b = 255;
-      g = 255;
-    } else {
-      uint8_t desat = 255 - sat;
-      desat = scale_8(desat, desat);
-      r = scale_8(r, sat) + desat;
-      g = scale_8(g, sat) + desat;
-      b = scale_8(b, sat) + desat;
-    }
-  }
-
-  if (gamma != 1) {
-    r = pow((float)r / 255.0, gamma) * 255;
-    g = pow((float)g / 255.0, gamma) * 255;
-    b = pow((float)b / 255.0, gamma) * 255;
-  }
-
-  if (has_white) {
-    uint8_t min = r < g ? (r < b ? r : b) : (g < b ? g : b);
-    r -= min;
-    g -= min;
-    b -= min;
-    w = scale_8(min, min);
-  }
-  */
-
-
 
   // Now scale everything down if we're at value < 255.
   if (val != 255) {
@@ -262,9 +228,10 @@ uint32_t render_rgb_float(color_rgb_float rgb,
                           color_rgb corr_rgb, float saturation,
                           float brightness, float gamma,
                           uint8_t has_white) {
-  float r = clamp(rgb.r, 0, 1) * brightness;
-  float g = clamp(rgb.g, 0, 1) * brightness;
-  float b = clamp(rgb.b, 0, 1) * brightness;
+  float r = clamp(rgb.r, 0, 1);
+  float g = clamp(rgb.g, 0, 1);
+  float b = clamp(rgb.b, 0, 1);
+  float w = 0;
 
   // If saturation is not 1, desaturate the color
   // Moves r/g/b values closer to their average
@@ -282,21 +249,32 @@ uint32_t render_rgb_float(color_rgb_float rgb,
     }
   }
 
+  if (has_white) {
+      float min = r < g ? (r < b ? r : b) : (g < b ? g : b);
+      r -= min;
+      g -= min;
+      b -= min;
+      w = min * min * min;
+  }
+
+  /*
   if (gamma != 1) {
     r = pow(r, gamma);
     g = pow(g, gamma);
     b = pow(b, gamma);
   }
+  */
 
-  uint8_t r8 = r * 255;
-  uint8_t g8 = g * 255;
-  uint8_t b8 = b * 255;
+  uint8_t r8 = r * brightness * 255;
+  uint8_t g8 = g * brightness * 255;
+  uint8_t b8 = b * brightness * 255;
+  uint8_t w8 = w * brightness * 255;
 
   r8 = scale_8(r8, corr_rgb.r);
   g8 = scale_8(g8, corr_rgb.g);
   b8 = scale_8(b8, corr_rgb.b);
 
-  return pack_rgbw(r8, g8, b8, 0);
+  return pack_rgbw(r8, g8, b8, w8);
 }
 
 // Render array of hsv pixels and display
