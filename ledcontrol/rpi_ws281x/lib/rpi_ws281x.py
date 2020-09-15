@@ -469,9 +469,9 @@ def unpack_rgb(arg1):
     return _rpi_ws281x.unpack_rgb(arg1)
 unpack_rgb = _rpi_ws281x.unpack_rgb
 
-def pack_rgb(r, g, b):
-    return _rpi_ws281x.pack_rgb(r, g, b)
-pack_rgb = _rpi_ws281x.pack_rgb
+def pack_rgbw(r, g, b, w):
+    return _rpi_ws281x.pack_rgbw(r, g, b, w)
+pack_rgbw = _rpi_ws281x.pack_rgbw
 
 def scale_8(a, b):
     return _rpi_ws281x.scale_8(a, b)

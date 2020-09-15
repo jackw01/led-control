@@ -31,9 +31,9 @@ color_rgb unpack_rgb(uint32_t in) {
   return (color_rgb){ r, g, b };
 }
 
-// Pack 24 bit rgb to int
-uint32_t pack_rgb(uint8_t r, uint8_t g, uint8_t b) {
-  return (r << 16) | (g << 8) | b;
+// Pack 32 bit rgbw to int
+uint32_t pack_rgbw(uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
+  return (w << 24) | (r << 16) | (g << 8) | b;
 }
 
 // Scale one 8 bit int by another (a * b / 255)
@@ -196,7 +196,7 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
   g = scale_8(g, corr_rgb.g);
   b = scale_8(b, corr_rgb.b);
 
-  return pack_rgb(r, g, b);
+  return pack_rgbw(r, g, b, 0);
 }
 
 // Render float RGB to LEDs
@@ -237,7 +237,7 @@ uint32_t render_rgb_float(color_rgb_float rgb,
   g8 = scale_8(g8, corr_rgb.g);
   b8 = scale_8(b8, corr_rgb.b);
 
-  return pack_rgb(r8, g8, b8);
+  return pack_rgbw(r8, g8, b8, 0);
 }
 
 // Render array of hsv pixels and display

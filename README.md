@@ -51,7 +51,6 @@ usage: ledcontrol [-h] [--port PORT] [--host HOST]
                   [--led_pin LED_PIN]
                   [--led_data_rate LED_DATA_RATE]
                   [--led_dma_channel LED_DMA_CHANNEL]
-                  [--led_strip_type LED_STRIP_TYPE]
                   [--led_pixel_order LED_PIXEL_ORDER]
                   [--led_color_correction LED_COLOR_CORRECTION]
                   [--led_brightness_limit LED_BRIGHTNESS_LIMIT]
@@ -69,19 +68,18 @@ optional arguments:
   --led_dma_channel LED_DMA_CHANNEL
                         DMA channel for LEDs. DO NOT USE CHANNEL 5 ON Pi 3 B.
                         Default: 10
-  --led_strip_type LED_STRIP_TYPE
-                        LED chipset. Either WS2812 or SK6812. Default: WS2812
   --led_pixel_order LED_PIXEL_ORDER
-                        LED color channel order. Any combination of RGB with
-                        or without a W at the end. Default: GRB
+                        LED color channel order. Any combination of RGB with or
+                        without a W at the end.
+                        Default: GRB, try GRBW for SK6812 RGBW LEDs
   --led_color_correction LED_COLOR_CORRECTION
                         LED color correction in RGB hex form. Use #FFB0F0 for
-                        5050 package LEDs on strips and arrays and #FFE08C for
-                        through-hole package LEDs or light strings. Default:
-                        #FFB0F0
+                        5050 package RGB LEDs, #FFF0FF for 5050 RGBW LEDs, and
+                        #FFE08C for through-hole package LEDs or light strings.
+                        Default: #FFB0F0
   --led_brightness_limit LED_BRIGHTNESS_LIMIT
-                        LED maximum brightness limit for the web UI. Float from
-                        0.0-1.0. Default: 1.0
+                        LED maximum brightness limit for the web UI. 0.0-1.0.
+                        Default: 1.0
   --save_interval SAVE_INTERVAL
                         Interval for automatically saving settings in seconds.
                         Default: 60

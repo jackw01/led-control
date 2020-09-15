@@ -6603,39 +6603,48 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_pack_rgb(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_pack_rgbw(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   uint8_t arg1 ;
   uint8_t arg2 ;
   uint8_t arg3 ;
+  uint8_t arg4 ;
   unsigned char val1 ;
   int ecode1 = 0 ;
   unsigned char val2 ;
   int ecode2 = 0 ;
   unsigned char val3 ;
   int ecode3 = 0 ;
+  unsigned char val4 ;
+  int ecode4 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
   uint32_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:pack_rgb",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:pack_rgbw",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
   ecode1 = SWIG_AsVal_unsigned_SS_char(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "pack_rgb" "', argument " "1"" of type '" "uint8_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "pack_rgbw" "', argument " "1"" of type '" "uint8_t""'");
   } 
   arg1 = (uint8_t)(val1);
   ecode2 = SWIG_AsVal_unsigned_SS_char(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "pack_rgb" "', argument " "2"" of type '" "uint8_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "pack_rgbw" "', argument " "2"" of type '" "uint8_t""'");
   } 
   arg2 = (uint8_t)(val2);
   ecode3 = SWIG_AsVal_unsigned_SS_char(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "pack_rgb" "', argument " "3"" of type '" "uint8_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "pack_rgbw" "', argument " "3"" of type '" "uint8_t""'");
   } 
   arg3 = (uint8_t)(val3);
-  result = (uint32_t)pack_rgb(arg1,arg2,arg3);
+  ecode4 = SWIG_AsVal_unsigned_SS_char(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "pack_rgbw" "', argument " "4"" of type '" "uint8_t""'");
+  } 
+  arg4 = (uint8_t)(val4);
+  result = (uint32_t)pack_rgbw(arg1,arg2,arg3,arg4);
   resultobj = SWIG_From_unsigned_SS_int((unsigned int)(result));
   return resultobj;
 fail:
@@ -7664,7 +7673,7 @@ static PyMethodDef SwigMethods[] = {
 	 { "ws2811_led_get", _wrap_ws2811_led_get, METH_VARARGS, NULL},
 	 { "ws2811_led_set", _wrap_ws2811_led_set, METH_VARARGS, NULL},
 	 { "unpack_rgb", _wrap_unpack_rgb, METH_VARARGS, NULL},
-	 { "pack_rgb", _wrap_pack_rgb, METH_VARARGS, NULL},
+	 { "pack_rgbw", _wrap_pack_rgbw, METH_VARARGS, NULL},
 	 { "scale_8", _wrap_scale_8, METH_VARARGS, NULL},
 	 { "clamp", _wrap_clamp, METH_VARARGS, NULL},
 	 { "blackbody_to_rgb", _wrap_blackbody_to_rgb, METH_VARARGS, NULL},

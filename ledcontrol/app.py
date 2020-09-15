@@ -26,14 +26,14 @@ FormItem = recordclass('FormItem', [
 
 def create_app(led_count, refresh_rate,
                led_pin, led_data_rate, led_dma_channel,
-               led_strip_type, led_pixel_order,
+               led_pixel_order,
                led_color_correction, led_v_limit,
                save_interval,
                allow_direct_control):
     app = Flask(__name__)
     leds = LEDController(led_count, led_pin,
                          led_data_rate, led_dma_channel,
-                         led_strip_type, led_pixel_order)
+                         led_pixel_order)
     controller = AnimationController(leds, refresh_rate, led_count,
                                      pixelmappings.line(led_count),
                                      led_color_correction)
