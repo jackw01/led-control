@@ -7,7 +7,8 @@
 * In-browser code editor with smart indentation, syntax highlighting, and syntax error detection makes creating animation patterns easy
 * Animation patterns are defined as Python functions that work similarly to fragment shaders
 * Builtin secondary patterns make it possible to quickly create more complex effects
-* Supports cheap and readily available WS281x and SK6812 LED strips and strings
+* Works with cheap and readily available WS281x and SK6812 LED strips and strings
+* Seamlessly supports HSV-to-RGBW and RGB-to-RGBW conversion for RGBW LED strips
 * Capable of achieving up to 380 FPS on 60 LEDs and 160 FPS on 150 LEDs on a Raspberry Pi Zero (see note below)
 * Web backend and animation code written in Python using the [Flask](https://github.com/pallets/flask) web framework for ease of development
 * Color conversions, color correction, and final rendering operations are implemented in a C extension module for maximum performance
@@ -17,14 +18,14 @@ Complex shaders will run slower, but framerates should stay comfortably above 24
 
 ## Install
 ### Hardware Setup
-1. Obtain a Raspberry Pi (any model), a WS2812B LED strip, and a suitable 5V power supply.
+1. Obtain a Raspberry Pi (any model), a WS2812B or SK6812B LED strip (SK6812 RGB/White LEDs are highly recommended), and a suitable 5V power supply.
 2. Read [this Adafruit guide](https://learn.adafruit.com/neopixels-on-raspberry-pi) and follow the directions to connect the LED strip to your Raspberry Pi. Installing the Python library and testing the LED strip with an example program is optional.
 
-Know what you're doing with electricity. WS2812B LEDs can draw a lot of current, especially in long strips. You should budget [at least 50mA for each LED at full brightness](https://www.pjrc.com/how-much-current-do-ws2812-neopixel-leds-really-use/), which means 7.5A for 150 LEDs (5 meters of 30 LED/m strip, 2.5m of 60LED/m strip, ~1m of 144LED/m strip...). In practice, your LED strips probably won't draw this much current, but it's good to have a power supply capable of handling it.
+Know what you're doing with electricity. Addressable LEDs can draw a lot of current, especially in long strips. You should budget [at least 50mA for each LED at full brightness](https://www.pjrc.com/how-much-current-do-ws2812-neopixel-leds-really-use/), which means 7.5A for 150 LEDs (5 meters of 30 LED/m strip, 2.5m of 60LED/m strip, ~1m of 144LED/m strip...). In practice, your LED strips probably won't draw this much current, but it's good to have a power supply capable of handling it.
 
 The flexible PCBs and connectors used in these LED strips are not really designed to handle these currents, and begin to heat up when passing as little as 2-3A. The voltage drop is significant (I measured a 0.6v drop across each power rail along the length of a 3m strip drawing about 3A), but it does not seem to impact color or brightness in individual strips under 5m long.
 
-For long strips (~150 LEDs) at high brightness and/or total current draw over 5A, I would recommend powering each strip from both ends with adequately sized (18AWG) wires to mitigate any issues with voltage drop. WS2812B strips usually come with seriously undersized power wires and barrel jacks or JST SM connectors rated for only 3A, and it would be a good idea to replace these appropriately in any case.
+For long strips (~150 LEDs) at high brightness and/or total current draw over 5A, I would recommend powering each strip from both ends with adequately sized (18AWG) wires to mitigate any issues with voltage drop. Addressable LED strips usually come with seriously undersized power wires and barrel jacks or JST SM connectors rated for only 3A, and it would be a good idea to replace these appropriately in any case.
 
 For installations with over 150 LEDs, don't expect to get good or safe results by daisy chaining strips together. See [this guide](https://learn.adafruit.com/1500-neopixel-led-curtain-with-raspberry-pi-fadecandy/power-topology) for good information on powering hundreds or thousands of LEDs.
 
@@ -73,8 +74,8 @@ optional arguments:
                         without a W at the end.
                         Default: GRB, try GRBW for SK6812 RGBW LEDs
   --led_color_correction LED_COLOR_CORRECTION
-                        LED color correction in RGB hex form. Use #FFB0F0 for
-                        5050 package RGB LEDs, #FFF0FF for 5050 RGBW LEDs, and
+                        LED color correction in RGB hex form. Try #FFB0F0 for
+                        5050 package RGB LEDs, #FFB2FF for 5050 RGBW LEDs, and
                         #FFE08C for through-hole package LEDs or light strings.
                         Default: #FFB0F0
   --led_brightness_limit LED_BRIGHTNESS_LIMIT
