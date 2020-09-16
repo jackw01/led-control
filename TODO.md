@@ -51,7 +51,6 @@
 - [x] calculate pixel mappings and scale once and store them
 - [x] optimize animation loop with list comprehensions
 - [x] RGB plasma shader and utility function
-- [x] master gamma control
 - [x] perlin noise utility function
 
 #### 2019-10
@@ -65,6 +64,7 @@
 
 ### Extras
 - [ ] password protection
+- [x] SK6812 RGBW support
 - [x] per-pattern speed/scale
 - [x] delete pattern
 - [X] gradient/palette based patterns
@@ -78,6 +78,4 @@
 - [x] palette based - ripples
 - [x] palette based - random wipe
 
-swig -python ./ledcontrol/rpi_ws281x/lib/rpi_ws281x.i && sudo python3 setup.py develop
-sudo ledcontrol --led_count 16 --led_pixel_order GRBW --led_color_correction "#FFF0FF"
-
+sudo ledcontrol --led_count 60 --led_pixel_order GRBW --led_color_correction "#FFB2FF"

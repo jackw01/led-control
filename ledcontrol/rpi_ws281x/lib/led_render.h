@@ -254,7 +254,7 @@ uint32_t render_rgb_float(color_rgb_float rgb,
       r -= min;
       g -= min;
       b -= min;
-      w = min * min * min;
+      w = min * min;
   }
 
   /*

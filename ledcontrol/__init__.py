@@ -26,7 +26,7 @@ def main():
     parser.add_argument('--led_pixel_order', default='GRB',
                         help='LED color channel order. Any combination of RGB with or without a W at the end. Default: GRB, try GRBW for SK6812')
     parser.add_argument('--led_color_correction', default='#FFB0F0',
-                        help='LED color correction in RGB hex form. Use #FFB0F0 for 5050 package RGB LEDs, #FFF0FF for 5050 RGBW LEDs, and #FFE08C for through-hole package LEDs or light strings. Default: #FFB0F0')
+                        help='LED color correction in RGB hex form. Use #FFB0F0 for 5050 package RGB LEDs, #FFB2FF for 5050 RGBW LEDs, and #FFE08C for through-hole package LEDs or light strings. Default: #FFB0F0')
     parser.add_argument('--led_brightness_limit', type=float, default=1.0,
                         help='LED maximum brightness limit for the web UI. Float from 0.0-1.0. Default: 1.0')
     parser.add_argument('--save_interval', type=int, default=60,

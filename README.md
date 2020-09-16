@@ -245,5 +245,11 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 }
 ```
 
+## Development
+To build the C extension module:
+```
+swig -python ./ledcontrol/rpi_ws281x/lib/rpi_ws281x.i && sudo python3 setup.py develop
+```
+
 ## License
 MIT
