@@ -78,4 +78,4 @@
 - [x] palette based - ripples
 - [x] palette based - random wipe
 
-sudo ledcontrol --led_count 60 --led_pixel_order GRBW --led_color_correction "#FFB2FF"
+sudo ledcontrol --led_count 150 --led_pixel_order GRBW --led_color_correction "#FFA8FF"

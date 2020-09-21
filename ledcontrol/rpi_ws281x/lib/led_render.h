@@ -251,10 +251,11 @@ uint32_t render_rgb_float(color_rgb_float rgb,
 
   if (has_white) {
       float min = r < g ? (r < b ? r : b) : (g < b ? g : b);
+      min *= min;
       r -= min;
       g -= min;
       b -= min;
-      w = min * min;
+      w = min;
   }
 
   /*

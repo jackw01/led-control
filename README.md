@@ -75,7 +75,7 @@ optional arguments:
                         Default: GRB, try GRBW for SK6812 RGBW LEDs
   --led_color_correction LED_COLOR_CORRECTION
                         LED color correction in RGB hex form. Try #FFB0F0 for
-                        5050 package RGB LEDs, #FFB2FF for 5050 RGBW LEDs, and
+                        5050 package RGB LEDs, #FFA8FF for 5050 RGBW LEDs, and
                         #FFE08C for through-hole package LEDs or light strings.
                         Default: #FFB0F0
   --led_brightness_limit LED_BRIGHTNESS_LIMIT
