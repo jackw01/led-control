@@ -42,7 +42,7 @@ Python 3.6 or newer is required.
 6. `cd ../../../../..`
 7. `swig -python ./ledcontrol/rpi_ws281x/lib/rpi_ws281x.i`
 8. `sudo python3 setup.py develop`
-9. `sudo ledcontrol --led_count 150`
+9. `sudo ledcontrol --led_count 150` (add `--led_pixel_order GRBW` if using RGBW LEDs)
 
 ### Command Line Configuration Arguments
 Web server and LED hardware parameters must be specified as command line arguments when running ledcontrol.
