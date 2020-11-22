@@ -2,6 +2,23 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import find_packages, setup, Extension
+from setuptools.command.develop import develop
+from setuptools.command.install import install
+from subprocess import check_call
+
+def pre_install():
+    print('preinstall')
+    check_call('scons', cwd='ledcontrol/driver/rpi_ws281x/')
+
+class PreDevelopCommand(develop):
+    def run(self):
+        pre_install()
+        develop.run(self)
+
+class PreInstallCommand(install):
+    def run(self):
+        pre_install()
+        install.run(self)
 
 requirements = [
     'recordclass>=0.12.0.1',
@@ -35,6 +52,10 @@ setup(
         'console_scripts': [
             'ledcontrol=ledcontrol:main'
         ]
+    },
+    cmdclass={
+        'develop': PreDevelopCommand,
+        'install': PreInstallCommand,
     },
     license='MIT',
     classifiers=[

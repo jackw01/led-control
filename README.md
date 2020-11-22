@@ -32,16 +32,13 @@ For installations with over 150 LEDs, don't expect to get good or safe results b
 More information on connecting LED strips and PWM/DMA usage is available [here](https://github.com/jgarff/rpi_ws281x).
 
 ### Software Setup
-Python 3.6 or newer is required.
+Python 3.7 or newer is required.
 
 1. `sudo apt-get install scons swig`
 2. `git clone --recurse-submodules https://github.com/jackw01/led-control.git`
 3. `cd led-control`
-4. `cd ledcontrol/driver/rpi_ws281x/`
-5. `scons`
-6. `cd ../../..`
-7. `sudo python3 setup.py develop`
-8. `sudo ledcontrol --led_count 150` (add `--led_pixel_order GRBW` if using RGBW LEDs)
+4. `sudo python3 setup.py develop`
+5. `sudo ledcontrol --led_count 150` (add `--led_pixel_order GRBW` if using RGBW LEDs)
 
 ### Command Line Configuration Arguments
 Web server and LED hardware parameters must be specified as command line arguments when running ledcontrol.
