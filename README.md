@@ -40,9 +40,8 @@ Python 3.6 or newer is required.
 4. `cd ledcontrol/driver/rpi_ws281x/`
 5. `scons`
 6. `cd ../../..`
-7. `swig -python ./ledcontrol/driver/ledcontrol_rpi_ws281x_driver.i`
-8. `sudo python3 setup.py develop`
-9. `sudo ledcontrol --led_count 150` (add `--led_pixel_order GRBW` if using RGBW LEDs)
+7. `sudo python3 setup.py develop`
+8. `sudo ledcontrol --led_count 150` (add `--led_pixel_order GRBW` if using RGBW LEDs)
 
 ### Command Line Configuration Arguments
 Web server and LED hardware parameters must be specified as command line arguments when running ledcontrol.
@@ -248,7 +247,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 ## Development
 To build the C extension module:
 ```
-swig -python ./ledcontrol/rpi_ws281x/lib/rpi_ws281x.i && sudo python3 setup.py develop
+swig -python ./ledcontrol/driver/ledcontrol_rpi_ws281x_driver.i && sudo python3 setup.py develop
 ```
 
 ## License

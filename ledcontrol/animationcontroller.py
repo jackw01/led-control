@@ -11,7 +11,7 @@ from ledcontrol.controlclient import ControlClient
 
 import ledcontrol.animationpatterns as animpatterns
 import ledcontrol.colorpalettes as colorpalettes
-import ledcontrol.driver as rpi_ws281x
+import ledcontrol.driver as driver
 import ledcontrol.utils as utils
 
 class RepeatedTimer:
@@ -157,17 +157,17 @@ class AnimationController:
             'hsv': animpatterns.ColorMode.hsv,
             'rgb': animpatterns.ColorMode.rgb,
             'clamp': utils.clamp,
-            'wave_pulse': rpi_ws281x.wave_pulse,
-            'wave_triangle': rpi_ws281x.wave_triangle,
-            'wave_sine': rpi_ws281x.wave_sine,
-            'wave_cubic': rpi_ws281x.wave_cubic,
-            'plasma_sines': rpi_ws281x.plasma_sines,
-            'plasma_sines_octave': rpi_ws281x.plasma_sines_octave,
-            'perlin_noise_3d': rpi_ws281x.perlin_noise_3d,
+            'wave_pulse': driver.wave_pulse,
+            'wave_triangle': driver.wave_triangle,
+            'wave_sine': driver.wave_sine,
+            'wave_cubic': driver.wave_cubic,
+            'plasma_sines': driver.plasma_sines,
+            'plasma_sines_octave': driver.plasma_sines_octave,
+            'perlin_noise_3d': driver.perlin_noise_3d,
             'impulse_exp': utils.impulse_exp,
             'fract': utils.fract,
-            'blackbody_to_rgb': rpi_ws281x.blackbody_to_rgb,
-            'blackbody_correction_rgb': rpi_ws281x.blackbody_correction_rgb,
+            'blackbody_to_rgb': driver.blackbody_to_rgb,
+            'blackbody_correction_rgb': driver.blackbody_correction_rgb,
         }
         restricted_locals = {}
         arg_names = ['t', 'dt', 'x', 'y', 'prev_state']
@@ -192,7 +192,7 @@ class AnimationController:
 
     def calculate_color_correction(self):
         'Calculate and store color temperature correction'
-        rgb = rpi_ws281x.blackbody_to_rgb(self.params['master_color_temp'])
+        rgb = driver.blackbody_to_rgb(self.params['master_color_temp'])
         c = [self.correction_original[0] * int(rgb[0] * 255) // 255,
              self.correction_original[1] * int(rgb[1] * 255) // 255,
              self.correction_original[2] * int(rgb[2] * 255) // 255]
@@ -345,24 +345,32 @@ class AnimationController:
 
         # Write colors to LEDs
         if mode == animpatterns.ColorMode.hsv:
-            self.led_controller.leds.set_all_pixels_hsv_float(
+            self.led_controller.set_all_pixels_hsv_float(
                 [(c[0][0] % 1, c[0][1], c[0][2] * c[1]) for c in s_2],
                 self.correction,
                 self.params['master_saturation'],
                 self.params['master_brightness'],
-                self.params['master_gamma'],
-                self.led_controller.has_white
+                self.params['master_gamma']
             )
         elif mode == animpatterns.ColorMode.rgb:
-            self.led_controller.leds.set_all_pixels_rgb_float(
+            self.led_controller.set_all_pixels_rgb_float(
                 [(c[0][0] * c[1], c[0][1] * c[1], c[0][2] * c[1]) for c in s_2],
                 self.correction,
                 self.params['master_saturation'],
                 self.params['master_brightness'],
-                self.params['master_gamma'],
-                self.led_controller.has_white
+                self.params['master_gamma']
             )
 
-    def end_animation_thread(self):
+    def clear_leds(self):
+        'Turn all LEDs off'
+        self.led_controller.set_all_pixels_rgb_float(
+            [(0, 0, 0) for i in range(self.led_count)],
+            self.correction,
+            self.params['master_saturation'],
+            self.params['master_brightness'],
+            self.params['master_gamma']
+        )
+
+    def end_animation(self):
         'Stop rendering in the animation thread'
         self.timer.stop()

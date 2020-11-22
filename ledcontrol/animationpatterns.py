@@ -4,7 +4,7 @@
 from random import random
 from enum import Enum
 
-import ledcontrol.driver as rpi_ws281x
+import ledcontrol.driver as driver
 import ledcontrol.utils as utils
 
 ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
@@ -253,25 +253,25 @@ def pattern(t, dt, x, y, prev_state):
 # return brightness, colorRGB
 
 def sine_1d(t, dt, x, y, prev_state, in_color):
-    return in_color, rpi_ws281x.wave_sine(t + x)
+    return in_color, driver.wave_sine(t + x)
 
 def cubic_1d(t, dt, x, y, prev_state, in_color):
-    return in_color, rpi_ws281x.wave_cubic(t + x)
+    return in_color, driver.wave_cubic(t + x)
 
 def ramp_1d(t, dt, x, y, prev_state, in_color):
     return in_color, (t + x) % 1 # test ramp^2
 
 def bounce_linear_1d(t, dt, x, y, prev_state, in_color):
-    return in_color, rpi_ws281x.wave_sine(x + rpi_ws281x.wave_triangle(t))
+    return in_color, driver.wave_sine(x + driver.wave_triangle(t))
 
 def bounce_sine_1d(t, dt, x, y, prev_state, in_color):
-    return in_color, rpi_ws281x.wave_sine(x + rpi_ws281x.wave_sine(t))
+    return in_color, driver.wave_sine(x + driver.wave_sine(t))
 
 def bounce_cubic_1d(t, dt, x, y, prev_state, in_color):
-    return in_color, rpi_ws281x.wave_sine(x + rpi_ws281x.wave_cubic(t))
+    return in_color, driver.wave_sine(x + driver.wave_cubic(t))
 
 def perlin_noise_2d(t, dt, x, y, prev_state, in_color):
-    return in_color, rpi_ws281x.perlin_noise_3d(x, y, t)
+    return in_color, driver.perlin_noise_3d(x, y, t)
 
 def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
     v = prev_state[1] - dt
