@@ -11,7 +11,7 @@ from ledcontrol.controlclient import ControlClient
 
 import ledcontrol.animationpatterns as animpatterns
 import ledcontrol.colorpalettes as colorpalettes
-import ledcontrol.rpi_ws281x as rpi_ws281x
+import ledcontrol.driver as rpi_ws281x
 import ledcontrol.utils as utils
 
 class RepeatedTimer:

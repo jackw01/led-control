@@ -24,10 +24,10 @@ setup(
     install_requires=requirements,
     setup_requires=requirements,
     ext_modules=[
-        Extension('_rpi_ws281x',
-                  sources=['ledcontrol/rpi_ws281x/lib/rpi_ws281x_wrap.c'],
-                  include_dirs=['ledcontrol/rpi_ws281x/lib'],
-                  library_dirs=['ledcontrol/rpi_ws281x/lib/c/rpi_ws281x/'],
+        Extension('_ledcontrol_rpi_ws281x_driver',
+                  sources=['ledcontrol/driver/lib/ledcontrol_rpi_ws281x_driver_wrap.c'],
+                  include_dirs=['ledcontrol/driver/lib'],
+                  library_dirs=['ledcontrol/driver/lib/rpi_ws281x/'],
                   libraries=['ws2811'])
     ],
     include_package_data=True,

@@ -3030,16 +3030,16 @@ static swig_module_info swig_module = {swig_types, 19, 0, 0, 0, 0};
 #endif
 
 /*-----------------------------------------------
-              @(target):= _rpi_ws281x.so
+              @(target):= _ledcontrol_rpi_ws281x_driver.so
   ------------------------------------------------*/
 #if PY_VERSION_HEX >= 0x03000000
-#  define SWIG_init    PyInit__rpi_ws281x
+#  define SWIG_init    PyInit__ledcontrol_rpi_ws281x_driver
 
 #else
-#  define SWIG_init    init_rpi_ws281x
+#  define SWIG_init    init_ledcontrol_rpi_ws281x_driver
 
 #endif
-#define SWIG_name    "_rpi_ws281x"
+#define SWIG_name    "_ledcontrol_rpi_ws281x_driver"
 
 #define SWIGVERSION 0x030012 
 #define SWIG_VERSION SWIGVERSION
@@ -3096,7 +3096,7 @@ static int convert_iarray_8(PyObject *input, uint8_t *ptr, int size) {
 }
 
 
-#include "c/rpi_ws281x/ws2811.h"
+#include "rpi_ws281x/ws2811.h"
 #include "color_types.h"
 #include "led_render.h"
 #include "animation_utils.h"
@@ -4617,6 +4617,36 @@ SWIGINTERN PyObject *_wrap_ws2811_get_return_t_str(PyObject *SWIGUNUSEDPARM(self
   arg1 = (ws2811_return_t)(val1);
   result = (char *)ws2811_get_return_t_str(arg1);
   resultobj = SWIG_FromCharPtr((const char *)result);
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ws2811_set_custom_gamma_factor(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ws2811_t *arg1 = (ws2811_t *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ws2811_set_custom_gamma_factor",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ws2811_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ws2811_set_custom_gamma_factor" "', argument " "1"" of type '" "ws2811_t *""'"); 
+  }
+  arg1 = (ws2811_t *)(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ws2811_set_custom_gamma_factor" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = (double)(val2);
+  ws2811_set_custom_gamma_factor(arg1,arg2);
+  resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
   return NULL;
@@ -7629,6 +7659,7 @@ static PyMethodDef SwigMethods[] = {
 	 { "ws2811_render", _wrap_ws2811_render, METH_VARARGS, NULL},
 	 { "ws2811_wait", _wrap_ws2811_wait, METH_VARARGS, NULL},
 	 { "ws2811_get_return_t_str", _wrap_ws2811_get_return_t_str, METH_VARARGS, NULL},
+	 { "ws2811_set_custom_gamma_factor", _wrap_ws2811_set_custom_gamma_factor, METH_VARARGS, NULL},
 	 { "color_hsv_hue_set", _wrap_color_hsv_hue_set, METH_VARARGS, NULL},
 	 { "color_hsv_hue_get", _wrap_color_hsv_hue_get, METH_VARARGS, NULL},
 	 { "color_hsv_h_set", _wrap_color_hsv_h_set, METH_VARARGS, NULL},

@@ -37,10 +37,10 @@ Python 3.6 or newer is required.
 1. `sudo apt-get install scons swig`
 2. `git clone --recurse-submodules https://github.com/jackw01/led-control.git`
 3. `cd led-control`
-4. `cd ledcontrol/rpi_ws281x/lib/c/rpi_ws281x/`
+4. `cd ledcontrol/driver/lib/rpi_ws281x/`
 5. `scons`
-6. `cd ../../../../..`
-7. `swig -python ./ledcontrol/rpi_ws281x/lib/rpi_ws281x.i`
+6. `cd ../../../..`
+7. `swig -python ./ledcontrol/driver/lib/ledcontrol_rpi_ws281x_driver.i`
 8. `sudo python3 setup.py develop`
 9. `sudo ledcontrol --led_count 150` (add `--led_pixel_order GRBW` if using RGBW LEDs)
 

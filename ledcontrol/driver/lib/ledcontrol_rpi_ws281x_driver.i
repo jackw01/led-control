@@ -4,7 +4,7 @@
 
 // Define module name rpi_ws281x. This will actually be imported under
 // the name _rpi_ws281x following the SWIG & Python conventions.
-%module rpi_ws281x
+%module ledcontrol_rpi_ws281x_driver
 
 // Include standard SWIG types & array support for support of uint32_tparameters and arrays.
 %include "stdint.i"
@@ -150,14 +150,14 @@ static int convert_iarray_8(PyObject *input, uint8_t *ptr, int size) {
 
 // Declare functions which will be exported as anything in the ws2811.h header.
 %{
-#include "c/rpi_ws281x/ws2811.h"
+#include "rpi_ws281x/ws2811.h"
 #include "color_types.h"
 #include "led_render.h"
 #include "animation_utils.h"
 %}
 
 // Process ws2811.h header and export all included functions.
-%include "c/rpi_ws281x/ws2811.h"
+%include "rpi_ws281x/ws2811.h"
 
 // Include render utils
 %include "color_types.h"

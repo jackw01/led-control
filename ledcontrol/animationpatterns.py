@@ -4,7 +4,7 @@
 from random import random
 from enum import Enum
 
-import ledcontrol.rpi_ws281x as rpi_ws281x
+import ledcontrol.driver as rpi_ws281x
 import ledcontrol.utils as utils
 
 ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
