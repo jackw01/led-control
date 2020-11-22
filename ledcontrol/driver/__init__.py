@@ -1,7 +1,9 @@
 # led-control WS2812B LED Controller Server
 # Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
-from .rpi_ws281x import PixelStrip, Color
+import _ledcontrol_rpi_ws281x_driver as rpi_ws281x
+
+from .rpi_ws281x_helper import PixelStrip, Color
 #from .lib.rpi_ws281x import (
 #    blackbody_to_rgb,
 #    blackbody_correction_rgb,
@@ -13,7 +15,8 @@ from .rpi_ws281x import PixelStrip, Color
 #    plasma_sines_octave,
 #    perlin_noise_3d,
 #)
-from .lib import *
+
+print(dir(rpi_ws281x))
 
 # For some reason this stopped working the normal way
 blackbody_to_rgb = rpi_ws281x.blackbody_to_rgb

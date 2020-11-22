@@ -3,7 +3,7 @@
 # led-control WS2812B LED Controller Server
 # Modifications copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
 
-from .lib import rpi_ws281x as ws
+import _ledcontrol_rpi_ws281x_driver as ws
 import atexit
 
 print(ws.__file__)
