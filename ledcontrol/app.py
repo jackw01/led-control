@@ -186,6 +186,11 @@ def create_app(led_count, refresh_rate,
         controller.delete_palette(key)
         return jsonify(result='')
 
+    @app.route('/getfps')
+    def get_fps():
+        'Returns latest animation frames per second'
+        return jsonify(fps=controller.timer.get_rate())
+
     def save_current_pattern_params():
         'Remembers speed and scale for current pattern'
         patterns[controller.params['primary_pattern']]['primary_speed']\

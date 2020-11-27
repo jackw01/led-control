@@ -45,18 +45,21 @@ class RepeatedTimer:
             self.count += 1
             if self.count % 100 == 0:
                 print('Average execution time (s): {}'.format(self.perf_avg / 100))
-                print('Average speed (cycles/s): {}'.format(
-                    (self.count - self.last_measurement_c)
-                    / (self.last_start - self.last_measurement_t)
-                ))
-                self.last_measurement_c = self.count
-                self.last_measurement_t = self.last_start
+                print('Average speed (cycles/s): {}'.format(self.get_speed()))
                 self.perf_avg = 0
 
             # Calculate wait for next iteration
             self.wait_time = self.interval - (time.perf_counter() - self.last_start)
             if (self.wait_time < 0):
                 self.wait_time = 0
+
+    def get_rate(self):
+        'Returns current rate in cycles per second'
+        result = ((self.count - self.last_measurement_c) /
+                  (self.last_start - self.last_measurement_t))
+        self.last_measurement_c = self.count
+        self.last_measurement_t = self.last_start
+        return result
 
     def stop(self):
         'Stops the timer thread'
