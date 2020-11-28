@@ -45,7 +45,7 @@ class RepeatedTimer:
             self.count += 1
             if self.count % 100 == 0:
                 print('Average execution time (s): {}'.format(self.perf_avg / 100))
-                print('Average speed (cycles/s): {}'.format(self.get_speed()))
+                print('Average speed (cycles/s): {}'.format(self.get_rate()))
                 self.perf_avg = 0
 
             # Calculate wait for next iteration
