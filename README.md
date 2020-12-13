@@ -29,7 +29,7 @@ For long strips (~150 LEDs) at high brightness and/or total current draw over 5A
 
 For installations with over 150 LEDs, don't expect to get good or safe results by daisy chaining strips together. See [this guide](https://learn.adafruit.com/1500-neopixel-led-curtain-with-raspberry-pi-fadecandy/power-topology) for good information on powering hundreds or thousands of LEDs.
 
-More information on connecting LED strips and PWM/DMA usage is available [here](https://github.com/jgarff/rpi_ws281x).
+For more information on which GPIO pins LED strips can be connected to, see [here](https://github.com/jgarff/rpi_ws281x).
 
 ### Software Setup
 Python 3.7 or newer is required.
@@ -58,7 +58,7 @@ optional arguments:
   --host HOST           Hostname to use for web interface. Default: 0.0.0.0
   --led_count LED_COUNT Number of LEDs.
   --fps FPS             Refresh rate limit for LEDs, in FPS. Default: 60
-  --led_pin LED_PIN     Pin for LEDs (GPIO10, GPIO12, GPIO18 or GPIO21). ss
+  --led_pin LED_PIN     Pin for LEDs (see https://github.com/jgarff/rpi_ws281x).
                         Default: 18
   --led_data_rate LED_DATA_RATE
                         Data rate for LEDs. Default: 800000 Hz
