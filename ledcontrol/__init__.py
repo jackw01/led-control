@@ -39,7 +39,7 @@ def main():
 
     app = create_app(args.led_count, args.fps,
                      args.led_pin, args.led_data_rate, args.led_dma_channel,
-                     args.led_pixel_order,
+                     args.led_pixel_order.upper(),
                      [int(color_correction_hex[i:i + 2], 16) for i in (0, 2, 4)],
                      args.led_brightness_limit,
                      args.save_interval,
