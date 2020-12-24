@@ -20,7 +20,7 @@ static_patterns = [0, 1] # pattern IDs that display a solid color
 default = {
     0: {
         'name': 'Solid Color',
-        'primary_speed': 0.2,
+        'primary_speed': 0.0,
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
@@ -29,7 +29,7 @@ def pattern(t, dt, x, y, prev_state):
     },
     1: {
         'name': 'Palette Gradient',
-        'primary_speed': 0.2,
+        'primary_speed': 0.0,
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):

@@ -370,7 +370,7 @@ class AnimationController:
         # If displaying a static pattern with no secondary pattern, brightness is 0,
         # or speed is 0: no update is needed the next frame
         self.update_needed = not (
-            (self.params['primary_pattern'] in animpatterns.static_patterns and self.params['secondary_pattern'] == 0) or self.params['master_brightness'] == 0 or self.params['primary_speed'] == 0)
+            ((self.params['primary_pattern'] in animpatterns.static_patterns or self.params['primary_speed'] == 0) and self.params['secondary_pattern'] == 0) or self.params['master_brightness'] == 0)
 
     def clear_leds(self):
         'Turn all LEDs off'
