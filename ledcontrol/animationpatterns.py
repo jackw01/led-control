@@ -15,6 +15,7 @@ ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
 def blank(t, dt, x, y, prev_state):
     return (0, 0, 0), ColorMode.hsv
 
+static_patterns = [0, 1] # pattern IDs that display a solid color
 
 default = {
     0: {
@@ -24,6 +25,15 @@ default = {
         'source': '''
 def pattern(t, dt, x, y, prev_state):
     return palette(0), hsv
+'''
+    },
+    1: {
+        'name': 'Palette Gradient',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, prev_state):
+    return palette(x), hsv
 '''
     },
     10: {
