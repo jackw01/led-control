@@ -233,6 +233,7 @@ class AnimationController:
     def set_param(self, key, value):
         'Set an animation parameter'
         self.params[key] = value
+        self.update_needed = True
         if key == 'master_color_temp':
             self.calculate_color_correction()
         elif key == 'primary_scale' or key == 'secondary_scale':
