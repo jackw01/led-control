@@ -6,6 +6,8 @@
 
 #include <math.h>
 
+const uint8_t debug = 0;
+
 ws2811_channel_t *ws2811_channel_get(ws2811_t *ws, int channelnum) {
   return &ws->channel[channelnum];
 }
@@ -220,6 +222,7 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
   g = scale_8(g, corr_rgb.g);
   b = scale_8(b, corr_rgb.b);
 
+  if (debug) printf("%d %d %d %d\n", r, g, b, w);
   return pack_rgbw(r, g, b, w);
 }
 
@@ -287,6 +290,7 @@ uint32_t render_rgb_float(color_rgb_float rgb,
   g8 = scale_8(g8, corr_rgb.g);
   b8 = scale_8(b8, corr_rgb.b);
 
+  if (debug) printf("%d %d %d %d\n", r8, g8, b8, w8);
   return pack_rgbw(r8, g8, b8, w8);
 }
 
