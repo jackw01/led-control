@@ -1,5 +1,5 @@
 # led-control WS2812B LED Controller Server
-# Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
+# Copyright 2021 jackw01. Released under the MIT License (see LICENSE for details).
 
 import math
 import random
@@ -94,10 +94,10 @@ class AnimationController:
 
         # Used to render main slider/select list
         self.params = {
-            'master_brightness': 0.15,
-            'master_color_temp': 6500,
-            'master_gamma': 1.0,
-            'master_saturation': 1.0,
+            'brightness': 0.15,
+            'color_temp': 6500,
+            'gamma': 1.0,
+            'saturation': 1.0,
             'primary_pattern': 0,
             'primary_speed': 0.2,
             'primary_scale': 1.0,
@@ -196,7 +196,7 @@ class AnimationController:
 
     def calculate_color_correction(self):
         'Calculate and store color temperature correction'
-        rgb = driver.blackbody_to_rgb(self.params['master_color_temp'])
+        rgb = driver.blackbody_to_rgb(self.params['color_temp'])
         c = [self.correction_original[0] * int(rgb[0] * 255) // 255,
              self.correction_original[1] * int(rgb[1] * 255) // 255,
              self.correction_original[2] * int(rgb[2] * 255) // 255]
@@ -234,7 +234,7 @@ class AnimationController:
         'Set an animation parameter'
         self.params[key] = value
         self.update_needed = True
-        if key == 'master_color_temp':
+        if key == 'color_temp':
             self.calculate_color_correction()
         elif key == 'primary_scale' or key == 'secondary_scale':
             self.calculate_mappings()
@@ -355,32 +355,32 @@ class AnimationController:
                 self.led_controller.set_all_pixels_hsv_float(
                     [(c[0][0] % 1, c[0][1], c[0][2] * c[1]) for c in s_2],
                     self.correction,
-                    self.params['master_saturation'],
-                    self.params['master_brightness'],
-                    self.params['master_gamma']
+                    self.params['saturation'],
+                    self.params['brightness'],
+                    self.params['gamma']
                 )
             elif mode == animpatterns.ColorMode.rgb:
                 self.led_controller.set_all_pixels_rgb_float(
                     [(c[0][0] * c[1], c[0][1] * c[1], c[0][2] * c[1]) for c in s_2],
                     self.correction,
-                    self.params['master_saturation'],
-                    self.params['master_brightness'],
-                    self.params['master_gamma']
+                    self.params['saturation'],
+                    self.params['brightness'],
+                    self.params['gamma']
                 )
 
         # If displaying a static pattern with no secondary pattern, brightness is 0,
         # or speed is 0: no update is needed the next frame
         self.update_needed = not (
-            ((self.params['primary_pattern'] in animpatterns.static_patterns or self.params['primary_speed'] == 0) and self.params['secondary_pattern'] == 0) or self.params['master_brightness'] == 0)
+            ((self.params['primary_pattern'] in animpatterns.static_patterns or self.params['primary_speed'] == 0) and self.params['secondary_pattern'] == 0) or self.params['brightness'] == 0)
 
     def clear_leds(self):
         'Turn all LEDs off'
         self.led_controller.set_all_pixels_rgb_float(
             [(0, 0, 0) for i in range(self.led_count)],
             self.correction,
-            self.params['master_saturation'],
-            self.params['master_brightness'],
-            self.params['master_gamma']
+            self.params['saturation'],
+            self.params['brightness'],
+            self.params['gamma']
         )
 
     def end_animation(self):

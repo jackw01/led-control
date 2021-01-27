@@ -1,5 +1,5 @@
 # led-control WS2812B LED Controller Server
-# Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
+# Copyright 2021 jackw01. Released under the MIT License (see LICENSE for details).
 
 import json
 import atexit
@@ -47,10 +47,10 @@ def create_app(led_count, refresh_rate,
     # Init controller params and custom patterns from settings file
     with open(str(filename), mode='r') as data_file:
         try:
-            settings = json.load(data_file)
+            settings = json.loads(data_file.read().replace('master_', ''))
             # Enforce brightness limit
-            settings['params']['master_brightness'] = min(
-                settings['params']['master_brightness'], led_v_limit)
+            settings['params']['brightness'] = min(
+                settings['params']['brightness'], led_v_limit)
             # Set controller params, recalculate things that depend on params
             controller.params.update(settings['params'])
             controller.params['direct_control_mode'] = 0
@@ -73,10 +73,10 @@ def create_app(led_count, refresh_rate,
 
     # Define form and create user-facing labels based on keys
     form = [
-        FormItem('range', 'master_brightness', float, 0, led_v_limit, 0.05),
-        FormItem('range', 'master_color_temp', int, 1000, 12000, 10, unit='K'),
-        #FormItem('range', 'master_gamma', float, 0.01, 3),
-        FormItem('range', 'master_saturation', float, 0, 1),
+        FormItem('range', 'brightness', float, 0, led_v_limit, 0.05),
+        FormItem('range', 'color_temp', int, 1000, 12000, 10, unit='K'),
+        #FormItem('range', 'gamma', float, 0.01, 3),
+        FormItem('range', 'saturation', float, 0, 1),
         FormItem('select', 'primary_pattern', int),
         FormItem('range', 'primary_speed', float, 0, 2, unit='Hz'),
         FormItem('range', 'primary_scale', float, -10, 10),

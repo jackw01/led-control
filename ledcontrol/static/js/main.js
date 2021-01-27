@@ -1,5 +1,5 @@
 // led-control WS2812B LED Controller Server
-// Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
+// Copyright 2021 jackw01. Released under the MIT License (see LICENSE for details).
 
 // Really should have used React or Vue for this but from my experience it would likely not build on a Raspberry Pi Zero due to the RAM limit
 // Enjoy my jquery spaghetti code lol

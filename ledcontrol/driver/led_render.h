@@ -1,5 +1,5 @@
 // led-control WS2812B LED Controller Server
-// Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
+// Copyright 2021 jackw01. Released under the MIT License (see LICENSE for details).
 
 #ifndef __LED_RENDER_H__
 #define __LED_RENDER_H__
