@@ -28,7 +28,8 @@ def create_app(led_count,
                save_interval,
                enable_sacn,
                no_timer_reset,
-               dev):
+               dev,
+               run_restricted):
     app = Flask(__name__)
 
     # Create pixel mapping function
@@ -53,7 +54,8 @@ def create_app(led_count,
                                      mapping_func,
                                      enable_sacn,
                                      no_timer_reset,
-                                     led_brightness_limit)
+                                     led_brightness_limit,
+                                     run_restricted)
 
     presets = {}
     functions = dict(animfunctions.default)
