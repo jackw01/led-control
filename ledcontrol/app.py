@@ -29,14 +29,14 @@ def create_app(led_count, refresh_rate,
                led_pixel_order,
                led_color_correction, led_v_limit,
                save_interval,
-               allow_direct_control):
+               allow_direct_control, run_restricted):
     app = Flask(__name__)
     leds = LEDController(led_count, led_pin,
                          led_data_rate, led_dma_channel,
                          led_pixel_order)
     controller = AnimationController(leds, refresh_rate, led_count,
                                      pixelmappings.line(led_count),
-                                     led_color_correction)
+                                     led_color_correction, run_restricted)
 
     patterns = dict(animpatterns.default)
 

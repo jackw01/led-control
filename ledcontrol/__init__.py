@@ -33,6 +33,9 @@ def main():
                         help='Interval for automatically saving settings in seconds. Default: 60')
     parser.add_argument('--allow_direct_control', type=bool, default=False,
                         help='Allow direct remote control of LEDs (experimental). Default: False')
+    parser.add_argument('--run-unsafe', dest='run_restricted', action='store_false', help='Do NOT run the pattern Python code in RestrictedPython.')
+    parser.set_defaults(run_restricted=True)
+
     args = parser.parse_args()
 
     color_correction_hex = args.led_color_correction.lstrip('#')
@@ -43,7 +46,8 @@ def main():
                      [int(color_correction_hex[i:i + 2], 16) for i in (0, 2, 4)],
                      args.led_brightness_limit,
                      args.save_interval,
-                     args.allow_direct_control)
+                     args.allow_direct_control,
+                     args.run_restricted)
     run_simple(args.host, args.port, app,
                use_reloader=False,
                use_debugger=True,

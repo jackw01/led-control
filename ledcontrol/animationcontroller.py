@@ -69,11 +69,12 @@ class RepeatedTimer:
 class AnimationController:
     def __init__(self, led_controller, refresh_rate, led_count,
                  mapping_func,
-                 led_color_correction):
+                 led_color_correction, run_restricted):
         self.led_controller = led_controller
         self.refresh_rate = refresh_rate
         self.led_count = led_count
         self.mapping_func = mapping_func
+        self.run_restricted = run_restricted
 
         # Initialize prev state arrays
         self.reset_prev_states()
@@ -176,7 +177,16 @@ class AnimationController:
         restricted_locals = {}
         arg_names = ['t', 'dt', 'x', 'y', 'prev_state']
 
-        results = RestrictedPython.compile_restricted_exec(source)
+        results = None
+        if self.run_restricted:
+          results = RestrictedPython.compile_restricted_exec(source)
+          code = results.code
+        else:
+          code = compile(source, 'pattern', 'exec')
+          print('compiled unsafe')
+          results = type('CompileResult', (object,),{'code': code, 'errors': [], 'warnings': [], 'used_names': []})
+          restricted_globals.update(globals())
+
         warnings = list(results.warnings)
         for name in results.used_names:
             if name not in restricted_globals and name not in arg_names:
