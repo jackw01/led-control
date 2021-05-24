@@ -19,12 +19,12 @@ Complex shaders will run slower, but framerates should stay comfortably above 24
 ## Install
 ### Hardware Setup
 1. Obtain a Raspberry Pi (any model), a WS2812B or SK6812B LED strip (SK6812 RGB/White LEDs are highly recommended), and a suitable 5V power supply.
-2. Connect the LED strip to your Raspberry Pi: 
+2. Connect the LED strip to your Raspberry Pi:
     - Pi GND to LED GND
     - Pi GPIO18 to LED Data in
     - Power supply ground to LED GND
     - Power supply 5V to LED 5V
-   
+
    See [this Adafruit guide](https://learn.adafruit.com/neopixels-on-raspberry-pi/raspberry-pi-wiring#using-external-power-source-without-level-shifting-3005993-11) for other ways to connect the LED strips or using a level shifter.
 
 
@@ -104,10 +104,10 @@ def pattern(t, dt, x, y, prev_state):
 ```
 
 #### Arguments
-##### `t`
+##### t
 Time in cycles (an arbitary unit that represents one animation cycle as a floating point number). Calculated by multiplying real time in seconds by animation speed in Hz (cycles/second).
 
-##### `dt`
+##### dt
 Delta time in cycles.
 
 ##### `x`, `y`
