@@ -104,10 +104,10 @@ def pattern(t, dt, x, y, prev_state):
 ```
 
 #### Arguments
-##### t
+##### `t`
 Time in cycles (an arbitary unit that represents one animation cycle as a floating point number). Calculated by multiplying real time in seconds by animation speed in Hz (cycles/second).
 
-##### dt
+##### `dt`
 Delta time in cycles.
 
 ##### `x`, `y`
