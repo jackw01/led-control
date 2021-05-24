@@ -5,7 +5,7 @@
 - [x] animation thread with proper waiting between cycles
 - [x] time and space dependent animations
 - [x] basic animations - hue cycle
-- [x] master brightness and saturation control
+- [x] brightness and saturation control
 - [x] basic secondary animations with scaling
 - [x] both number and slider inputs on UI
 - [x] command line arguments for configuration
@@ -19,7 +19,7 @@
 - [x] support all possible pixel orders and sk6812
 - [x] test alternative color conversions in python
 - [x] LED color correction
-- [x] master color temperature control
+- [x] color temperature control
 - [x] make form generator code more pythonic
 - [x] web UI - migrate to SCSS
 - [x] web UI - flexbox
@@ -40,7 +40,7 @@
 - [x] web UI - allow inverting pattern scale
 - [x] web UI - update number inputs when sliders are moved
 - [x] rewrite final saturation/brightness in C
-- [x] apply master saturation in RGB render mode
+- [x] apply saturation in RGB render mode
 - [x] web UI - prevent editing default patterns
 - [x] web UI - copying and renaming patterns
 - [x] web UI - better color pickers
@@ -56,7 +56,7 @@
 #### 2019-10
 - [x] automatically save settings
 - [x] general code cleanup and documentation
-- [x] master brightness limiting
+- [x] brightness limiting
 - [x] secondary patterns - wipe
 - [x] web UI - update code after changing patterns
 - [x] patterns - ripple

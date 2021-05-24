@@ -1,10 +1,12 @@
 // led-control WS2812B LED Controller Server
-// Copyright 2019 jackw01. Released under the MIT License (see LICENSE for details).
+// Copyright 2021 jackw01. Released under the MIT License (see LICENSE for details).
 
 #ifndef __LED_RENDER_H__
 #define __LED_RENDER_H__
 
 #include <math.h>
+
+const uint8_t debug = 0;
 
 ws2811_channel_t *ws2811_channel_get(ws2811_t *ws, int channelnum) {
   return &ws->channel[channelnum];
@@ -171,7 +173,7 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
         w = 255;
       } else {
         uint8_t desat = 255 - sat;
-        desat = scale_8(scale_8(desat, desat), desat);
+        desat = scale_8(desat, desat);
         r = scale_8(r, sat);
         g = scale_8(g, sat);
         b = scale_8(b, sat);
@@ -220,6 +222,7 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
   g = scale_8(g, corr_rgb.g);
   b = scale_8(b, corr_rgb.b);
 
+  if (debug) printf("%d %d %d %d\n", r, g, b, w);
   return pack_rgbw(r, g, b, w);
 }
 
@@ -232,30 +235,42 @@ uint32_t render_rgb_float(color_rgb_float rgb,
   float g = clamp(rgb.g, 0, 1);
   float b = clamp(rgb.b, 0, 1);
   float w = 0;
-
-  // If saturation is not 1, desaturate the color
-  // Moves r/g/b values closer to their average
-  // Not sure if this is the technically correct way but it seems to work?
-  if (saturation < 1) {
-    float v = (r + g + b) / 3.0;
-    if (saturation == 0) {
-      r = v;
-      b = v;
-      g = v;
-    } else {
-      r = (r - v) * saturation + v;
-      g = (g - v) * saturation + v;
-      b = (b - v) * saturation + v;
-    }
-  }
+  uint8_t sat = saturation * 255.0;
 
   if (has_white) {
-      float min = r < g ? (r < b ? r : b) : (g < b ? g : b);
-      min *= min;
+    float max = r > g ? (r > b ? r : b) : (g > b ? g : b);
+    float min;
+    if (sat == 0) {
+      r = 0;
+      g = 0;
+      b = 0;
+      min = max;
+    } else {
+      r = (r - max) * saturation + max;
+      g = (g - max) * saturation + max;
+      b = (b - max) * saturation + max;
+      min = r < g ? (r < b ? r : b) : (g < b ? g : b);
       r -= min;
       g -= min;
       b -= min;
-      w = min;
+    }
+    w = min * min;
+  } else {
+    // If saturation is not 1, desaturate the color
+    // Moves r/g/b values closer to their average
+    // Not sure if this is the technically correct way but it seems to work?
+    if (sat != 255) {
+      float v = (r + g + b) / 3.0;
+      if (sat == 0) {
+        r = v;
+        b = v;
+        g = v;
+      } else {
+        r = (r - v) * saturation + v;
+        g = (g - v) * saturation + v;
+        b = (b - v) * saturation + v;
+      }
+    }
   }
 
   /*
@@ -275,6 +290,7 @@ uint32_t render_rgb_float(color_rgb_float rgb,
   g8 = scale_8(g8, corr_rgb.g);
   b8 = scale_8(b8, corr_rgb.b);
 
+  if (debug) printf("%d %d %d %d\n", r8, g8, b8, w8);
   return pack_rgbw(r8, g8, b8, w8);
 }
 

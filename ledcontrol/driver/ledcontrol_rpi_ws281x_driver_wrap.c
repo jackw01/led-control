@@ -6509,6 +6509,20 @@ SWIGINTERN PyObject *color_rgb_float_swigregister(PyObject *SWIGUNUSEDPARM(self)
   return SWIG_Py_Void();
 }
 
+SWIGINTERN int Swig_var_debug_set(PyObject *_val SWIGUNUSED) {
+  SWIG_Error(SWIG_AttributeError,"Variable debug is read-only.");
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_debug_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_From_unsigned_SS_char((unsigned char)(debug));
+  return pyobj;
+}
+
+
 SWIGINTERN PyObject *_wrap_ws2811_channel_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ws2811_t *arg1 = (ws2811_t *) 0 ;
@@ -8571,6 +8585,7 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "WS2811_ERROR_SPI_TRANSFER",SWIG_From_int((int)(WS2811_ERROR_SPI_TRANSFER)));
   SWIG_Python_SetConstant(d, "WS2811_RETURN_STATE_COUNT",SWIG_From_int((int)(WS2811_RETURN_STATE_COUNT)));
   PyDict_SetItemString(md,(char *)"cvar", SWIG_globals());
+  SWIG_addvarlink(SWIG_globals(),(char *)"debug",Swig_var_debug_get, Swig_var_debug_set);
   SWIG_addvarlink(SWIG_globals(),(char *)"p",Swig_var_p_get, Swig_var_p_set);
 #if PY_VERSION_HEX >= 0x03000000
   return m;

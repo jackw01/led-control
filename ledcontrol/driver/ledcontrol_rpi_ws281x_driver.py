@@ -551,4 +551,5 @@ perlin_noise_3d = _ledcontrol_rpi_ws281x_driver.perlin_noise_3d
 # This file is compatible with both classic and new-style classes.
 
 cvar = _ledcontrol_rpi_ws281x_driver.cvar
+debug = cvar.debug
 
