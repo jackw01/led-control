@@ -248,6 +248,7 @@ class AnimationController:
             self.pattern_functions[key] = pattern
         elif key not in self.pattern_functions:
             self.pattern_functions[key] = animpatterns.blank
+        self.update_needed = True
         return errors, warnings
 
     def calculate_palette_table(self):
@@ -270,6 +271,7 @@ class AnimationController:
             ))
         self.palette_table = palette_table
         self.palette_length = len(palette['colors'])
+        self.update_needed = True
 
     def get_palette_color(self, t):
         'Get color from current palette corresponding to index between 0 and 1'
