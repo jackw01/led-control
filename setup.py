@@ -21,7 +21,6 @@ class PreInstallCommand(install):
         install.run(self)
 
 requirements = [
-    'recordclass>=0.12.0.1',
     'Flask>=1.0.2',
     'RestrictedPython>=4.0',
     'ujson>=3.1.0',

@@ -3,7 +3,7 @@
 
 import json
 import atexit
-from recordclass import recordclass
+from dataclasses import dataclass, field
 from threading import Timer
 from pathlib import Path
 from flask import Flask, render_template, request, jsonify
@@ -15,14 +15,20 @@ import ledcontrol.animationpatterns as animpatterns
 import ledcontrol.colorpalettes as colorpalettes
 import ledcontrol.utils as utils
 
-# Record class for form items
-FormItem = recordclass('FormItem', [
-    'control', 'key', 'type', 'min', 'max', 'step', 'options', 'val',
-    'label', 'unit', 'hide',
-], defaults=[
-    'range', 'None', None, 0, 1, 0.01, [], 0,
-    '', '', False,
-])
+# Data class for form items
+@dataclass
+class FormItem:
+    control: str
+    key: str = 'None'
+    type: type = None
+    min: float = 0
+    max: float = 1
+    step: float = 0.01
+    options: list = field(default_factory=list)
+    val: float = 0
+    label: str = ''
+    unit: str = ''
+    hide: bool = False
 
 def create_app(led_count, refresh_rate,
                led_pin, led_data_rate, led_dma_channel,
