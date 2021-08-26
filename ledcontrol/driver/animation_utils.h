@@ -7,6 +7,11 @@
 #include <math.h>
 
 // Optimized C utility functions
+// Not stupid if it works
+int float_to_int_1000(float t) {
+  return (int)(t * 1000.0) % 1000;
+}
+
 // Waveforms for pattern generation.
 // All have a period of 1 time unit and range from 0-1.
 

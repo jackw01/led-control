@@ -275,7 +275,9 @@ class AnimationController:
 
     def get_palette_color(self, t):
         'Get color from current palette corresponding to index between 0 and 1'
-        return self.palette_table[int(t * self.palette_table_size) % self.palette_table_size]
+        # This gives a surprising performance improvement over doing the math in python
+        # If the palette size is ever changed here, it needs to be changed in animation_utils.h
+        return self.palette_table[driver.float_to_int_1000(t)]
 
     def get_palette_length(self):
         'Get length of current palette color array'

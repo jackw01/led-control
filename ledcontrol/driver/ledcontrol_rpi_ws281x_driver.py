@@ -509,6 +509,14 @@ def ws2811_rgb_render_array_float(ws, channel, values, count, correction, satura
     return _ledcontrol_rpi_ws281x_driver.ws2811_rgb_render_array_float(ws, channel, values, count, correction, saturation, brightness, gamma, has_white)
 ws2811_rgb_render_array_float = _ledcontrol_rpi_ws281x_driver.ws2811_rgb_render_array_float
 
+def float_to_int_range(t, range):
+    return _ledcontrol_rpi_ws281x_driver.float_to_int_range(t, range)
+float_to_int_range = _ledcontrol_rpi_ws281x_driver.float_to_int_range
+
+def float_to_int_1000(t):
+    return _ledcontrol_rpi_ws281x_driver.float_to_int_1000(t)
+float_to_int_1000 = _ledcontrol_rpi_ws281x_driver.float_to_int_1000
+
 def wave_pulse(t, duty_cycle):
     return _ledcontrol_rpi_ws281x_driver.wave_pulse(t, duty_cycle)
 wave_pulse = _ledcontrol_rpi_ws281x_driver.wave_pulse

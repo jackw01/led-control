@@ -9,7 +9,7 @@
 * Builtin secondary patterns make it possible to quickly create more complex effects
 * Works with cheap and readily available WS281x and SK6812 LED strips and strings
 * Seamlessly supports HSV-to-RGBW and RGB-to-RGBW conversion for RGBW LED strips
-* Capable of achieving up to 380 FPS on 60 LEDs and 160 FPS on 150 LEDs on a Raspberry Pi Zero (see note below)
+* Capable of achieving up to 150 FPS on 150 RGBW LEDs on a Raspberry Pi Zero (see note below)
 * Web backend and animation code written in Python using the [Flask](https://github.com/pallets/flask) web framework for ease of development
 * Color conversions, color correction, and final rendering operations are implemented in a C extension module for maximum performance
 
@@ -125,9 +125,10 @@ Pattern functions must return a color in tuple form and either `hsv` or `rgb` de
 * All functions from the [`random` module](https://docs.python.org/3/library/random.html)
 
 ### Color Palette Access
+Color palettes are interpolated in the HSV color space. 1000 interpolated values are stored in a lookup table to allow for fast access to any color in the palette.
 
 ##### `palette(t)`
-Returns the color from the current palette (stored in a lookup table) corresponding to a value `t` between 0 and 1. Values of `t` less than 0 or greater than 1 will wrap.
+Returns the color from the current palette corresponding to a value `t` between 0 and 1. Values of `t` less than 0 or greater than 1 will wrap.
 
 ##### `palette_length()`
 Returns the number of colors used to generate the current palette.
@@ -139,7 +140,7 @@ All waveforms have a period of 1 time unit, a range from 0 to 1, and a peak (`f(
 Returns the instantaneous value of a 1Hz sine wave at time `t`.
 
 ##### `wave_cubic(t)`
-Returns the instantaneous value of a 1Hz cubic approximated sine wave (triangle wave with cubic easing) at time `t`. Appears to spend more time near 0 and 1 than a sine wave.
+Returns the instantaneous value of a 1Hz sine wave approximated with cubic easing at time `t`. Appears to spend more time near 0 and 1 than a true sine wave.
 
 ##### `wave_triangle(t)`
 Returns the instantaneous value of a 1Hz triangle wave at time `t`.
@@ -164,7 +165,7 @@ Returns `min` if `x < min` and `max` if `x > max`, otherwise returns `x`.
 Returns the floating point component of `x` (`x - floor(x)`).
 
 ##### `impulse_exp(t)`
-Asymmetrical exponential "impulse" wave function. Peaks at `t=1`.
+Asymmetrical exponential "impulse" wave function `f(t) = t * e^(1-t)`. Peaks at `t=1`.
 
 ##### `blackbody_to_rgb(kelvin)`
 Returns a normalized RGB tuple for a color temperature in Kelvin.
