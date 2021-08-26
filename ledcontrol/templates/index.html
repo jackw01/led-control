@@ -22,7 +22,7 @@
 <body class="body-dark">
   <div class="wrapper clearfix">
     <main id="main">
-      <h2 class="header-stylized-text">LED Control Center</h2>
+      <h2 class="header-stylized-text">LEDControl v1.1.2</h2>
       <br/>
       {% for input in form if not input.hide %}
       {% if input.control == 'select' %}
@@ -100,6 +100,7 @@
         </div>
       </div>
       {% elif input.control == 'colors' %}
+      <canvas id="palette-color-bar" style="display: block; border-radius: 3px; width: 100%; height: 0.7rem; margin-bottom: 0.5rem;"></canvas>
       <div id="colors">
         <div class="input-row input-row-bottom-margin">
           <a class="button" id="new-palette">New Palette</a>
