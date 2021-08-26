@@ -65,7 +65,7 @@ def create_app(led_count, refresh_rate,
             # Read custom patterns and changed params for default patterns
             for k, v in settings['patterns'].items():
                 # JSON keys are always strings
-                if int(k) not in animpatterns.default:
+                if int(k) not in animpatterns.default and 'source' in v:
                     patterns[int(k)] = v
                     controller.set_pattern_function(int(k), v['source'])
                 else:
@@ -75,7 +75,7 @@ def create_app(led_count, refresh_rate,
             controller.calculate_palette_table()
             print(f'Loaded saved settings from {filename}.')
         except Exception:
-            print(f'Could not open saved settings at {filename}, ignoring.')
+            print(f'Some saved settings at {filename} are out of date or invalid, ignoring.')
 
     # Define form and create user-facing labels based on keys
     form = [
