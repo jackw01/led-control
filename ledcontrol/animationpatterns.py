@@ -36,6 +36,15 @@ def pattern(t, dt, x, y, prev_state):
     return palette(x), hsv
 '''
     },
+    2: {
+        'name': 'Static Gradient Mirrored',
+        'primary_speed': 0.0,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, prev_state):
+    return palette(wave_triangle(x + 0.001)), hsv
+'''
+    },
     10: {
         'name': 'Hue Cycle 1D',
         'primary_speed': 0.2,
@@ -56,12 +65,21 @@ def pattern(t, dt, x, y, prev_state):
 '''
     },
     30: {
-        'name': 'Hue Bounce 1D',
+        'name': 'Hue Scan 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
     return (wave_triangle(t) + x, 1, 1), hsv
+'''
+    },
+    31: {
+        'name': 'Hue Bounce 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, prev_state):
+    return (wave_sine(t) + x, 1, 1), hsv
 '''
     },
     40: {
@@ -129,12 +147,21 @@ def pattern(t, dt, x, y, prev_state):
 '''
     },
     140: {
-        'name': 'Palette Bounce 1D',
+        'name': 'Palette Scan Mirrored 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
-    return palette(wave_triangle(t) + x), hsv
+    return palette(wave_triangle(wave_triangle(t) + x)), hsv
+'''
+    },
+    141: {
+        'name': 'Palette Bounce Mirrored 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, prev_state):
+    return palette(wave_triangle(wave_sine(t) + x)), hsv
 '''
     },
     150: { # Performance isn't as good as it could be
@@ -144,7 +171,7 @@ def pattern(t, dt, x, y, prev_state):
         'source': '''
 def pattern(t, dt, x, y, prev_state):
     h = (x + t) * 0.5 % .5 + x + wave_sine(t)
-    c = palette(h)
+    c = palette(wave_triangle(h))
     return (c[0], c[1], wave_sine(h + t)), hsv
 '''
     },
