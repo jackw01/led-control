@@ -1,3 +1,5 @@
 remote_theme: jackw01/jackw01.github.io
 title: LED Control
 hide_first_h1: true
+plugins:
+  - jekyll-seo-tag

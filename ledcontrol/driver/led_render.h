@@ -91,7 +91,7 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
                                       color_rgb corr_rgb, float saturation,
                                       float brightness, float gamma,
                                       uint8_t has_white) {
-  uint8_t hue = hsv.hue * 255.0;
+  uint8_t hue = fmod(hsv.hue, 1.0) * 255.0;
   uint8_t sat = hsv.sat * saturation * 255.0;
   uint8_t val = (hsv.val * hsv.val) * 255;
   if (val > 0 && val < 255) val += 1;

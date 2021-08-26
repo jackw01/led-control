@@ -306,8 +306,8 @@ class AnimationController:
             pattern_2 = self.secondary_pattern_functions[self.params['secondary_pattern']]
 
             # Calculate times
-            # Reset time every day to prevent strange floating point math issues
-            time_2 = self.time % 86400
+            # Reset time every week to prevent strange math issues
+            time_2 = self.time % 604800
             # time component = time (s) * speed (cycle/s)
             primary_time = time_2 * self.params['primary_speed']
             primary_delta_t = delta_t * self.params['primary_speed']
@@ -321,59 +321,83 @@ class AnimationController:
                 c, mode = pattern_1(0, 0.1, 0, 0, (0, 0, 0))
 
                 # Run primary pattern to determine initial color
-                # State is an array of (color, secondary_value) pairs
-                s_1 = [(pattern_1(primary_time,
-                                primary_delta_t,
-                                self.primary_mapping[i][0],
-                                self.primary_mapping[i][1],
-                                self.primary_prev_state[i][0])[0],
-                        1) for i in range(self.led_count)]
+                # State 1 is an array of color tuples
+                s_1 = [pattern_1(primary_time,
+                                 primary_delta_t,
+                                 self.primary_mapping[i][0],
+                                 self.primary_mapping[i][1],
+                                 self.primary_prev_state[i])[0]
+                       for i in range(self.led_count)]
                 self.primary_prev_state = s_1
 
-                # Run secondary pattern to get new brightness and modify color
+                # If no secondary pattern is set, write colors to LEDs
                 if pattern_2 is None:
-                    s_2 = s_1
+                    if mode == animpatterns.ColorMode.hsv:
+                        self.led_controller.set_all_pixels_hsv_float(
+                            s_1,
+                            self.correction,
+                            self.params['saturation'],
+                            self.params['brightness'],
+                            self.params['gamma']
+                        )
+                    elif mode == animpatterns.ColorMode.rgb:
+                        self.led_controller.set_all_pixels_rgb_float(
+                            s_1,
+                            self.correction,
+                            self.params['saturation'],
+                            self.params['brightness'],
+                            self.params['gamma']
+                        )
+
+                 # Run secondary pattern to get new brightness and modify color
                 else:
                     s_2 = [pattern_2(secondary_time,
-                                    secondary_delta_t,
-                                    self.secondary_mapping[i][0],
-                                    self.secondary_mapping[i][1],
-                                    self.secondary_prev_state[i],
-                                    s_1[i][0]) for i in range(self.led_count)]
+                                     secondary_delta_t,
+                                     self.secondary_mapping[i][0],
+                                     self.secondary_mapping[i][1],
+                                     self.secondary_prev_state[i],
+                                     s_1[i]) for i in range(self.led_count)]
                     self.secondary_prev_state = s_2
 
+                    # Write colors to LEDs
+                    if mode == animpatterns.ColorMode.hsv:
+                        self.led_controller.set_all_pixels_hsv_float(
+                            [(c[0][0], c[0][1], c[0][2] * c[1]) for c in s_2],
+                            self.correction,
+                            self.params['saturation'],
+                            self.params['brightness'],
+                            self.params['gamma']
+                        )
+                    elif mode == animpatterns.ColorMode.rgb:
+                        self.led_controller.set_all_pixels_rgb_float(
+                            [(c[0][0] * c[1], c[0][1] * c[1], c[0][2] * c[1]) for c in s_2],
+                            self.correction,
+                            self.params['saturation'],
+                            self.params['brightness'],
+                            self.params['gamma']
+                        )
+
                 # Direct control mode override
-                if self.params['direct_control_mode']:
-                    s_2 = self.control_client.get_frame(self.led_count)
-                    mode = animpatterns.ColorMode.hsv
+                #if self.params['direct_control_mode']:
+                #    s_2 = self.control_client.get_frame(self.led_count)
+                #    mode = animpatterns.ColorMode.hsv
 
             except Exception as e:
                 msg = traceback.format_exception(type(e), e, e.__traceback__)
                 print(f'Pattern execution: {msg}')
-                s_2 = [((0, 0, 0), 0) for i in range(self.led_count)]
-
-            # Write colors to LEDs
-            if mode == animpatterns.ColorMode.hsv:
-                self.led_controller.set_all_pixels_hsv_float(
-                    [(c[0][0] % 1, c[0][1], c[0][2] * c[1]) for c in s_2],
-                    self.correction,
-                    self.params['saturation'],
-                    self.params['brightness'],
-                    self.params['gamma']
-                )
-            elif mode == animpatterns.ColorMode.rgb:
+                r = 0.1 * driver.wave_pulse(time_2, 0.5)
                 self.led_controller.set_all_pixels_rgb_float(
-                    [(c[0][0] * c[1], c[0][1] * c[1], c[0][2] * c[1]) for c in s_2],
+                    [(r, 0, 0) for i in range(self.led_count)],
                     self.correction,
-                    self.params['saturation'],
-                    self.params['brightness'],
-                    self.params['gamma']
+                    1.0,
+                    1.0,
+                    1.0
                 )
 
-        # If displaying a static pattern with no secondary pattern, brightness is 0,
-        # or speed is 0: no update is needed the next frame
-        self.update_needed = not (
-            ((self.params['primary_pattern'] in animpatterns.static_patterns or self.params['primary_speed'] == 0) and self.params['secondary_pattern'] == 0) or self.params['brightness'] == 0)
+            # If displaying a static pattern with no secondary pattern, brightness is 0,
+            # or speed is 0: no update is needed the next frame
+            self.update_needed = not (
+                ((self.params['primary_pattern'] in animpatterns.static_patterns or self.params['primary_speed'] == 0) and self.params['secondary_pattern'] == 0) or self.params['brightness'] == 0)
 
     def clear_leds(self):
         'Turn all LEDs off'
