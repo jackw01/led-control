@@ -144,6 +144,7 @@ function updateCodeView(newKey) {
 
 // Send the current palette to the server
 function updateCurrentPalette() {
+  updatePaletteColorBar();
   const key = getCurrentPaletteKey();
   $.getJSON('/setpalette', {
     key: key, value: JSON.stringify(palettes[key])
@@ -186,6 +187,32 @@ function handleRenamePalette() {
   palettes[key].name = newName;
   $('select[data-id="palette"] option[value=' + key + ']').html(newName);
   updateCurrentPalette();
+}
+
+// Update palette preview
+function updatePaletteColorBar() {
+  const palette = palettes[getCurrentPaletteKey()];
+  const c = document.getElementById('palette-color-bar');
+  const ctx = c.getContext('2d');
+  c.width = 64;
+  c.height = 1;
+  const sectorSize = 1 / (palette.colors.length - 1);
+  for (let i = 0; i < c.width; i++) {
+    let f = i / c.width;
+    const sector = Math.floor(f / sectorSize);
+    f = f % sectorSize / sectorSize;
+    const c1 = palette.colors[sector];
+    const c2 = palette.colors[sector + 1];
+    const h1 = c2[0] - c1[0];
+    const h2 = c2[0] - 1 - c1[0];
+    const h = (f * (Math.abs(h1) < Math.abs(h2) || h1 === 1 ? h1 : h2) + c1[0]) * 360;
+    const s = (f * (c2[1] - c1[1]) + c1[1]) * 100;
+    const v = (f * (c2[2] - c1[2]) + c1[2]) * 100;
+    const l = (2 - s / 100) * v / 2;
+    const s2 = s * v / (l < 50 ? l * 2 : 200 - l * 2);
+    ctx.fillStyle = `hsl(${h}, ${s}%, ${l}%)`
+    ctx.fillRect(i, 0, 1, c.height);
+  }
 }
 
 // Update color pickers for selected palette
@@ -255,26 +282,7 @@ function updateColorPickers(newKey) {
     }
   }
 
-  const c = document.getElementById('palette-color-bar');
-  const ctx = c.getContext('2d');
-  c.width = 20;
-  const sectorSize = 1 / (palette.colors.length - 1);
-  for (let i = 0; i < c.width; i++) {
-    let f = i / c.width;
-    const sector = Math.floor(f / sectorSize);
-    f = f % sectorSize / sectorSize;
-    const c1 = palette.colors[sector];
-    const c2 = palette.colors[sector + 1];
-    const h1 = c2[0] - c1[0];
-    const h2 = c2[0] - 1 - c1[0];
-    const h = (f * (Math.abs(h1) < Math.abs(h2) || h1 === 1 ? h1 : h2) + c1[0]) * 360;
-    const s = (f * (c2[1] - c1[1]) + c1[1]) * 100;
-    const v = (f * (c2[2] - c1[2]) + c1[2]) * 100;
-    const l = (2 - s / 100) * v / 2;
-    const s2 = s * v / (l < 50 ? l * 2 : 200 - l * 2);
-    ctx.fillStyle = `hsl(${h}, ${s}%, ${l}%)`
-    ctx.fillRect(i, 0, 1, c.height);
-  }
+  updatePaletteColorBar();
 }
 
 function getCurrentPatternKey() {
