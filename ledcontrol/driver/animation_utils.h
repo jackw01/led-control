@@ -22,7 +22,8 @@ float wave_pulse(float t, float duty_cycle) {
 
 // Triangle
 float wave_triangle(float t) {
-  return fabs(fmod(2.0 * t, 2.0) - 1.0);
+  float ramp = fmod(2.0 * t, 2.0);
+  return fabs((ramp < 0 ? ramp + 2.0 : ramp) - 1.0);
 }
 
 // Sine
@@ -32,7 +33,8 @@ float wave_sine(float t) {
 
 // Sine approximation (triangle wave with cubic in-out easing)
 float wave_cubic(float t) {
-  float tri = fabs(fmod(2.0 * t, 2.0) - 1.0);
+  float ramp = fmod(2.0 * t, 2.0);
+  float tri = fabs((ramp < 0 ? ramp + 2.0 : ramp) - 1.0);
   if (tri > 0.5) {
     float t2 = 1.0 - tri;
     return 1.0 - 4.0 * t2 * t2 * t2;
@@ -57,20 +59,18 @@ float plasma_sines(float x, float y, float t,
 // Sum of sine octaves for more advanced plasma shaders
 float plasma_sines_octave(float x, float y, float t,
                           uint8_t octaves,
-                          float temporal_freq_persistence,
-                          float amplitude_persistence) {
+                          float lacunarity,
+                          float persistence) {
   float vx = x;
   float vy = y;
-  float spatial_freq = 1.0;
-	float temporal_freq = 1.0;
+	float freq = 1.0;
 	float amplitude = 1.0;
   for (uint8_t i = 0; i < octaves; i++) {
     float vx1 = vx;
-    vx += cos(vy * spatial_freq + t * temporal_freq) * amplitude;
-    vy += sin(vx1 * spatial_freq + t * temporal_freq) * amplitude;
-    spatial_freq *= 2.0;
-    temporal_freq *= temporal_freq_persistence;
-    amplitude *= amplitude_persistence;
+    vx += cos(vy * freq + t * freq) * amplitude;
+    vy += sin(vx1 * freq + t * freq) * amplitude;
+    freq *= lacunarity;
+    amplitude *= persistence;
   }
   return vx / 2.0;
 }
@@ -131,14 +131,30 @@ double perlin_noise_3d(double x, double y, double z) {
   double u = fade(x), v = fade(y), w = fade(z);
   int A = p[X] + Y, AA = p[A] + Z, AB = p[A + 1] + Z;
   int B = p[X + 1] + Y, BA = p[B] + Z, BB = p[B + 1]+Z;
-  return lerp(w, lerp(v, lerp(u, grad(p[AA  ], x  , y  , z   ),
-                                 grad(p[BA  ], x-1, y  , z   )),
-                         lerp(u, grad(p[AB  ], x  , y-1, z   ),
-                                 grad(p[BB  ], x-1, y-1, z   ))),
-                 lerp(v, lerp(u, grad(p[AA+1], x  , y  , z-1 ),
-                                 grad(p[BA+1], x-1, y  , z-1 )),
-                         lerp(u, grad(p[AB+1], x  , y-1, z-1 ),
-                                 grad(p[BB+1], x-1, y-1, z-1 ))));
+  return (lerp(w, lerp(v, lerp(u, grad(p[AA  ], x  , y  , z   ),
+                                  grad(p[BA  ], x-1, y  , z   )),
+                          lerp(u, grad(p[AB  ], x  , y-1, z   ),
+                                  grad(p[BB  ], x-1, y-1, z   ))),
+                  lerp(v, lerp(u, grad(p[AA+1], x  , y  , z-1 ),
+                                  grad(p[BA+1], x-1, y  , z-1 )),
+                          lerp(u, grad(p[AB+1], x  , y-1, z-1 ),
+                                  grad(p[BB+1], x-1, y-1, z-1 )))) + 1.0) / 2.0;
+}
+
+// fBm noise based on perlin noise function above
+float fbm_noise_3d(float x, float y, float z,
+                   uint8_t octaves,
+                   float lacunarity,
+                   float persistence) {
+  float v = 0;
+	float freq = 1.0;
+	float amplitude = 1.0;
+  for (uint8_t i = 0; i < octaves; i++) {
+    v += amplitude * perlin_noise_3d(freq * x, freq * y, freq * z);
+    freq *= lacunarity;
+    amplitude *= persistence;
+  }
+  return v / 2.0;
 }
 
 #endif

@@ -509,10 +509,6 @@ def ws2811_rgb_render_array_float(ws, channel, values, count, correction, satura
     return _ledcontrol_rpi_ws281x_driver.ws2811_rgb_render_array_float(ws, channel, values, count, correction, saturation, brightness, gamma, has_white)
 ws2811_rgb_render_array_float = _ledcontrol_rpi_ws281x_driver.ws2811_rgb_render_array_float
 
-def float_to_int_range(t, range):
-    return _ledcontrol_rpi_ws281x_driver.float_to_int_range(t, range)
-float_to_int_range = _ledcontrol_rpi_ws281x_driver.float_to_int_range
-
 def float_to_int_1000(t):
     return _ledcontrol_rpi_ws281x_driver.float_to_int_1000(t)
 float_to_int_1000 = _ledcontrol_rpi_ws281x_driver.float_to_int_1000
@@ -537,8 +533,8 @@ def plasma_sines(x, y, t, coeff_x, coeff_y, coeff_x_y, coeff_dist_xy):
     return _ledcontrol_rpi_ws281x_driver.plasma_sines(x, y, t, coeff_x, coeff_y, coeff_x_y, coeff_dist_xy)
 plasma_sines = _ledcontrol_rpi_ws281x_driver.plasma_sines
 
-def plasma_sines_octave(x, y, t, octaves, temporal_freq_persistence, amplitude_persistence):
-    return _ledcontrol_rpi_ws281x_driver.plasma_sines_octave(x, y, t, octaves, temporal_freq_persistence, amplitude_persistence)
+def plasma_sines_octave(x, y, t, octaves, lacunarity, persistence):
+    return _ledcontrol_rpi_ws281x_driver.plasma_sines_octave(x, y, t, octaves, lacunarity, persistence)
 plasma_sines_octave = _ledcontrol_rpi_ws281x_driver.plasma_sines_octave
 
 def fade(t):
@@ -556,6 +552,10 @@ grad = _ledcontrol_rpi_ws281x_driver.grad
 def perlin_noise_3d(x, y, z):
     return _ledcontrol_rpi_ws281x_driver.perlin_noise_3d(x, y, z)
 perlin_noise_3d = _ledcontrol_rpi_ws281x_driver.perlin_noise_3d
+
+def fbm_noise_3d(x, y, z, octaves, lacunarity, persistence):
+    return _ledcontrol_rpi_ws281x_driver.fbm_noise_3d(x, y, z, octaves, lacunarity, persistence)
+fbm_noise_3d = _ledcontrol_rpi_ws281x_driver.fbm_noise_3d
 # This file is compatible with both classic and new-style classes.
 
 cvar = _ledcontrol_rpi_ws281x_driver.cvar

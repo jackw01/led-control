@@ -73,9 +73,16 @@
 - [x] web UI palette create/rename
 - [x] web UI palette delete
 - [x] web UI palette add/remove colors
-- [x] update hsv patterns to palettes
-- [x] palette based - multi color wipe/bands
-- [x] palette based - ripples
-- [x] palette based - random wipe
+- [x] update existing hsv patterns to palettes
+- [x] palette - multi color wipe/bands
+- [x] palette - ripples
+- [x] palette - random wipe
+
+### Extras 2
+- [x] better default palettes
+- [x] palette based - plasma
+- [ ] DMX
+- [ ] pixel mapping
+
 
 sudo ledcontrol --led_count 150 --led_pixel_order GRBW --led_color_correction "#FFA8FF"

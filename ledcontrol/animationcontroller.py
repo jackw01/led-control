@@ -168,6 +168,7 @@ class AnimationController:
             'plasma_sines': driver.plasma_sines,
             'plasma_sines_octave': driver.plasma_sines_octave,
             'perlin_noise_3d': driver.perlin_noise_3d,
+            'fbm_noise_3d': driver.fbm_noise_3d,
             'impulse_exp': utils.impulse_exp,
             'fract': utils.fract,
             'blackbody_to_rgb': driver.blackbody_to_rgb,

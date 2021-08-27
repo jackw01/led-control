@@ -202,6 +202,26 @@ def pattern(t, dt, x, y, prev_state):
 '''
     },
     170: {
+        'name': 'Palette Plasma 2D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, prev_state):
+    v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
+    return palette(wave_triangle(v)), hsv
+'''
+    },
+    180: {
+        'name': 'Palette Octave Plasma 2D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, prev_state):
+    v = plasma_sines_octave(x, y, t, 7, 2.0, 0.5)
+    return palette(wave_triangle(v)), hsv
+'''
+    },
+    190: {
         'name': 'Palette Twinkle 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -215,6 +235,15 @@ def pattern(t, dt, x, y, prev_state):
         return (prev_state[0], prev_state[1], v), hsv
     else:
         return (0, 0, 0), hsv
+'''
+    },
+    200: {
+        'name': 'Palette Perlin Noise 2D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, prev_state):
+    return palette(perlin_noise_3d(x, y, t)), hsv
 '''
     },
 
@@ -256,7 +285,7 @@ def pattern(t, dt, x, y, prev_state):
 '''
     },
     330: {
-        'name': 'RGB Plasma (Spectrum Sines) 1D',
+        'name': 'RGB Plasma (Spectrum Sines) 2D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
@@ -268,7 +297,7 @@ def pattern(t, dt, x, y, prev_state):
 '''
     },
     340: {
-        'name': 'RGB Plasma (Fire Sines) 1D',
+        'name': 'RGB Plasma (Fire Sines) 2D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
@@ -280,12 +309,12 @@ def pattern(t, dt, x, y, prev_state):
 '''
     },
     350: {
-        'name': 'RGB Octave Plasma (Fire Sines) 1D',
+        'name': 'RGB Octave Plasma (Fire Sines) 2D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
-    v = plasma_sines_octave(x, y, t, 7, 1.5, 0.5)
+    v = plasma_sines_octave(x, y, t, 7, 2.0, 0.5)
     return (1.0 - wave_sine(v),
             wave_sine(v + 0.333),
             1.0 - wave_sine(v + 0.666)), rgb
