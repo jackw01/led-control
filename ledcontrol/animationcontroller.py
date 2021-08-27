@@ -6,8 +6,9 @@ import random
 import time
 import traceback
 import RestrictedPython
+import sacn
 from threading import Event, Thread
-from ledcontrol.controlclient import ControlClient
+from itertools import zip_longest
 
 import ledcontrol.animationpatterns as animpatterns
 import ledcontrol.colorpalettes as colorpalettes
@@ -69,11 +70,13 @@ class RepeatedTimer:
 class AnimationController:
     def __init__(self, led_controller, refresh_rate, led_count,
                  mapping_func,
-                 led_color_correction):
+                 led_color_correction,
+                 enable_sacn):
         self.led_controller = led_controller
         self.refresh_rate = refresh_rate
         self.led_count = led_count
         self.mapping_func = mapping_func
+        self._enable_sacn = enable_sacn
 
         # Initialize prev state arrays
         self.reset_prev_states()
@@ -105,7 +108,7 @@ class AnimationController:
             'secondary_speed': 0.2,
             'secondary_scale': 1.0,
             'palette': 0,
-            'direct_control_mode': 0,
+            'sacn': 0,
         }
 
         # Lookup dictionary for pattern functions used to generate select menu
@@ -135,7 +138,23 @@ class AnimationController:
         self.time = 0
         self.update_needed = True # Is the LED state going to change this frame?
 
-        self.control_client = ControlClient()
+        # Initialize sACN / E1.31
+        if enable_sacn:
+            self._receiver = sacn.sACNreceiver()
+            self._receiver.start()
+            self._receiver.listen_on('universe', universe=1)(self._sacn_callback)
+
+    def _sacn_callback(self, packet):
+        'Callback for sACN / E1.31 client'
+        if self.params['sacn'] == 1:
+            data = [x / 255.0 for x in packet.dmxData[:self.led_count * 3]]
+            self.led_controller.set_all_pixels_rgb_float(
+                list(zip_longest(*(iter(data),) * 3)),
+                self.correction,
+                1.0,
+                self.params['brightness'],
+                1.0
+            )
 
     def compile_pattern(self, source):
         'Compiles source string to a pattern function with restricted globals'
@@ -303,7 +322,7 @@ class AnimationController:
         self.time = self.timer.last_start - self.start
         delta_t = self.time - last_t
 
-        if self.update_needed:
+        if self.update_needed and self.params['sacn'] == 0:
             # Begin render
             pattern_1 = self.pattern_functions[self.params['primary_pattern']]
             pattern_2 = self.secondary_pattern_functions[self.params['secondary_pattern']]

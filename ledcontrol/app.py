@@ -35,14 +35,15 @@ def create_app(led_count, refresh_rate,
                led_pixel_order,
                led_color_correction, led_v_limit,
                save_interval,
-               allow_direct_control):
+               enable_sacn):
     app = Flask(__name__)
     leds = LEDController(led_count, led_pin,
                          led_data_rate, led_dma_channel,
                          led_pixel_order)
     controller = AnimationController(leds, refresh_rate, led_count,
                                      pixelmappings.line(led_count),
-                                     led_color_correction)
+                                     led_color_correction,
+                                     enable_sacn)
 
     patterns = dict(animpatterns.default)
 
@@ -59,7 +60,7 @@ def create_app(led_count, refresh_rate,
                 settings['params']['brightness'], led_v_limit)
             # Set controller params, recalculate things that depend on params
             controller.params.update(settings['params'])
-            controller.params['direct_control_mode'] = 0
+            controller.params['sacn'] = 0
             controller.calculate_color_correction()
             controller.calculate_mappings()
             # Read custom patterns and changed params for default patterns
@@ -96,12 +97,12 @@ def create_app(led_count, refresh_rate,
         FormItem('colors'),
     ]
 
-    if allow_direct_control:
-        form.append(FormItem('select', 'direct_control_mode', int,
-                             options=['Off', 'On']))
-
     for item in form:
         item.label = utils.snake_to_title(item.key)
+
+    if enable_sacn:
+        form.append(FormItem('select', 'sacn', int,
+                             options=['Off', 'On'], label='E1.31 sACN Receiver Mode'))
 
     @app.route('/')
     def index():

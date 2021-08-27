@@ -23,7 +23,7 @@ class PreInstallCommand(install):
 requirements = [
     'Flask>=1.0.2',
     'RestrictedPython>=4.0',
-    'ujson>=3.1.0',
+    'sacn>=1.8.1',
 ]
 
 setup(

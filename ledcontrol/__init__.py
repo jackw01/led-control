@@ -31,8 +31,8 @@ def main():
                         help='LED maximum brightness limit for the web UI. Float from 0.0-1.0. Default: 1.0')
     parser.add_argument('--save_interval', type=int, default=60,
                         help='Interval for automatically saving settings in seconds. Default: 60')
-    parser.add_argument('--allow_direct_control', type=bool, default=False,
-                        help='Allow direct remote control of LEDs (experimental). Default: False')
+    parser.add_argument('--sacn', action='store_true',
+                        help='Enable sACN / E1.31 support (experimental). Default: False')
     args = parser.parse_args()
 
     color_correction_hex = args.led_color_correction.lstrip('#')
@@ -43,7 +43,7 @@ def main():
                      [int(color_correction_hex[i:i + 2], 16) for i in (0, 2, 4)],
                      args.led_brightness_limit,
                      args.save_interval,
-                     args.allow_direct_control)
+                     args.sacn)
     run_simple(args.host, args.port, app,
                use_reloader=False,
                use_debugger=True,
