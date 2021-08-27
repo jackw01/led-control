@@ -149,7 +149,7 @@ Returns the instantaneous value of a 1Hz triangle wave at time `t`.
 Returns the instantaneous value of a 1Hz pulse wave of the specified duty cycle (range 0 to 1) at time `t`.
 
 ##### `plasma_sines_octave(x, y, t, octaves, lacunarity, persistence)`
-Custom optimized "plasma" implementation that returns a sum of several octaves of sinusoid-based waveforms creating a non-random noise effect. This creates more detailed and better looking plasma effects than simpler implementations. For each successive octave, the frequency (how fast the wave changes with space and time) is multiplied by `lacunarity`, and the amplitude is multiplied by `persistence`. `octaves` must be an integer. See the usage notes below.
+Custom optimized "plasma" implementation that returns a sum of several octaves of sinusoid-based waveforms creating a non-random noise effect. Essentially fractal noise, but using sinusoid functions as a basis instead of pseudorandom noise. This creates more detailed and better looking plasma effects than simpler implementations. For each successive octave, the frequency (how fast the wave changes with space and time) is multiplied by `lacunarity`, and the amplitude is multiplied by `persistence`. `octaves` must be an integer. See the usage notes below.
 
 ##### `plasma_sines(x, y, t, coeff_x, coeff_y, coeff_x_y, coeff_mag_xy)`
 Basic optimized function for creating RGB plasma animations (see [https://www.bidouille.org/prog/plasma](https://www.bidouille.org/prog/plasma)). Returns `sin((x + t) * coeff_x) + sin((y + t) * coeff_y) + sin((x + y + t) * coeff_x_y) + sin((sqrt(x * x + y * y) + t) * coeff_mag_xy)`. Not recommended unless you want it, `plasma_sines_octave` generally looks better.

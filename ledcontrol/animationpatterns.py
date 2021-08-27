@@ -28,7 +28,7 @@ def pattern(t, dt, x, y, prev_state):
 '''
     },
     1: {
-        'name': 'Static Gradient',
+        'name': 'Static Gradient 1D',
         'primary_speed': 0.0,
         'primary_scale': 1.0,
         'source': '''
@@ -37,7 +37,7 @@ def pattern(t, dt, x, y, prev_state):
 '''
     },
     2: {
-        'name': 'Static Gradient Mirrored',
+        'name': 'Static Gradient Mirrored 1D',
         'primary_speed': 0.0,
         'primary_scale': 1.0,
         'source': '''
@@ -212,7 +212,7 @@ def pattern(t, dt, x, y, prev_state):
 '''
     },
     180: {
-        'name': 'Palette Octave Plasma 2D',
+        'name': 'Palette Fractal Plasma 2D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
@@ -309,7 +309,7 @@ def pattern(t, dt, x, y, prev_state):
 '''
     },
     350: {
-        'name': 'RGB Octave Plasma (Fire Sines) 2D',
+        'name': 'RGB Fractal Plasma (Fire Sines) 2D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''

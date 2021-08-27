@@ -83,6 +83,6 @@
 - [x] palette based - plasma
 - [ ] DMX
 - [ ] pixel mapping
-
+- [ ] render animations to images for readme
 
 sudo ledcontrol --led_count 150 --led_pixel_order GRBW --led_color_correction "#FFA8FF"
