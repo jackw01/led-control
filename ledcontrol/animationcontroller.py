@@ -7,65 +7,13 @@ import time
 import traceback
 import RestrictedPython
 import sacn
-from threading import Event, Thread
 from itertools import zip_longest
+from ledcontrol.intervaltimer import IntervalTimer
 
 import ledcontrol.animationpatterns as animpatterns
 import ledcontrol.colorpalettes as colorpalettes
 import ledcontrol.driver as driver
 import ledcontrol.utils as utils
-
-class RepeatedTimer:
-    'Repeat function call at a regular interval'
-
-    def __init__(self, interval, function, *args, **kwargs):
-        self.interval = interval
-        self.function = function
-        self.args = args
-        self.kwargs = kwargs
-        self.count = 0
-        self.wait_time = 0
-        self.last_start = time.perf_counter()
-        self.last_measurement_c = 0
-        self.last_measurement_t = 0
-        self.perf_avg = 0
-        self.event = Event()
-        self.thread = Thread(target=self.target, daemon=True)
-
-    def start(self):
-        'Starts the timer thread'
-        self.thread.start()
-
-    def target(self):
-        'Waits until ready and executes target function'
-        while not self.event.wait(self.wait_time):
-            self.last_start = time.perf_counter()
-            self.function(*self.args, **self.kwargs)
-            self.perf_avg += (time.perf_counter() - self.last_start)
-
-            self.count += 1
-            if self.count % 100 == 0:
-                print('Average execution time (s): {}'.format(self.perf_avg / 100))
-                print('Average speed (cycles/s): {}'.format(self.get_rate()))
-                self.perf_avg = 0
-
-            # Calculate wait for next iteration
-            self.wait_time = self.interval - (time.perf_counter() - self.last_start)
-            if (self.wait_time < 0):
-                self.wait_time = 0
-
-    def get_rate(self):
-        'Returns current rate in cycles per second'
-        result = ((self.count - self.last_measurement_c) /
-                  (self.last_start - self.last_measurement_t))
-        self.last_measurement_c = self.count
-        self.last_measurement_t = self.last_start
-        return result
-
-    def stop(self):
-        'Stops the timer thread'
-        self.event.set()
-        self.thread.join()
 
 class AnimationController:
     def __init__(self, led_controller, refresh_rate, led_count,
@@ -140,21 +88,29 @@ class AnimationController:
 
         # Initialize sACN / E1.31
         if enable_sacn:
-            self._receiver = sacn.sACNreceiver()
-            self._receiver.start()
-            self._receiver.listen_on('universe', universe=1)(self._sacn_callback)
+            self._last_sacn_time = 0
+            self._sacn_perf_avg = 0
+            self._sacn_count = 0
 
     def _sacn_callback(self, packet):
         'Callback for sACN / E1.31 client'
-        if self.params['sacn'] == 1:
-            data = [x / 255.0 for x in packet.dmxData[:self.led_count * 3]]
-            self.led_controller.set_all_pixels_rgb_float(
-                list(zip_longest(*(iter(data),) * 3)),
-                self.correction,
-                1.0,
-                self.params['brightness'],
-                1.0
-            )
+        sacn_time = time.perf_counter()
+        self._sacn_perf_avg += (sacn_time - self._last_sacn_time)
+        self._last_sacn_time = sacn_time
+
+        self._sacn_count += 1
+        if self._sacn_count % 100 == 0:
+            print('Average sACN rate (packets/s): {}'.format(1 / (self._sacn_perf_avg / 100)))
+            self._sacn_perf_avg = 0
+
+        data = [x / 255.0 for x in packet.dmxData[:self.led_count * 3]]
+        self.led_controller.set_all_pixels_rgb_float(
+            list(zip_longest(*(iter(data),) * 3)),
+            self.correction,
+            1.0,
+            self.params['brightness'],
+            1.0
+        )
 
     def compile_pattern(self, source):
         'Compiles source string to a pattern function with restricted globals'
@@ -250,6 +206,14 @@ class AnimationController:
         self.primary_mapping = p
         self.secondary_mapping = s
 
+    def _update_sacn_state(self):
+        if self.params['sacn']:
+            self._receiver = sacn.sACNreceiver()
+            self._receiver.listen_on('universe', universe=1)(self._sacn_callback)
+            self._receiver.start()
+        else:
+            self._receiver.stop()
+
     def set_param(self, key, value):
         'Set an animation parameter'
         self.params[key] = value
@@ -260,6 +224,8 @@ class AnimationController:
             self.calculate_mappings()
         elif key == 'palette':
             self.calculate_palette_table()
+        elif key == 'sacn' and self._enable_sacn:
+            self._update_sacn_state()
 
     def set_pattern_function(self, key, source):
         'Update the source code and recompile a pattern function'
@@ -313,7 +279,7 @@ class AnimationController:
 
     def begin_animation_thread(self):
         'Start animating'
-        self.timer = RepeatedTimer(1.0 / self.refresh_rate, self.update_leds)
+        self.timer = IntervalTimer(1.0 / self.refresh_rate, self.update_leds)
         self.timer.start()
 
     def update_leds(self):
@@ -432,5 +398,7 @@ class AnimationController:
         )
 
     def end_animation(self):
-        'Stop rendering in the animation thread'
+        'Stop rendering in the animation thread and stop sACN receiver'
         self.timer.stop()
+        if self._enable_sacn:
+            self._receiver.stop()

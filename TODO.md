@@ -81,7 +81,7 @@
 ### Extras 2
 - [x] better default palettes
 - [x] palette based - plasma
-- [ ] DMX
+- [x] DMX
 - [ ] pixel mapping
 - [ ] render animations to images for readme
 
