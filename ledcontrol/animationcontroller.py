@@ -365,11 +365,6 @@ class AnimationController:
                             self.params['gamma']
                         )
 
-                # Direct control mode override
-                #if self.params['direct_control_mode']:
-                #    s_2 = self.control_client.get_frame(self.led_count)
-                #    mode = animpatterns.ColorMode.hsv
-
             except Exception as e:
                 msg = traceback.format_exception(type(e), e, e.__traceback__)
                 print(f'Pattern execution: {msg}')

@@ -22,11 +22,11 @@
 <body class="body-dark">
   <div class="wrapper clearfix">
     <main id="main">
-      <h2 class="header-stylized-text">LEDControl v1.2.0</h2>
+      <h2 class="header-stylized-text">LEDControl v1.3.0</h2>
       <br/>
       {% for input in form if not input.hide %}
       {% if input.control == 'select' %}
-      <div class="input-row input-row-top-margin">
+      <div class="input-row input-row-top-margin input-toplevel" data-id="{{ input.key }}">
         <span class="label select-label">{{ input.label }}:</span>
         <span class="select-container">
           <select
@@ -45,38 +45,40 @@
         </span>
       </div>
       {% elif input.control == 'range' %}
-      <span class="label">{{ input.label }}:
-        {% if input.unit != "" %}<span class="number-units">({{ input.unit }})</span>{% endif %}
-      </span>
-      <div class="input-row">
-        <div class="input-slider-container">
-          <input
-            type="range"
-            min="{{ input.min }}"
-            max="{{ input.max }}"
-            step="{{ input.step }}"
-            value="{{ input.val }}"
-            class="update-on-change {{ input.e_class }}"
-            autocomplete="off"
-            data-id="{{ input.key }}"
-          >
-        </div>
-        <div class="input-number-container">
-          <input
-            type="number"
-            style="width:80px"
-            min="{{ input.min }}"
-            max="{{ input.max }}"
-            step="{{ input.step }}"
-            value="{{ input.val }}"
-            class="update-on-change {{ input.e_class }}"
-            autocomplete="off"
-            data-id="{{ input.key }}"
-          >
+      <div class="input-toplevel" data-id="{{ input.key }}">
+        <span class="label">{{ input.label }}:
+          {% if input.unit != "" %}<span class="number-units">({{ input.unit }})</span>{% endif %}
+        </span>
+        <div class="input-row">
+          <div class="input-slider-container">
+            <input
+              type="range"
+              min="{{ input.min }}"
+              max="{{ input.max }}"
+              step="{{ input.step }}"
+              value="{{ input.val }}"
+              class="update-on-change {{ input.e_class }}"
+              autocomplete="off"
+              data-id="{{ input.key }}"
+            >
+          </div>
+          <div class="input-number-container">
+            <input
+              type="number"
+              style="width:80px"
+              min="{{ input.min }}"
+              max="{{ input.max }}"
+              step="{{ input.step }}"
+              value="{{ input.val }}"
+              class="update-on-change {{ input.e_class }}"
+              autocomplete="off"
+              data-id="{{ input.key }}"
+            >
+          </div>
         </div>
       </div>
       {% elif input.control == 'text' %}
-      <div class="input-row">
+      <div class="input-row input-toplevel" data-id="{{ input.key }}">
         <div class="input-slider-container">
           <span class="label">{{ input.label }}: </span>
           <input

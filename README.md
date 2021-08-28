@@ -4,12 +4,14 @@
 
 ## Features
 * Lightweight responsive web interface works on both desktop and mobile devices
-* In-browser code editor with smart indentation, syntax highlighting, and syntax error detection makes creating animation patterns easy
-* In-browser color palette editor with 12 built-in color palettes
-* Animation patterns are defined as Python functions that work similarly to fragment shaders
-* Builtin secondary patterns make it possible to quickly create more complex effects
+* In-browser code editor and color palette editor make creating and modifying animations easy
+* Large selection of built-in animations and color palettes means you don't have to write any code
 * Works with cheap and readily available WS281x and SK6812 LED strips and strings
 * Seamlessly supports HSV-to-RGBW and RGB-to-RGBW conversion for RGBW LED strips
+* Supports networked E1.31 sACN DMX control for music visualization through [LedFx](https://github.com/LedFx/LedFx)
+
+### Technical Details
+* Animation patterns are defined as Python functions that work similarly to fragment shaders
 * Capable of achieving up to 150 FPS on 150 RGBW LEDs on a Raspberry Pi Zero (see note below)
 * Web backend and animation code written in Python using the [Flask](https://github.com/pallets/flask) web framework for ease of development
 * Color conversions, color correction, and final rendering operations are implemented in a C extension module for maximum performance
@@ -19,14 +21,14 @@ Complex shaders will run slower, but framerates should stay comfortably above 24
 
 ## Install
 ### Hardware Setup
-1. Obtain a Raspberry Pi (any model), a WS2812B or SK6812B LED strip (SK6812 RGB/White LEDs are **highly recommended**), and a suitable 5V power supply.
+1. Obtain a Raspberry Pi (any model), a WS2812B or SK6812B LED strip (**SK6812 RGB/White LEDs are highly recommended**), and a suitable 5V power supply.
 2. Connect the LED strip to your Raspberry Pi:
     - Pi GND to LED GND
     - Pi GPIO18 to LED Data in
     - Power supply ground to LED GND
     - Power supply 5V to LED 5V
 
-   See [this Adafruit guide](https://learn.adafruit.com/neopixels-on-raspberry-pi/raspberry-pi-wiring#using-external-power-source-without-level-shifting-3005993-11) for other ways to connect the LED strips or using a level shifter.
+   See [this Adafruit guide](https://learn.adafruit.com/neopixels-on-raspberry-pi/raspberry-pi-wiring#using-external-power-source-without-level-shifting-3005993-11) for other ways to connect the LED strips or for using a level shifter.
 
 #### RGBW LEDs Are Highly Recommended
 Know what you're doing with electricity. Addressable LEDs can draw a lot of current, especially in long strips. You should use RGBW LEDs for the reason that **they look better and require much less power** when displaying whiter colors (a good quality 5V 4A power supply can comfortably handle 150 RGBW LEDs at full brightness).
@@ -54,44 +56,56 @@ Python 3.7 or newer is required.
 ### Command Line Configuration Arguments
 Web server and LED hardware parameters must be specified as command line arguments when running ledcontrol.
 ```
-usage: ledcontrol [-h] [--port PORT] [--host HOST]
-                  [--led_count LED_COUNT] [--fps FPS]
-                  [--led_pin LED_PIN]
+usage: ledcontrol [-h] [--port PORT] [--host HOST] [--led_count LED_COUNT]
+                  [--fps FPS] [--led_pin LED_PIN]
                   [--led_data_rate LED_DATA_RATE]
                   [--led_dma_channel LED_DMA_CHANNEL]
                   [--led_pixel_order LED_PIXEL_ORDER]
                   [--led_color_correction LED_COLOR_CORRECTION]
                   [--led_brightness_limit LED_BRIGHTNESS_LIMIT]
-                  [--save_interval SAVE_INTERVAL]
+                  [--save_interval SAVE_INTERVAL] [--sacn]
+
 optional arguments:
   -h, --help            show this help message and exit
   --port PORT           Port to use for web interface. Default: 80
   --host HOST           Hostname to use for web interface. Default: 0.0.0.0
-  --led_count LED_COUNT Number of LEDs.
+  --led_count LED_COUNT Number of LEDs
   --fps FPS             Refresh rate limit for LEDs, in FPS. Default: 60
-  --led_pin LED_PIN     Pin for LEDs (see https://github.com/jgarff/rpi_ws281x).
-                        Default: 18
+  --led_pin LED_PIN     Pin for LEDs (see
+                        https://github.com/jgarff/rpi_ws281x). Default: 18
   --led_data_rate LED_DATA_RATE
                         Data rate for LEDs. Default: 800000 Hz
   --led_dma_channel LED_DMA_CHANNEL
                         DMA channel for LEDs. DO NOT USE CHANNEL 5 ON Pi 3 B.
                         Default: 10
   --led_pixel_order LED_PIXEL_ORDER
-                        LED color channel order. Any combination of RGB with or
-                        without a W at the end.
-                        Default: GRB, try GRBW for SK6812 RGBW LEDs
+                        LED color channel order. Any combination of RGB with
+                        or without a W at the end. Default: GRB, try GRBW for
+                        SK6812
   --led_color_correction LED_COLOR_CORRECTION
-                        LED color correction in RGB hex form. Try #FFB0F0 for
+                        LED color correction in RGB hex form. Use #FFB0F0 for
                         5050 package RGB LEDs, #FFA8FF for 5050 RGBW LEDs, and
-                        #FFE08C for through-hole package LEDs or light strings.
-                        Default: #FFB0F0
+                        #FFE08C for through-hole package LEDs or light
+                        strings. Default: #FFB0F0
   --led_brightness_limit LED_BRIGHTNESS_LIMIT
-                        LED maximum brightness limit for the web UI. 0.0-1.0.
-                        Default: 1.0
+                        LED maximum brightness limit for the web UI. Float
+                        from 0.0-1.0. Default: 1.0
   --save_interval SAVE_INTERVAL
                         Interval for automatically saving settings in seconds.
                         Default: 60
+  --sacn                Enable sACN / E1.31 support. Default: False
 ```
+
+### E1.31 sACN, Music Visualization, and LedFx Use
+LEDControl can function as a E1.31 streaming ACN receiver, allowing the connected LEDs to be directly controlled over the network. [LedFx](https://github.com/LedFx/LedFx) is recommended for music visualization over sACN.
+
+1. Follow the [instructions](https://github.com/LedFx/LedFx) to install LedFx and set up your computer's audio output.
+2. Add your LEDControl device in LedFx: Select `e131` as the device type, use the hostname or IP of your Raspberry Pi, and enter the number of LEDs you have attached.
+3. Run LEDControl with the `--sacn` command line flag. An option to enable sACN receiver mode will appear on the web interface.
+4. Enable sACN receiver mode in the LEDControl web interface.
+5. Configure a music visualizer effect in LedFx.
+
+While sACN receiver mode is enabled, the LED refresh rate is determined by your sACN server. There may be noticeable latency when using sACN on congested networks or if other software on the Raspberry Pi is using its network hardware; this is a known limitation of sACN.
 
 ## Pattern Editing
 Animation patterns are defined as Python functions that work similarly to GLSL fragment shaders or DirectX pixel shaders. The LEDControl web interface allows editing and creation of patterns using a subset of Python.

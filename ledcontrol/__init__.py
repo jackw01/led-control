@@ -18,7 +18,7 @@ def main():
     parser.add_argument('--fps', type=int, default=60,
                         help='Refresh rate limit for LEDs, in FPS. Default: 60')
     parser.add_argument('--led_pin', type=int, default=18,
-                        help='Pin for LEDs (see https://github.com/jgarff/rpi_ws281x).. Default: 18')
+                        help='Pin for LEDs (see https://github.com/jgarff/rpi_ws281x). Default: 18')
     parser.add_argument('--led_data_rate', type=int, default=800000,
                         help='Data rate for LEDs. Default: 800000 Hz')
     parser.add_argument('--led_dma_channel', type=int, default=10,
@@ -32,7 +32,7 @@ def main():
     parser.add_argument('--save_interval', type=int, default=60,
                         help='Interval for automatically saving settings in seconds. Default: 60')
     parser.add_argument('--sacn', action='store_true',
-                        help='Enable sACN / E1.31 support (experimental). Default: False')
+                        help='Enable sACN / E1.31 support. Default: False')
     args = parser.parse_args()
 
     color_correction_hex = args.led_color_correction.lstrip('#')

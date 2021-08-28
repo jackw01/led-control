@@ -32,6 +32,14 @@ function handleInputChange(elem) {
   // On palette change, update color pickers
   if (key === 'palette') updateColorPickers(val);
 
+  // On sACN mode change, hide or show UI
+  if (key === 'sacn') {
+    console.log(val);
+    const elems = $('.input-toplevel:not(.input-toplevel[data-id=brightness], .input-toplevel[data-id=color_temp], .input-toplevel[data-id=sacn]), #code, #palette-color-bar, #colors');
+    if (val === 1) elems.hide();
+    else elems.show();
+  }
+
   return { key: key, value: val };
 }
 
