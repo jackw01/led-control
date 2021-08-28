@@ -12,12 +12,13 @@
 
 ### Technical Details
 * Animation patterns are defined as Python functions that work similarly to fragment shaders
-* Capable of achieving up to 150 FPS on 150 RGBW LEDs on a Raspberry Pi Zero (see note below)
-* Web backend and animation code written in Python using the [Flask](https://github.com/pallets/flask) web framework for ease of development
+* Capable of achieving up to 150 FPS on 150 RGBW LEDs on a Raspberry Pi Zero
+* Web backend and animation code are written in Python using the [Flask](https://github.com/pallets/flask) web framework for ease of development
 * Color conversions, color correction, and final rendering operations are implemented in a C extension module for maximum performance
 
-### Framerate Note
-Complex shaders will run slower, but framerates should stay comfortably above 24FPS even with large numbers of LEDs. This should not be an issue unless you are trying to display very fast-moving animations on long LED strips. All of the framerate numbers here were obtained from testing on a Raspberry Pi Zero, and almost any other Pi will run animations faster. The framerate is limited to 60FPS by default to reduce CPU usage.
+#### Framerate Note
+The theoretical maximum framerate for 150 RGBW LEDs is 800000 Hz / (8*4) bits / 150 = 166.67 FPS.
+All built-in animations run at over 50FPS on a Raspberry Pi Zero, and will run faster on any other Raspberry Pi model. The framerate is limited to 60FPS by default to reduce CPU usage.
 
 ## Install
 ### Hardware Setup

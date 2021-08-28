@@ -9,7 +9,7 @@
 // Optimized C utility functions
 // Not stupid if it works
 int float_to_int_1000(float t) {
-  return (int)(t * 1000.0) % 1000;
+  return (int)(t * 999.9) % 1000;
 }
 
 // Waveforms for pattern generation.

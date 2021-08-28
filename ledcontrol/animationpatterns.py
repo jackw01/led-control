@@ -66,7 +66,7 @@ def pattern(t, dt, x, y, prev_state):
     },
     30: {
         'name': 'Hue Scan 1D',
-        'primary_speed': 0.2,
+        'primary_speed': 0.1,
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
@@ -75,7 +75,7 @@ def pattern(t, dt, x, y, prev_state):
     },
     31: {
         'name': 'Hue Bounce 1D',
-        'primary_speed': 0.2,
+        'primary_speed': 0.1,
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
@@ -88,7 +88,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
-    h = (x + t) * 0.5 % .5 + x + wave_sine(t)
+    h = (x + t) * 0.5 + x + wave_sine(t)
     return (h, 1, wave_sine(h + t)), hsv
 '''
     },
@@ -148,7 +148,7 @@ def pattern(t, dt, x, y, prev_state):
     },
     140: {
         'name': 'Palette Scan Mirrored 1D',
-        'primary_speed': 0.2,
+        'primary_speed': 0.1,
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
@@ -157,7 +157,7 @@ def pattern(t, dt, x, y, prev_state):
     },
     141: {
         'name': 'Palette Bounce Mirrored 1D',
-        'primary_speed': 0.2,
+        'primary_speed': 0.1,
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
@@ -166,11 +166,11 @@ def pattern(t, dt, x, y, prev_state):
     },
     150: { # Performance isn't as good as it could be
         'name': 'Palette Waves 1D',
-        'primary_speed': 0.2,
+        'primary_speed': 0.05,
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
-    h = (x + t) * 0.5 % .5 + x + wave_sine(t)
+    h = (x + t) * 0.1 + x + wave_sine(t)
     c = palette(wave_triangle(h))
     return (c[0], c[1], wave_sine(h + t)), hsv
 '''
@@ -239,7 +239,7 @@ def pattern(t, dt, x, y, prev_state):
     },
     200: {
         'name': 'Palette Perlin Noise 2D',
-        'primary_speed': 0.2,
+        'primary_speed': 0.3,
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
@@ -276,12 +276,10 @@ def pattern(t, dt, x, y, prev_state):
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
-    color = [0, 0, 0]
-    for i in range(3):
-        delay = 0.05 * i
-        v = x + (wave_sine(t + delay)) + wave_sine(x + 0.666 * t + delay)
-        color[i] = 0.005 / wave_triangle(v)
-    return color, rgb
+    v0 = x + (wave_sine(t)) + wave_sine(x + 0.666 * t)
+    v1 = x + (wave_sine(t + 0.05)) + wave_sine(x + 0.666 * t + 0.05)
+    v2 = x + (wave_sine(t + 0.1)) + wave_sine(x + 0.666 * t + 0.1)
+    return (0.005 / (wave_triangle(v0) + 0.01), 0.005 / (wave_triangle(v1) + 0.01), 0.005 / (wave_triangle(v2) + 0.01)), rgb
 '''
     },
     330: {

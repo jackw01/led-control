@@ -28,7 +28,7 @@ requirements = [
 
 setup(
     name='led-control',
-    version='1.2.0',
+    version='1.3.0',
     description='WS2812 LED strip controller with web interface for Raspberry Pi',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
