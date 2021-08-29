@@ -82,7 +82,9 @@
 - [x] better default palettes
 - [x] palette based - plasma
 - [x] DMX
+- [x] render animations to images for readme
+- [ ] add palette_mirrored utility for performance
 - [ ] pixel mapping
-- [ ] render animations to images for readme
+- [ ] timer
 
 sudo ledcontrol --led_count 150 --led_pixel_order GRBW --led_color_correction "#FFA8FF"
