@@ -149,6 +149,9 @@ Color palettes are interpolated in the HSV color space. 1000 interpolated values
 ##### `palette(t)`
 Returns the color from the current palette corresponding to a value `t` between 0 and 1. Values of `t` less than 0 or greater than 1 will wrap.
 
+##### `palette_mirrored(t)`
+Returns a color from a mirrored version of the current palette that wraps seamlessly. Functionally equivalent to `palette(wave_triangle(t))`, but performs just as well as `palette(t)`.
+
 ##### `palette_length()`
 Returns the number of colors used to generate the current palette.
 

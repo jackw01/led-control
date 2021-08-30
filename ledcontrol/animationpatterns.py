@@ -42,7 +42,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
-    return palette(wave_triangle(x + 0.001)), hsv
+    return palette_mirrored(x), hsv
 '''
     },
     10: {
@@ -122,7 +122,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
-    return palette(wave_triangle(t + x)), hsv
+    return palette_mirrored(t + x), hsv
 '''
     },
     120: {
@@ -152,7 +152,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
-    return palette(wave_triangle(wave_triangle(t) + x)), hsv
+    return palette_mirrored(wave_triangle(t) + x), hsv
 '''
     },
     141: {
@@ -161,7 +161,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_scale': 1.0,
         'source': '''
 def pattern(t, dt, x, y, prev_state):
-    return palette(wave_triangle(wave_sine(t) + x)), hsv
+    return palette_mirrored(wave_sine(t) + x), hsv
 '''
     },
     150: { # Performance isn't as good as it could be

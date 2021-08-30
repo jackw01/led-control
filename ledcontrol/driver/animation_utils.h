@@ -12,6 +12,10 @@ int float_to_int_1000(float t) {
   return (int)(t * 999.9) % 1000;
 }
 
+int float_to_int_1000_mirror(float t) {
+  return abs((int)(t * 1998.9) % 1999 - 999);
+}
+
 // Waveforms for pattern generation.
 // All have a period of 1 time unit and range from 0-1.
 

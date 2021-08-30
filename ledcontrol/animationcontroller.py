@@ -132,6 +132,7 @@ class AnimationController:
             'math': math,
             'random': random,
             'palette': self.get_palette_color,
+            'palette_mirrored': self.get_palette_color_mirrored,
             'palette_length': self.get_palette_length,
             'hsv': animpatterns.ColorMode.hsv,
             'rgb': animpatterns.ColorMode.rgb,
@@ -264,6 +265,10 @@ class AnimationController:
         # This gives a surprising performance improvement over doing the math in python
         # If the palette size is ever changed here, it needs to be changed in animation_utils.h
         return self.palette_table[driver.float_to_int_1000(t)]
+
+    def get_palette_color_mirrored(self, t):
+        'Version of get_palette_color that samples a mirrored version of the palette'
+        return self.palette_table[driver.float_to_int_1000_mirror(t)]
 
     def get_palette_length(self):
         'Get length of current palette color array'

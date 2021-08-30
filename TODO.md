@@ -83,7 +83,7 @@
 - [x] palette based - plasma
 - [x] DMX
 - [x] render animations to images for readme
-- [ ] add palette_mirrored utility for performance
+- [x] add palette_mirrored utility for performance
 - [ ] pixel mapping
 - [ ] timer
 

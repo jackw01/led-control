@@ -44,7 +44,7 @@ for pattern_dict in animpatterns.default.values():
     pixels = img.load()
 
     print(pattern_dict["name"])
-    f.write(f'##E {pattern_dict["name"]}\n')
+    f.write(f'## {pattern_dict["name"]}\n')
 
     prev = [(0, 0, 0) for i in range(s)]
     for i in range(img.size[0]):

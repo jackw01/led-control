@@ -7230,6 +7230,28 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_float_to_int_1000_mirror(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  float arg1 ;
+  float val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:float_to_int_1000_mirror",&obj0)) SWIG_fail;
+  ecode1 = SWIG_AsVal_float(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "float_to_int_1000_mirror" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = (float)(val1);
+  result = (int)float_to_int_1000_mirror(arg1);
+  resultobj = SWIG_From_int((int)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_wave_pulse(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   float arg1 ;
@@ -7853,6 +7875,7 @@ static PyMethodDef SwigMethods[] = {
 	 { "ws2811_hsv_render_array_float", _wrap_ws2811_hsv_render_array_float, METH_VARARGS, NULL},
 	 { "ws2811_rgb_render_array_float", _wrap_ws2811_rgb_render_array_float, METH_VARARGS, NULL},
 	 { "float_to_int_1000", _wrap_float_to_int_1000, METH_VARARGS, NULL},
+	 { "float_to_int_1000_mirror", _wrap_float_to_int_1000_mirror, METH_VARARGS, NULL},
 	 { "wave_pulse", _wrap_wave_pulse, METH_VARARGS, NULL},
 	 { "wave_triangle", _wrap_wave_triangle, METH_VARARGS, NULL},
 	 { "wave_sine", _wrap_wave_sine, METH_VARARGS, NULL},

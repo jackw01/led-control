@@ -513,6 +513,10 @@ def float_to_int_1000(t):
     return _ledcontrol_rpi_ws281x_driver.float_to_int_1000(t)
 float_to_int_1000 = _ledcontrol_rpi_ws281x_driver.float_to_int_1000
 
+def float_to_int_1000_mirror(t):
+    return _ledcontrol_rpi_ws281x_driver.float_to_int_1000_mirror(t)
+float_to_int_1000_mirror = _ledcontrol_rpi_ws281x_driver.float_to_int_1000_mirror
+
 def wave_pulse(t, duty_cycle):
     return _ledcontrol_rpi_ws281x_driver.wave_pulse(t, duty_cycle)
 wave_pulse = _ledcontrol_rpi_ws281x_driver.wave_pulse
