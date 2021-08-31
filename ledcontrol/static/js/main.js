@@ -370,6 +370,12 @@ window.onload = function() {
       lineWrapping: true,
       theme: 'summer-night',
     });
+    codeMirror.setOption('extraKeys', {
+      Tab: function(cm) {
+        const spaces = Array(cm.getOption('indentUnit') + 1).join(' ');
+        cm.replaceSelection(spaces);
+      }
+    });
     updateCodeView(result.current);
   });
 
