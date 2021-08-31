@@ -279,7 +279,7 @@ def pattern(t, dt, x, y, z, prev_state):
     v0 = x + (wave_sine(t)) + wave_sine(x + 0.666 * t)
     v1 = x + (wave_sine(t + 0.05)) + wave_sine(x + 0.666 * t + 0.05)
     v2 = x + (wave_sine(t + 0.1)) + wave_sine(x + 0.666 * t + 0.1)
-    return (0.005 / (wave_triangle(v0) + 0.01), 0.005 / (wave_triangle(v1) + 0.01), 0.005 / (wave_triangle(v2) + 0.01)), rgb
+    return (0.01 / (wave_triangle(v0) + 0.01), 0.01 / (wave_triangle(v1) + 0.01), 0.01 / (wave_triangle(v2) + 0.01)), rgb
 '''
     },
     330: {

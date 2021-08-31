@@ -10,11 +10,11 @@ import ledcontrol.utils as utils
 controller = AnimationController(None, 0, 256, pixelmappings.line(256), (0, 0, 0), False)
 
 s = 100 # LED strip length
-t = 500 # Time units
-gif_t = 200 # Animated gif duration
+t = 400 # Time units
+gif_t = 300 # Animated gif duration
 
 f = open('patterns.md', 'w')
-f.write('## Built-In Animation Patterns\n\nIn the images below, the y-axis represents the colors of a linear array of LEDs and the x-axis represents time.\n\n')
+f.write('## Built-In Animation Patterns\n\n')
 
 for pattern_dict in animpatterns.default.values():
     errors, warnings, pattern = controller.compile_pattern(pattern_dict['source'])
@@ -46,10 +46,11 @@ for pattern_dict in animpatterns.default.values():
         if i < gif_t:
             frames.append(frame)
 
-    img_name = f'img/{pattern_dict["name"]}.png'.replace(' ', '-')
+    #img_name = f'img/{pattern_dict["name"]}.png'.replace(' ', '-')
     gif_name = f'img/{pattern_dict["name"]}.gif'.replace(' ', '-')
-    img.save(img_name)
+    #img.save(img_name)
     frames[0].save(gif_name, save_all=True, append_images=frames[1:], duration=100, loop=0)
-    f.write(f'![{img_name}]({img_name})\n![{gif_name}]({gif_name})\n\n')
+    f.write(f'<img src="{gif_name}" width="800"/>\n\n')
+    #f.write(f'<img src="{img_name}" width="800"/>\n\n')
 
 f.close()

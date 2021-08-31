@@ -7,7 +7,7 @@
 * In-browser code editor and color palette editor make creating and modifying animations easy
 * Large selection of built-in animations and color palettes means you don't have to write any code
 * Works with cheap and readily available WS281x and SK6812 LED strips and strings
-* Supports pixel mapping for arbitrary 2D and 3D LED arrangements (matrix displays and LED cubes)
+* Supports pixel mapping for arbitrary 2D and 3D LED arrangements
 * Seamlessly supports HSV-to-RGBW and RGB-to-RGBW conversion for RGBW LED strips
 * Supports networked E1.31 sACN DMX control for music visualization through [LedFx](https://github.com/LedFx/LedFx)
 
@@ -101,7 +101,7 @@ optional arguments:
 ```
 
 ### Built-In Animation Patterns
-Image and animated GIF previews of all built-in animations can be seen at [patterns.md](patterns).
+Animated GIF previews of all built-in animations can be seen at [patterns.md](patterns).
 
 ### E1.31 sACN, Music Visualization, and LedFx Use
 LEDControl can function as a E1.31 streaming ACN receiver, allowing the connected LEDs to be directly controlled over the network. [LedFx](https://github.com/LedFx/LedFx) is recommended for music visualization over sACN.
