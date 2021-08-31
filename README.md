@@ -13,6 +13,7 @@
 ### Technical Details
 * Animation patterns are defined as Python functions that work similarly to fragment shaders
 * Capable of achieving up to 150 FPS on 150 RGBW LEDs on a Raspberry Pi Zero
+* Supports pixel mapping for displaying animations on arbitrary 3D arrangements of LEDs
 * Web backend and animation code are written in Python using the [Flask](https://github.com/pallets/flask) web framework for ease of development
 * Color conversions, color correction, and final rendering operations are implemented in a C extension module for maximum performance
 
@@ -58,8 +59,8 @@ Python 3.7 or newer is required.
 Web server and LED hardware parameters must be specified as command line arguments when running ledcontrol.
 ```
 usage: ledcontrol [-h] [--port PORT] [--host HOST] [--led_count LED_COUNT]
-                  [--fps FPS] [--led_pin LED_PIN]
-                  [--led_data_rate LED_DATA_RATE]
+                  [--pixel_mapping_json PIXEL_MAPPING_JSON] [--fps FPS]
+                  [--led_pin LED_PIN] [--led_data_rate LED_DATA_RATE]
                   [--led_dma_channel LED_DMA_CHANNEL]
                   [--led_pixel_order LED_PIXEL_ORDER]
                   [--led_color_correction LED_COLOR_CORRECTION]
@@ -71,6 +72,8 @@ optional arguments:
   --port PORT           Port to use for web interface. Default: 80
   --host HOST           Hostname to use for web interface. Default: 0.0.0.0
   --led_count LED_COUNT Number of LEDs
+  --pixel_mapping_json PIXEL_MAPPING_JSON
+                        JSON file containing pixel mapping (see README)
   --fps FPS             Refresh rate limit for LEDs, in FPS. Default: 60
   --led_pin LED_PIN     Pin for LEDs (see
                         https://github.com/jgarff/rpi_ws281x). Default: 18
@@ -108,21 +111,21 @@ LEDControl can function as a E1.31 streaming ACN receiver, allowing the connecte
 While sACN receiver mode is enabled, the LED refresh rate is determined by your sACN server. There may be noticeable latency when using sACN on congested networks or if other software on the Raspberry Pi is using its network hardware; this is a known limitation of sACN.
 
 ### Pixel Mapping
-LEDControl supports pixel mapping, which allows 2-dimensional animation patterns to be mapped to any physical arrangement of LEDs (currently only in 2D space). Currently, pixel mappings can only be specified with a JSON file containing an array of points representing the positions of each LED, using the `--pixel_mapping_json` command line argument. `--led_count` does not need to be specified when pixel mapping is used. The points must be in the same order that the correresponding LEDs are connected, and the units used to define the pixel mapping do not matter (negative and floating-point values are allowed).
+LEDControl supports pixel mapping, which allows 2- and 3-dimensional animation patterns to be mapped to any physical arrangement of LEDs. Currently, pixel mappings can only be specified with a JSON file containing an array of points representing the positions of each LED, using the `--pixel_mapping_json` command line argument. `--led_count` does not need to be specified when pixel mapping is used. The points must be in the same order that the correresponding LEDs are connected, and the units used to define the pixel mapping do not matter (negative and floating-point values are allowed).
 
 #### Example
 ![pixelmapping.png](pixelmapping.png)
 
 ```json
 [
-  [-3, 3],
-  [0, 3],
-  [3, 3],
-  [3, 0],
-  [3, -3],
-  [0, -3],
-  [-3, -3],
-  [-3, 0]
+  [-3, 3, 0],
+  [0, 3, 0],
+  [3, 3, 0],
+  [3, 0, 0],
+  [3, -3, 0],
+  [0, -3, 0],
+  [-3, -3, 0],
+  [-3, 0, 0]
 ]
 ```
 
@@ -136,7 +139,7 @@ Each animation frame, the pattern function is called once per LED/pixel with tim
 
 ```python
 # cycle_hue_1d
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     return (t + x, 1, 1), hsv
 ```
 
@@ -147,8 +150,8 @@ Time in cycles (an arbitary unit that represents one animation cycle as a floati
 ##### `dt`
 Delta time in cycles.
 
-##### `x`, `y`
-Normalized (0 to 1) value representing the position of the current LED in arbitrary units (after mapping LED indices to positions and scaling). Straight LED strips are mapped to the x axis only. One position unit represents the scale factor multiplied by the length of the axis. At a scale of less than 1, one position unit represents a fraction of the axis length and the animation is repeated to fill all the LEDs.
+##### `x`, `y`, `z`
+Normalized (0 to 1) value representing the position of the current LED in arbitrary units (after mapping LED indices to positions and scaling). By default, LEDs are mapped to the x axis only. One position unit represents the scale factor multiplied by the length of the axis. At a scale of less than 1, one position unit represents a fraction of the axis length and the animation is tiled to fill all the LEDs.
 
 ##### `prev_state`
 Previous color state of the current LED as an HSV or RGB tuple. Initialized to `(0, 0, 0)` on the first animation frame.

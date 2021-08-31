@@ -73,15 +73,23 @@ def create_app(led_count,
     # Init controller params and custom patterns from settings file
     with open(str(filename), mode='r') as data_file:
         try:
-            settings = json.loads(data_file.read().replace('master_', ''))
+            settings_str = data_file.read()
+            # Apply updates to old versions of settings file
+            settings_str = settings_str.replace('master_', '')
+            settings_str = settings_str.replace('pattern(t, dt, x, y, prev_state)',
+                                                'pattern(t, dt, x, y, z, prev_state)')
+            settings = json.loads(settings_str)
+
             # Enforce brightness limit
             settings['params']['brightness'] = min(
                 settings['params']['brightness'], led_v_limit)
+
             # Set controller params, recalculate things that depend on params
             controller.params.update(settings['params'])
             controller.params['sacn'] = 0
             controller.calculate_color_correction()
             controller.calculate_mappings()
+
             # Read custom patterns and changed params for default patterns
             for k, v in settings['patterns'].items():
                 # JSON keys are always strings
@@ -90,10 +98,12 @@ def create_app(led_count,
                     controller.set_pattern_function(int(k), v['source'])
                 else:
                     patterns[int(k)].update(v)
+
             # Read color palettes
             controller.palettes.update({int(k): v for k, v in settings['palettes'].items()})
             controller.calculate_palette_table()
             print(f'Loaded saved settings from {filename}.')
+
         except Exception:
             print(f'Some saved settings at {filename} are out of date or invalid, ignoring.')
 
@@ -142,6 +152,7 @@ def create_app(led_count,
             save_current_pattern_params()
             controller.set_param('primary_speed', patterns[int(value)]['primary_speed'])
             controller.set_param('primary_scale', patterns[int(value)]['primary_scale'])
+
         value = form_item.type(value)
         if form_item.control == 'range':
             value = utils.clamp(value, form_item.min, form_item.max)

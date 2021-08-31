@@ -23,7 +23,7 @@ default = {
         'primary_speed': 0.0,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     return palette(0), hsv
 '''
     },
@@ -32,7 +32,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.0,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     return palette(x), hsv
 '''
     },
@@ -41,7 +41,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.0,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     return palette_mirrored(x), hsv
 '''
     },
@@ -50,7 +50,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     return (t + x, 1, 1), hsv
 '''
     },
@@ -59,7 +59,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     hue = (t + x) % 1
     return (hue - (hue % 0.1666), 1, 1), hsv
 '''
@@ -69,7 +69,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.1,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     return (wave_triangle(t) + x, 1, 1), hsv
 '''
     },
@@ -78,7 +78,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.1,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     return (wave_sine(t) + x, 1, 1), hsv
 '''
     },
@@ -87,7 +87,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     h = (x + t) * 0.5 + x + wave_sine(t)
     return (h, 1, wave_sine(h + t)), hsv
 '''
@@ -97,7 +97,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     wave1 = wave_sine(t / 4 + x)
     wave2 = wave_sine(t / 8 - x)
     wave3 = wave_sine(x + wave1 + wave2)
@@ -112,7 +112,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     return palette(t + x), hsv
 '''
     },
@@ -121,7 +121,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     return palette_mirrored(t + x), hsv
 '''
     },
@@ -130,7 +130,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     t = (t + x) % 1
     return palette(t - (t % (1 / palette_length()))), hsv
 '''
@@ -140,7 +140,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     t = t + x
     i = (t - (t % 0.2)) / 0.2
     return palette(i * 0.618034), hsv
@@ -151,7 +151,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.1,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     return palette_mirrored(wave_triangle(t) + x), hsv
 '''
     },
@@ -160,7 +160,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.1,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     return palette_mirrored(wave_sine(t) + x), hsv
 '''
     },
@@ -169,7 +169,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.05,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     h = (x + t) * 0.1 + x + wave_sine(t)
     c = palette(wave_triangle(h))
     return (c[0], c[1], wave_sine(h + t)), hsv
@@ -180,7 +180,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     wave1 = wave_sine(t / 4 + x)
     wave2 = wave_sine(t / 8 - x)
     wave3 = wave_sine(x + wave1 + wave2)
@@ -193,7 +193,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     wave1 = wave_sine(t / 4 + x)
     wave2 = wave_sine(t / 8 - x)
     wave3 = wave_sine(x + wave1 + wave2)
@@ -206,7 +206,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
     return palette(wave_triangle(v)), hsv
 '''
@@ -216,7 +216,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     v = plasma_sines_octave(x, y, t, 7, 2.0, 0.5)
     return palette(wave_triangle(v)), hsv
 '''
@@ -226,7 +226,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     v = prev_state[2] - dt
     if v <= 0:
         c = palette(t + x)
@@ -242,7 +242,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.3,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     return palette(perlin_noise_3d(x, y, t)), hsv
 '''
     },
@@ -253,7 +253,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     return (wave_sine(t + x),
             wave_sine((t + x) * 1.2),
             wave_sine((t + x) * 1.4)), rgb
@@ -264,7 +264,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     return (wave_cubic(t + x),
             wave_cubic((t + x) * 1.2),
             wave_cubic((t + x) * 1.4)), rgb
@@ -275,7 +275,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     v0 = x + (wave_sine(t)) + wave_sine(x + 0.666 * t)
     v1 = x + (wave_sine(t + 0.05)) + wave_sine(x + 0.666 * t + 0.05)
     v2 = x + (wave_sine(t + 0.1)) + wave_sine(x + 0.666 * t + 0.1)
@@ -287,7 +287,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
     return (wave_sine(v),
             wave_sine(v + 0.333),
@@ -299,7 +299,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
     return (0.9 - wave_sine(v),
             wave_sine(v + 0.333) - 0.1,
@@ -311,7 +311,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     v = plasma_sines_octave(x, y, t, 7, 2.0, 0.5)
     return (1.0 - wave_sine(v),
             wave_sine(v + 0.333),
@@ -323,7 +323,7 @@ def pattern(t, dt, x, y, prev_state):
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'source': '''
-def pattern(t, dt, x, y, prev_state):
+def pattern(t, dt, x, y, z, prev_state):
     v = wave_triangle(t + x)
     c = blackbody_to_rgb(v * v * 5500 + 1000)
     return (c[0] * v, c[1] * v, c[2] * v), rgb
@@ -334,28 +334,28 @@ def pattern(t, dt, x, y, prev_state):
 # Secondary animations that transform finalized colors to add brightness effects
 # return brightness, colorRGB
 
-def sine_1d(t, dt, x, y, prev_state, in_color):
+def sine_1d(t, dt, x, y, z, prev_state, in_color):
     return in_color, driver.wave_sine(t + x)
 
-def cubic_1d(t, dt, x, y, prev_state, in_color):
+def cubic_1d(t, dt, x, y, z, prev_state, in_color):
     return in_color, driver.wave_cubic(t + x)
 
-def ramp_1d(t, dt, x, y, prev_state, in_color):
+def ramp_1d(t, dt, x, y, z, prev_state, in_color):
     return in_color, (t + x) % 1 # test ramp^2
 
-def bounce_linear_1d(t, dt, x, y, prev_state, in_color):
+def bounce_linear_1d(t, dt, x, y, z, prev_state, in_color):
     return in_color, driver.wave_sine(x + driver.wave_triangle(t))
 
-def bounce_sine_1d(t, dt, x, y, prev_state, in_color):
+def bounce_sine_1d(t, dt, x, y, z, prev_state, in_color):
     return in_color, driver.wave_sine(x + driver.wave_sine(t))
 
-def bounce_cubic_1d(t, dt, x, y, prev_state, in_color):
+def bounce_cubic_1d(t, dt, x, y, z, prev_state, in_color):
     return in_color, driver.wave_sine(x + driver.wave_cubic(t))
 
-def perlin_noise_2d(t, dt, x, y, prev_state, in_color):
+def perlin_noise_2d(t, dt, x, y, z, prev_state, in_color):
     return in_color, driver.perlin_noise_3d(x, y, t)
 
-def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
+def twinkle_pulse_1d(t, dt, x, y, z, prev_state, in_color):
     v = prev_state[1] - dt
     if v <= -0.2:
         return in_color, random()
@@ -364,16 +364,16 @@ def twinkle_pulse_1d(t, dt, x, y, prev_state, in_color):
     else:
         return (0, 0, 0), v
 
-def wipe_across_1d(t, dt, x, y, prev_state, in_color):
+def wipe_across_1d(t, dt, x, y, z, prev_state, in_color):
     return in_color, ((t + x) % 1 > 0.5) * 1.0
 
-def wipe_from_center_1d(t, dt, x, y, prev_state, in_color):
+def wipe_from_center_1d(t, dt, x, y, z, prev_state, in_color):
     if x < 0.5:
         return in_color, ((t + x) % 1 < 0.5) * 1.0
     else:
         return in_color, ((x - t) % 1 < 0.5) * 1.0
 
-def wipe_from_ends_1d(t, dt, x, y, prev_state, in_color):
+def wipe_from_ends_1d(t, dt, x, y, z, prev_state, in_color):
     if x < 0.5:
         return in_color, ((x - t) % 1 < 0.5) * 1.0
     else:

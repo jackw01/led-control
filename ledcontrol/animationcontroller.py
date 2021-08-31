@@ -148,7 +148,7 @@ class AnimationController:
             'blackbody_correction_rgb': driver.blackbody_correction_rgb,
         }
         restricted_locals = {}
-        arg_names = ['t', 'dt', 'x', 'y', 'prev_state']
+        arg_names = ['t', 'dt', 'x', 'y', 'z', 'prev_state']
 
         results = RestrictedPython.compile_restricted_exec(source)
         warnings = list(results.warnings)
@@ -187,19 +187,21 @@ class AnimationController:
                 # One cycle is a normalized input value's transition from 0 to 1
                 p.append((
                     (self.mapped[i][0] / self.params['primary_scale']) % 1,
-                    (self.mapped[i][1] / self.params['primary_scale']) % 1
+                    (self.mapped[i][1] / self.params['primary_scale']) % 1,
+                    (self.mapped[i][2] / self.params['primary_scale']) % 1,
                 ))
         else:
-            p = [(0, 0) for i in range(self.led_count)]
+            p = [(0, 0, 0) for i in range(self.led_count)]
 
         if self.params['secondary_scale'] != 0:
             for i in range(self.led_count):
                 s.append((
                     (self.mapped[i][0] / self.params['secondary_scale']) % 1,
-                    (self.mapped[i][1] / self.params['secondary_scale']) % 1
+                    (self.mapped[i][1] / self.params['secondary_scale']) % 1,
+                    (self.mapped[i][2] / self.params['secondary_scale']) % 1
                 ))
         else:
-            s = [(0, 0) for i in range(self.led_count)]
+            s = [(0, 0, 0) for i in range(self.led_count)]
 
         self.primary_mapping = p
         self.secondary_mapping = s
@@ -308,7 +310,7 @@ class AnimationController:
 
             try:
                 # Determine current pattern mode
-                c, mode = pattern_1(0, 0.1, 0, 0, (0, 0, 0))
+                c, mode = pattern_1(0, 0.1, 0, 0, 0, (0, 0, 0))
 
                 # Run primary pattern to determine initial color
                 # State 1 is an array of color tuples
@@ -316,6 +318,7 @@ class AnimationController:
                                  primary_delta_t,
                                  self.primary_mapping[i][0],
                                  self.primary_mapping[i][1],
+                                 self.primary_mapping[i][2],
                                  self.primary_prev_state[i])[0]
                        for i in range(self.led_count)]
                 self.primary_prev_state = s_1
@@ -345,6 +348,7 @@ class AnimationController:
                                      secondary_delta_t,
                                      self.secondary_mapping[i][0],
                                      self.secondary_mapping[i][1],
+                                     self.secondary_mapping[i][2],
                                      self.secondary_prev_state[i],
                                      s_1[i]) for i in range(self.led_count)]
                     self.secondary_prev_state = s_2

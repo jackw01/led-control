@@ -63,7 +63,6 @@
 - [x] patterns - hsv waves
 
 ### Extras
-- [ ] password protection
 - [x] SK6812 RGBW support
 - [x] per-pattern speed/scale
 - [x] delete pattern
@@ -85,6 +84,8 @@
 - [x] render animations to images for readme
 - [x] add palette_mirrored utility for performance
 - [x] pixel mapping
+- [x] 3D
 - [ ] timer
+- [ ] mapping editor
 
 sudo ledcontrol --led_count 150 --led_pixel_order GRBW --led_color_correction "#FFA8FF"
