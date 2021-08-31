@@ -104,9 +104,27 @@ LEDControl can function as a E1.31 streaming ACN receiver, allowing the connecte
 2. Add your LEDControl device in LedFx: Select `e131` as the device type, use the hostname or IP of your Raspberry Pi, and enter the number of LEDs you have attached.
 3. Run LEDControl with the `--sacn` command line flag. An option to enable sACN receiver mode will appear on the web interface.
 4. Enable sACN receiver mode in the LEDControl web interface.
-5. Configure a music visualizer effect in LedFx.
-
+5. Configure a music visualizer effect i
 While sACN receiver mode is enabled, the LED refresh rate is determined by your sACN server. There may be noticeable latency when using sACN on congested networks or if other software on the Raspberry Pi is using its network hardware; this is a known limitation of sACN.
+
+### Pixel Mapping
+LEDControl supports pixel mapping, which allows 2-dimensional animation patterns to be mapped to any physical arrangement of LEDs (currently only in 2D space). Currently, pixel mappings can only be specified with a JSON file containing an array of points representing the positions of each LED, using the `--pixel_mapping_json` command line argument. `--led_count` does not need to be specified when pixel mapping is used. The points must be in the same order that the correresponding LEDs are connected, and the units used to define the pixel mapping do not matter (negative and floating-point values are allowed).
+
+#### Example
+![pixelmapping.png](pixelmapping.png)
+
+```json
+[
+  [-3, 3],
+  [0, 3],
+  [3, 3],
+  [3, 0],
+  [3, -3],
+  [0, -3],
+  [-3, -3],
+  [-3, 0]
+]
+```
 
 ## Pattern Editing
 Animation patterns are defined as Python functions that work similarly to GLSL fragment shaders or DirectX pixel shaders. The LEDControl web interface allows editing and creation of patterns using a subset of Python.

@@ -84,7 +84,7 @@
 - [x] DMX
 - [x] render animations to images for readme
 - [x] add palette_mirrored utility for performance
-- [ ] pixel mapping
+- [x] pixel mapping
 - [ ] timer
 
 sudo ledcontrol --led_count 150 --led_pixel_order GRBW --led_color_correction "#FFA8FF"

@@ -8,5 +8,8 @@ Point = collections.namedtuple('Point', ['x', 'y'])
 def line(count):
     return lambda i: Point(i / count, 0)
 
-# needs arrays and serpentine order modes
-# json mapping
+def from_array(mapping):
+    min_v = min([min(pt) for pt in mapping])
+    v_range = max([max(pt) for pt in mapping]) - min_v
+    mapping_normalized = [[(v - min_v) / v_range * 0.999 for v in pt] for pt in mapping]
+    return lambda i: Point(mapping_normalized[i][0], mapping_normalized[i][1])

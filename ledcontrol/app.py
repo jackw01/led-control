@@ -30,18 +30,37 @@ class FormItem:
     unit: str = ''
     hide: bool = False
 
-def create_app(led_count, refresh_rate,
-               led_pin, led_data_rate, led_dma_channel,
+def create_app(led_count,
+               pixel_mapping,
+               refresh_rate,
+               led_pin,
+               led_data_rate,
+               led_dma_channel,
                led_pixel_order,
-               led_color_correction, led_v_limit,
+               led_color_correction,
+               led_v_limit,
                save_interval,
                enable_sacn):
     app = Flask(__name__)
-    leds = LEDController(led_count, led_pin,
-                         led_data_rate, led_dma_channel,
+
+    # Create pixel mapping function
+    if pixel_mapping is not None:
+        print(f'Using pixel mapping from file ({len(pixel_mapping)} LEDs)')
+        led_count = len(pixel_mapping)
+        mapping_func = pixelmappings.from_array(pixel_mapping)
+    else:
+        print(f'Using default linear pixel mapping ({led_count} LEDs)')
+        mapping_func = pixelmappings.line(led_count)
+
+    leds = LEDController(led_count,
+                         led_pin,
+                         led_data_rate,
+                         led_dma_channel,
                          led_pixel_order)
-    controller = AnimationController(leds, refresh_rate, led_count,
-                                     pixelmappings.line(led_count),
+    controller = AnimationController(leds,
+                                     refresh_rate,
+                                     led_count,
+                                     mapping_func,
                                      led_color_correction,
                                      enable_sacn)
 

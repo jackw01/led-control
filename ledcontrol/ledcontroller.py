@@ -7,8 +7,11 @@ import ledcontrol.driver as driver
 import ledcontrol.utils as utils
 
 class LEDController:
-    def __init__(self, led_count, led_pin,
-                 led_data_rate, led_dma_channel,
+    def __init__(self,
+                 led_count,
+                 led_pin,
+                 led_data_rate,
+                 led_dma_channel,
                  led_pixel_order):
         # This is bad but it's the only way
         px_order = driver.WS2811_STRIP_GRB

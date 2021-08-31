@@ -16,7 +16,10 @@ import ledcontrol.driver as driver
 import ledcontrol.utils as utils
 
 class AnimationController:
-    def __init__(self, led_controller, refresh_rate, led_count,
+    def __init__(self,
+                 led_controller,
+                 refresh_rate,
+                 led_count,
                  mapping_func,
                  led_color_correction,
                  enable_sacn):
@@ -31,12 +34,6 @@ class AnimationController:
 
         # Map led indices to normalized position vectors
         self.mapped = [self.mapping_func(i) for i in range(self.led_count)]
-
-        # Check mapping dimensions to simplify loop if possible
-        self.mapping_uses_x_only = True
-        for point in self.mapped:
-            if point.y != 0:
-                self.mapping_uses_x_only = False
 
         # Create lists used to cache current mapping
         # so it doesn't have to be recalculated every frame
