@@ -7,13 +7,13 @@
 * In-browser code editor and color palette editor make creating and modifying animations easy
 * Large selection of built-in animations and color palettes means you don't have to write any code
 * Works with cheap and readily available WS281x and SK6812 LED strips and strings
+* Supports pixel mapping for arbitrary 2D and 3D LED arrangements (matrix displays and LED cubes)
 * Seamlessly supports HSV-to-RGBW and RGB-to-RGBW conversion for RGBW LED strips
 * Supports networked E1.31 sACN DMX control for music visualization through [LedFx](https://github.com/LedFx/LedFx)
 
 ### Technical Details
 * Animation patterns are defined as Python functions that work similarly to fragment shaders
 * Capable of achieving up to 150 FPS on 150 RGBW LEDs on a Raspberry Pi Zero
-* Supports pixel mapping for displaying animations on arbitrary 3D arrangements of LEDs
 * Web backend and animation code are written in Python using the [Flask](https://github.com/pallets/flask) web framework for ease of development
 * Color conversions, color correction, and final rendering operations are implemented in a C extension module for maximum performance
 
@@ -99,6 +99,9 @@ optional arguments:
                         Default: 60
   --sacn                Enable sACN / E1.31 support. Default: False
 ```
+
+### Built-In Animation Patterns
+Image and animated GIF previews of all built-in animations can be seen at [patterns.md](patterns).
 
 ### E1.31 sACN, Music Visualization, and LedFx Use
 LEDControl can function as a E1.31 streaming ACN receiver, allowing the connected LEDs to be directly controlled over the network. [LedFx](https://github.com/LedFx/LedFx) is recommended for music visualization over sACN.

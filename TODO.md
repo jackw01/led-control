@@ -86,6 +86,7 @@
 - [x] pixel mapping
 - [x] 3D
 - [ ] timer
-- [ ] mapping editor
+- [ ] pixel mapping global rotation/scale
+- [ ] pixel mapping editor
 
 sudo ledcontrol --led_count 150 --led_pixel_order GRBW --led_color_correction "#FFA8FF"
