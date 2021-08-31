@@ -118,11 +118,15 @@ def create_app(led_count, refresh_rate,
         'Sets a key/value pair in controller parameters'
         key = request.args.get('key', type=str)
         value = request.args.get('value')
+        form_item = next(filter(lambda i: i.key == key, form))
         if key == 'primary_pattern':
             save_current_pattern_params()
             controller.set_param('primary_speed', patterns[int(value)]['primary_speed'])
             controller.set_param('primary_scale', patterns[int(value)]['primary_scale'])
-        controller.set_param(key, next(filter(lambda i: i.key == key, form)).type(value))
+        value = form_item.type(value)
+        if form_item.control == 'range':
+            value = utils.clamp(value, form_item.min, form_item.max)
+        controller.set_param(key, value)
         return jsonify(result='')
 
     @app.route('/getpatternparams')

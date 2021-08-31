@@ -400,5 +400,8 @@ class AnimationController:
     def end_animation(self):
         'Stop rendering in the animation thread and stop sACN receiver'
         self.timer.stop()
-        if self._enable_sacn:
-            self._receiver.stop()
+        try:
+            if self._enable_sacn and self._receiver:
+                self._receiver.stop()
+        except:
+            pass
