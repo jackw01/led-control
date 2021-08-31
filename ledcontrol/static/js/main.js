@@ -34,7 +34,6 @@ function handleInputChange(elem) {
 
   // On sACN mode change, hide or show UI
   if (key === 'sacn') {
-    console.log(val);
     const elems = $('.input-toplevel:not(.input-toplevel[data-id=brightness], .input-toplevel[data-id=color_temp], .input-toplevel[data-id=sacn]), #code, #palette-color-bar, #colors');
     if (val === 1) elems.hide();
     else elems.show();
@@ -346,6 +345,8 @@ window.onload = function() {
   $('#new-palette').on('click', handleNewPalette);
   $('#delete-palette').on('click', handleDeletePalette);
   $('#palette-name').on('change', handleRenamePalette);
+
+  handleInputChange($('select[data-id="sacn"]'));
 
   $.getJSON('/getpatternsources', {}, (result) => {
     console.log('Sources:', result);
