@@ -49,7 +49,7 @@ The flexible PCBs and connectors used in these LED strips are not really designe
 ### Software Setup
 Python 3.7 or newer is required.
 
-1. `sudo apt-get install scons swig`
+1. `sudo apt-get install scons swig python3-setuptools`
 2. `git clone --recurse-submodules https://github.com/jackw01/led-control.git`
 3. `cd led-control`
 4. `sudo python3 setup.py develop`
