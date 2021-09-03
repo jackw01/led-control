@@ -110,7 +110,8 @@ LEDControl can function as a E1.31 streaming ACN receiver, allowing the connecte
 2. Add your LEDControl device in LedFx: Select `e131` as the device type, use the hostname or IP of your Raspberry Pi, and enter the number of LEDs you have attached.
 3. Run LEDControl with the `--sacn` command line flag. An option to enable sACN receiver mode will appear on the web interface.
 4. Enable sACN receiver mode in the LEDControl web interface.
-5. Configure a music visualizer effect i
+5. Configure a music visualizer effect in LedFx.
+
 While sACN receiver mode is enabled, the LED refresh rate is determined by your sACN server. There may be noticeable latency when using sACN on congested networks or if other software on the Raspberry Pi is using its network hardware; this is a known limitation of sACN.
 
 ### Pixel Mapping
