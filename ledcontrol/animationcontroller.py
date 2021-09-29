@@ -251,8 +251,10 @@ class AnimationController:
             # otherwise pick shortest path between colors
             h1 = c2[0] - c1[0]
             if abs(h1) != 1:
-                if h1 < -0.5: h1 += 1
-                if h1 > 0.5: h1 -= 1
+                if h1 < -0.5:
+                    h1 += 1
+                if h1 > 0.5:
+                    h1 -= 1
             palette_table.append((
                 f * h1 + c1[0],
                 f * (c2[1] - c1[1]) + c1[1],
