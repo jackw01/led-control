@@ -249,9 +249,12 @@ class AnimationController:
             c1, c2 = palette['colors'][sector], palette['colors'][sector + 1]
             # Allow full spectrum if extremes are 0 and 1 in any order
             # otherwise pick shortest path between colors
-            h1, h2 = c2[0] - c1[0], c2[0] - 1.0 - c1[0]
+            h1 = c2[0] - c1[0]
+            if abs(h1) != 1:
+                if h1 < -0.5: h1 += 1
+                if h1 > 0.5: h1 -= 1
             palette_table.append((
-                f * (h1 if abs(h1) < abs(h2) or h1 == 1.0 else h2) + c1[0],
+                f * h1 + c1[0],
                 f * (c2[1] - c1[1]) + c1[1],
                 f * (c2[2] - c1[2]) + c1[2],
             ))
