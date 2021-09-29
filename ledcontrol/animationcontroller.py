@@ -281,6 +281,10 @@ class AnimationController:
         'Delete palette'
         del self.palettes[key]
 
+    def reset_timer(self):
+        'Reset animation timer'
+        self.start = time.perf_counter()
+
     def begin_animation_thread(self):
         'Start animating'
         self.timer = IntervalTimer(1.0 / self.refresh_rate, self.update_leds)

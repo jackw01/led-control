@@ -232,6 +232,12 @@ def create_app(led_count,
         'Returns latest animation frames per second'
         return jsonify(fps=controller.timer.get_rate())
 
+    @app.route('/resettimer')
+    def reset_timer():
+        'Resets animation timer'
+        controller.reset_timer()
+        return jsonify(result='')
+
     def save_current_pattern_params():
         'Remembers speed and scale for current pattern'
         patterns[controller.params['primary_pattern']]['primary_speed']\
