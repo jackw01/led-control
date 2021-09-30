@@ -149,7 +149,7 @@ def pattern(t, dt, x, y, z, prev_state):
 
 #### Arguments
 ##### `t`
-Time in cycles (an arbitary unit that represents one animation cycle as a floating point number). Calculated by multiplying real time in seconds by animation speed in Hz (cycles/second).
+Time in cycles (an arbitary unit that represents one animation cycle as a floating point number). Calculated by multiplying real time in seconds by animation speed in Hz (cycles/second). Time is reset to 0 every week (168 hours) of uptime to prevent any math/overflow issues that may occur.
 
 ##### `dt`
 Delta time in cycles.
@@ -158,7 +158,7 @@ Delta time in cycles.
 Normalized (0 to 1) value representing the position of the current LED in arbitrary units (after mapping LED indices to positions and scaling). By default, LEDs are mapped to the x axis only. One position unit represents the scale factor multiplied by the length of the axis. At a scale of less than 1, one position unit represents a fraction of the axis length and the animation is tiled to fill all the LEDs.
 
 ##### `prev_state`
-Previous color state of the current LED as an HSV or RGB tuple. Initialized to `(0, 0, 0)` on the first animation frame.
+Previous color state of the current LED as an HSV or RGB tuple. Initialized to `(0, 0, 0)` when the program starts.
 
 #### Return Values
 Pattern functions must return a color in tuple form and either `hsv` or `rgb` depending on the format of the color. All values are expected to be in the 0 to 1 range, except for hue. Hue values less than 0 or greater than 1 will wrap. RGB values will be clamped to the 0 to 1 range.

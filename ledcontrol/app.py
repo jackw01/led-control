@@ -40,7 +40,8 @@ def create_app(led_count,
                led_color_correction,
                led_v_limit,
                save_interval,
-               enable_sacn):
+               enable_sacn,
+               no_timer_reset):
     app = Flask(__name__)
 
     # Create pixel mapping function
@@ -62,7 +63,8 @@ def create_app(led_count,
                                      led_count,
                                      mapping_func,
                                      led_color_correction,
-                                     enable_sacn)
+                                     enable_sacn,
+                                     no_timer_reset)
 
     patterns = dict(animpatterns.default)
 

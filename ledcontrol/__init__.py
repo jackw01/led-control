@@ -36,6 +36,8 @@ def main():
                         help='Interval for automatically saving settings in seconds. Default: 60')
     parser.add_argument('--sacn', action='store_true',
                         help='Enable sACN / E1.31 support. Default: False')
+    parser.add_argument('--no_timer_reset', action='store_true',
+                        help='Do not reset the animation timer and state when patterns are changed. Default: False')
     args = parser.parse_args()
 
     pixel_mapping = None
@@ -55,7 +57,8 @@ def main():
                      [int(color_correction_hex[i:i + 2], 16) for i in (0, 2, 4)],
                      args.led_brightness_limit,
                      args.save_interval,
-                     args.sacn)
+                     args.sacn
+                     args.no_timer_reset)
     run_simple(args.host, args.port, app,
                use_reloader=False,
                use_debugger=True,

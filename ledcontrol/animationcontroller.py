@@ -22,12 +22,14 @@ class AnimationController:
                  led_count,
                  mapping_func,
                  led_color_correction,
-                 enable_sacn):
+                 enable_sacn,
+                 no_timer_reset):
         self.led_controller = led_controller
         self.refresh_rate = refresh_rate
         self.led_count = led_count
         self.mapping_func = mapping_func
         self._enable_sacn = enable_sacn
+        self._no_timer_reset = no_timer_reset
 
         # Initialize prev state arrays
         self.reset_prev_states()
@@ -79,7 +81,7 @@ class AnimationController:
         self.calculate_mappings()
 
         # Prepare to start
-        self.start = time.perf_counter()
+        self.reset_timer()
         self.time = 0
         self.update_needed = True # Is the LED state going to change this frame?
 
@@ -168,6 +170,10 @@ class AnimationController:
         self.primary_prev_state = blank[:]
         self.secondary_prev_state = blank[:]
 
+    def reset_timer(self):
+        'Reset animation timer'
+        self.start = time.perf_counter()
+
     def calculate_color_correction(self):
         'Calculate and store color temperature correction'
         rgb = driver.blackbody_to_rgb(self.params['color_temp'])
@@ -232,6 +238,9 @@ class AnimationController:
         errors, warnings, pattern = self.compile_pattern(source)
         if len(errors) == 0:
             self.pattern_functions[key] = pattern
+            if not self._no_timer_reset:
+                self.reset_timer()
+                self.reset_prev_states()
         elif key not in self.pattern_functions:
             self.pattern_functions[key] = animpatterns.blank
         self.update_needed = True
@@ -285,10 +294,6 @@ class AnimationController:
     def delete_palette(self, key):
         'Delete palette'
         del self.palettes[key]
-
-    def reset_timer(self):
-        'Reset animation timer'
-        self.start = time.perf_counter()
 
     def begin_animation_thread(self):
         'Start animating'
