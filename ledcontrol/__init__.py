@@ -57,7 +57,7 @@ def main():
                      [int(color_correction_hex[i:i + 2], 16) for i in (0, 2, 4)],
                      args.led_brightness_limit,
                      args.save_interval,
-                     args.sacn
+                     args.sacn,
                      args.no_timer_reset)
     run_simple(args.host, args.port, app,
                use_reloader=False,

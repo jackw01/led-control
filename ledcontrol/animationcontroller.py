@@ -220,12 +220,19 @@ class AnimationController:
         else:
             self._receiver.stop()
 
+    def _check_reset_animation_state(self):
+        if not self._no_timer_reset:
+            self.reset_timer()
+            self.reset_prev_states()
+
     def set_param(self, key, value):
         'Set an animation parameter'
         self.params[key] = value
         self.update_needed = True
         if key == 'color_temp':
             self.calculate_color_correction()
+        elif key == 'primary_pattern':
+            self._check_reset_animation_state()
         elif key == 'primary_scale' or key == 'secondary_scale':
             self.calculate_mappings()
         elif key == 'palette':
@@ -238,9 +245,7 @@ class AnimationController:
         errors, warnings, pattern = self.compile_pattern(source)
         if len(errors) == 0:
             self.pattern_functions[key] = pattern
-            if not self._no_timer_reset:
-                self.reset_timer()
-                self.reset_prev_states()
+            self._check_reset_animation_state()
         elif key not in self.pattern_functions:
             self.pattern_functions[key] = animpatterns.blank
         self.update_needed = True
