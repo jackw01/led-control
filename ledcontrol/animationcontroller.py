@@ -223,7 +223,6 @@ class AnimationController:
     def _check_reset_animation_state(self):
         if not self._no_timer_reset:
             self.reset_timer()
-            self.reset_prev_states()
 
     def set_param(self, key, value):
         'Set an animation parameter'

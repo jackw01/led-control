@@ -98,8 +98,8 @@ optional arguments:
                         Interval for automatically saving settings in seconds.
                         Default: 60
   --sacn                Enable sACN / E1.31 support. Default: False
-  --no_timer_reset      Do not reset the animation timer and state when
-                        patterns are changed. Default: False
+  --no_timer_reset      Do not reset the animation timer when patterns are
+                        changed. Default: False
 ```
 
 ### Built-In Animation Patterns
