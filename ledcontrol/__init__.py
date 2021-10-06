@@ -37,7 +37,7 @@ def main():
     parser.add_argument('--sacn', action='store_true',
                         help='Enable sACN / E1.31 support. Default: False')
     parser.add_argument('--no_timer_reset', action='store_true',
-                        help='Do not reset the animation timer and state when patterns are changed. Default: False')
+                        help='Do not reset the animation timer when patterns are changed. Default: False')
     args = parser.parse_args()
 
     pixel_mapping = None
