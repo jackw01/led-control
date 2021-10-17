@@ -7,7 +7,7 @@ import ledcontrol.pixelmappings as pixelmappings
 import ledcontrol.driver as driver
 import ledcontrol.utils as utils
 
-controller = AnimationController(None, 0, 256, pixelmappings.line(256), (0, 0, 0), False)
+controller = AnimationController(None, 0, 256, pixelmappings.line(256), (0, 0, 0), False, True)
 
 s = 100 # LED strip length
 t = 400 # Time units
