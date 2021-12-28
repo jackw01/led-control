@@ -15,7 +15,7 @@ ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
 def blank(t, dt, x, y, prev_state):
     return (0, 0, 0), ColorMode.hsv
 
-static_patterns = [0, 1] # pattern IDs that display a solid color
+static_patterns = [0, 1, 2] # pattern IDs that display a solid color
 
 default = {
     0: {
@@ -28,6 +28,15 @@ def pattern(t, dt, x, y, z, prev_state):
 '''
     },
     1: {
+        'name': 'Static White',
+        'primary_speed': 0.0,
+        'primary_scale': 1.0,
+        'source': '''
+def pattern(t, dt, x, y, z, prev_state):
+    return (0, 0, 1), hsv
+'''
+    },
+    2: {
         'name': 'Static Gradient 1D',
         'primary_speed': 0.0,
         'primary_scale': 1.0,
@@ -36,7 +45,7 @@ def pattern(t, dt, x, y, z, prev_state):
     return palette(x), hsv
 '''
     },
-    2: {
+    3: {
         'name': 'Static Gradient Mirrored 1D',
         'primary_speed': 0.0,
         'primary_scale': 1.0,

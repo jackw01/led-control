@@ -244,9 +244,14 @@ function updatePaletteColorBar() {
       f = f % sectorSize / sectorSize;
       const c1 = palette.colors[sector];
       const c2 = palette.colors[sector + 1];
-      const h1 = c2[0] - c1[0];
-      const h2 = c2[0] - 1 - c1[0];
-      const h = (f * (Math.abs(h1) < Math.abs(h2) || h1 === 1 ? h1 : h2) + c1[0]) * 360;
+      let h1 = c2[0] - c1[0];
+      // Allow full spectrum if extremes are 0 and 1 in any order
+      // otherwise pick shortest path between colors
+      if (Math.abs(h1) != 1) {
+        if (h1 < -0.5) h1++;
+        if (h1 > 0.5) h1--;
+      }
+      const h = (f * h1 + c1[0]) * 360;
       const s = (f * (c2[1] - c1[1]) + c1[1]) * 100;
       const v = (f * (c2[2] - c1[2]) + c1[2]) * 100;
       const l = (2 - s / 100) * v / 2;
