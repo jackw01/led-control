@@ -30,7 +30,7 @@ class AnimationController:
         self.mapping_func = mapping_func
         self._enable_sacn = enable_sacn
         self._no_timer_reset = no_timer_reset
-
+        self.data = []
         # Initialize prev state arrays
         self.reset_prev_states()
 
@@ -91,7 +91,10 @@ class AnimationController:
             self._sacn_perf_avg = 0
             self._sacn_count = 0
 
-    def _sacn_callback(self, packet):
+
+
+
+    def _sacn_callback_1(self, packet):
         'Callback for sACN / E1.31 client'
         sacn_time = time.perf_counter()
         self._sacn_perf_avg += (sacn_time - self._last_sacn_time)
@@ -102,9 +105,23 @@ class AnimationController:
             print('Average sACN rate (packets/s): {}'.format(1 / (self._sacn_perf_avg / 100)))
             self._sacn_perf_avg = 0
 
-        data = [x / 255.0 for x in packet.dmxData[:self.led_count * 3]]
+        self.data[0:] = [x / 255.0 for x in packet.dmxData]
         self.led_controller.set_all_pixels_rgb_float(
-            list(zip_longest(*(iter(data),) * 3)),
+            list(zip_longest(*(iter(self.data[:510]),) * 3)),
+            self.correction,
+            1.0,
+            self.params['brightness'],
+            1.0
+        )
+    def _sacn_callback_2(self, packet):
+        'Callback for sACN / E1.31 client'
+        sacn_time = time.perf_counter()
+        self._sacn_perf_avg += (sacn_time - self._last_sacn_time)
+        self._last_sacn_time = sacn_time
+        self.data[512:] = [x / 255.0 for x in packet.dmxData]
+        #breakpoint()
+        self.led_controller.set_all_pixels_rgb_float(
+            list(zip_longest(*(iter(self.data[:self.led_count*3]),) * 3)),
             self.correction,
             1.0,
             self.params['brightness'],
@@ -215,7 +232,8 @@ class AnimationController:
     def _update_sacn_state(self):
         if self.params['sacn']:
             self._receiver = sacn.sACNreceiver()
-            self._receiver.listen_on('universe', universe=1)(self._sacn_callback)
+            self._receiver.listen_on('universe', universe=1)(self._sacn_callback_1)
+            self._receiver.listen_on('universe', universe=2)(self._sacn_callback_2)
             self._receiver.start()
         else:
             self._receiver.stop()
