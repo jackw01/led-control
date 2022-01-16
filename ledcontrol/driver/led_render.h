@@ -236,6 +236,7 @@ uint32_t render_rgb_float(color_rgb_float rgb,
   float b = clamp(rgb.b, 0, 1);
   float w = 0;
   uint8_t sat = saturation * 255.0;
+  if (debug) printf("%d %d %d %d\n", r, g, b, sat);
 
   if (has_white) {
     float max = r > g ? (r > b ? r : b) : (g > b ? g : b);
@@ -250,9 +251,9 @@ uint32_t render_rgb_float(color_rgb_float rgb,
       g = (g - max) * saturation + max;
       b = (b - max) * saturation + max;
       min = r < g ? (r < b ? r : b) : (g < b ? g : b);
-      r -= min;
-      g -= min;
-      b -= min;
+      //r -= min;
+      //g -= min;
+      //b -= min;
     }
     w = min * min;
   } else {
