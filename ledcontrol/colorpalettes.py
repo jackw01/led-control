@@ -4,7 +4,7 @@
 default = {
     0: {
         'name': 'Sunset Light',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 0.6175635842715993,
@@ -35,7 +35,7 @@ default = {
     },
     10: {
         'name': 'Sunset Dark',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 0.8833333333333333,
@@ -61,7 +61,7 @@ default = {
     },
     20: {
         'name': 'Miami',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 0.973575367647059,
@@ -97,7 +97,7 @@ default = {
     },
     90: {
         'name': 'Spectrum',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 0,
@@ -113,7 +113,7 @@ default = {
     },
     30: {
         'name': 'Lemonbars',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 1,
@@ -134,7 +134,7 @@ default = {
     },
     40: {
         'name': 'Aurora',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 0.8304057401769303,
@@ -155,7 +155,7 @@ default = {
     },
     50: {
         'name': 'Twilight',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 0.05943623711081113,
@@ -191,7 +191,7 @@ default = {
     },
     70: {
         'name': 'Viridis',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 0.7663143382352942,
@@ -217,7 +217,7 @@ default = {
     },
     150: {
         'name': 'Fire',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 0,
@@ -248,7 +248,7 @@ default = {
     },
     160: {
         'name': 'Golden Hour',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 0.052355598000919115,
@@ -269,7 +269,7 @@ default = {
     },
     170: {
         'name': 'Ocean',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 0.6190257352941176,
@@ -291,7 +291,7 @@ default = {
 
     190: {
         'name': 'Sky Blue',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 0.5824908088235294,
@@ -312,7 +312,7 @@ default = {
     },
     200: {
         'name': 'Purple',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 0.7456341911764706,
@@ -333,7 +333,7 @@ default = {
     },
     210: {
         'name': 'Hot Pink',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 0.979549632352941,
@@ -354,7 +354,7 @@ default = {
     },
     220: {
         'name': 'Light Pink',
-        'mode': 0,
+        'default': True,
         'colors': [
             [
                 0.9338235294117647,

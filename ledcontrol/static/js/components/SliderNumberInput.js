@@ -1,6 +1,8 @@
+import store from '../Store.js';
+
 export default {
   props: {
-    'k': String,
+    'path': String,
     'label': String,
     'unit': String,
     'min': Number,
@@ -9,14 +11,12 @@ export default {
   },
   data() {
     return {
-      val: 0
+      val: store.get(this.path),
     }
   },
   methods: {
     update(event) {
-      console.log(this);
-      console.log(this.k);
-      axios.post('/setparam', { key: this.k, value: this.val });
+      store.set(this.path, _.clamp(this.val, this.min, this.max));
     }
   },
   template: `

@@ -1,21 +1,16 @@
+import store from '../Store.js';
+
 export default {
   name: 'ControlPage',
-  created() {
-    this.form = [
-      {
-        'key': 'b',
-        'label': 'Brightness',
-        'unit': '',
-        'min': 0,
-        'max': 1,
-        'step': 0.01,
-      }
-    ];
+  computed: {
+    groups: function () {
+      return store.get('groups');
+    }
   },
   template: `
     <div>
       <slider-number-input
-        k="brightness"
+        path="global_brightness"
         label="Brightness"
         unit=""
         v-bind:min="0"
@@ -23,7 +18,7 @@ export default {
         v-bind:step="0.01"
       ></slider-number-input>
       <slider-number-input
-        k="color_temp"
+        path="global_color_temp"
         label="Color Temp"
         unit="K"
         v-bind:min="1000"
@@ -31,7 +26,7 @@ export default {
         v-bind:step="10"
       ></slider-number-input>
       <slider-number-input
-        k="saturation"
+        path="global_saturation"
         label="Saturation"
         unit=""
         v-bind:min="0"
@@ -39,5 +34,12 @@ export default {
         v-bind:step="0.01"
       ></slider-number-input>
     </div>
+    <br />
+    <group-controls
+      v-for="(group, k, i) in groups"
+      v-bind:name="k"
+      v-bind:i="i"
+    >
+    </group-controls>
   `
 }

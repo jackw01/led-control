@@ -7,6 +7,7 @@ import time
 import traceback
 import RestrictedPython
 import sacn
+import collections
 from itertools import zip_longest
 from ledcontrol.intervaltimer import IntervalTimer
 
@@ -56,6 +57,28 @@ class AnimationController:
             'secondary_scale': 1.0,
             'palette': 0,
             'sacn': 0,
+        }
+
+        # All user-editable animation settings stored here
+        self._settings = {
+            'global_brightness': 0.15,
+            'global_color_temp': 6500,
+            'global_saturation': 1.0,
+            'sacn': 0,
+            'groups': {
+                'main': {
+                    'range_start': 0,
+                    'range_end': 100000,
+                    'mapping': [],
+                    'brightness': 1.0,
+                    'color_temp': 6500,
+                    'saturation': 1.0,
+                    'function': 0,
+                    'speed': 0.2,
+                    'scale': 1.0,
+                    'palette': 0,
+                }
+            }
         }
 
         # Lookup dictionary for pattern functions used to generate select menu
@@ -239,6 +262,22 @@ class AnimationController:
         elif key == 'sacn' and self._enable_sacn:
             self._update_sacn_state()
 
+    def get_settings(self):
+        'Get settings dict'
+        return self._settings
+
+    def update_settings(self, new_settings):
+        'Update settings dict with new values'
+        def recursive_update(d1, d2):
+            for k, v in d2.items():
+                if isinstance(v, collections.abc.Mapping):
+                    d1[k] = recursive_update(d1.get(k, {}), v)
+                else:
+                    d1[k] = v
+            return d1
+
+        recursive_update(self._settings, new_settings)
+
     def set_pattern_function(self, key, source):
         'Update the source code and recompile a pattern function'
         errors, warnings, pattern = self.compile_pattern(source)
@@ -290,6 +329,10 @@ class AnimationController:
     def get_palette_length(self):
         'Get length of current palette color array'
         return self.palette_length
+
+    def get_palettes(self):
+        'Get palettes dict'
+        return self.palettes
 
     def set_palette(self, key, value):
         'Update palette'

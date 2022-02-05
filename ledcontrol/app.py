@@ -96,13 +96,16 @@ def create_app(led_count,
             for k, v in settings['patterns'].items():
                 # JSON keys are always strings
                 if int(k) not in animpatterns.default and 'source' in v:
+                    v.default = False
                     patterns[int(k)] = v
                     controller.set_pattern_function(int(k), v['source'])
                 else:
                     patterns[int(k)].update(v)
 
             # Read color palettes
-            controller.palettes.update({int(k): v for k, v in settings['palettes'].items()})
+            for k, v in settings['palettes'].items():
+                v.default = False
+                controller.set_palette(int(k), v)
             controller.calculate_palette_table()
             print(f'Loaded saved settings from {filename}.')
 
@@ -135,6 +138,40 @@ def create_app(led_count,
         form.append(FormItem('select', 'sacn', int,
                              options=['Off', 'On'], label='E1.31 sACN Receiver Mode'))
 
+    @app.route('/ui-test')
+    def index2():
+        'Returns web app page'
+        return app.send_static_file('index-vue.html')
+
+    @app.route('/getsettings')
+    def get_settings():
+        'Get settings'
+        return jsonify(controller.get_settings())
+
+    @app.route('/updatesettings', methods=['POST'])
+    def update_settings():
+        'Update settings'
+        new_settings = request.json
+        print(new_settings)
+
+        #controller.update_settings(new_settings)
+        return jsonify(result='')
+
+    @app.route('/getfunctions')
+    def get_functions():
+        'Get functions'
+        return jsonify(patterns)
+
+    @app.route('/getpalettes')
+    def get_palettes2():
+        'Get palettes'
+        return jsonify(controller.get_palettes())
+
+
+
+
+
+
     @app.route('/')
     def index():
         'Returns web app page'
@@ -144,33 +181,11 @@ def create_app(led_count,
         return render_template('index.html',
                                form=form)
 
-    @app.route('/ui-test')
-    def index2():
-        'Returns web app page'
-        return app.send_static_file('index-vue.html')
-
     @app.route('/setparam')
     def set_param():
         'Sets a key/value pair in controller parameters'
         key = request.args.get('key', type=str)
         value = request.args.get('value')
-        form_item = next(filter(lambda i: i.key == key, form))
-        if key == 'primary_pattern':
-            save_current_pattern_params()
-            controller.set_param('primary_speed', patterns[int(value)]['primary_speed'])
-            controller.set_param('primary_scale', patterns[int(value)]['primary_scale'])
-
-        value = form_item.type(value)
-        if form_item.control == 'range':
-            value = utils.clamp(value, form_item.min, form_item.max)
-        controller.set_param(key, value)
-        return jsonify(result='')
-
-    @app.route('/setparam', methods=['POST'])
-    def set_param():
-        'Sets a key/value pair in controller parameters'
-        key = request.form['key']
-        value = request.form['value']
         form_item = next(filter(lambda i: i.key == key, form))
         if key == 'primary_pattern':
             save_current_pattern_params()
@@ -228,7 +243,7 @@ def create_app(led_count,
         del patterns[key]
         return jsonify(result='')
 
-    @app.route('/getpalettes')
+    @app.route('/getpalettes_old')
     def get_palettes():
         'Returns palettes in JSON dict form'
         return jsonify(palettes=controller.palettes,

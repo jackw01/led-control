@@ -390,7 +390,7 @@ window.onload = function() {
     updateCodeView(result.current);
   });
 
-  $.getJSON('/getpalettes', {}, (result) => {
+  $.getJSON('/getpalettes_old', {}, (result) => {
     console.log('Palettes:', result);
     // Set selected palette to current value
     palettes = result.palettes;

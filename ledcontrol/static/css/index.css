@@ -16,6 +16,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "Barlow", sans-serif;
+  color: #e6e8ec;
 }
 
 .header-light {
@@ -170,7 +171,7 @@ textarea {
 
 .body-dark {
   background: #16181a;
-  color: #e6e8ec;
+  color: #afb1b5;
 }
 
 .label {
@@ -259,7 +260,7 @@ textarea {
 }
 
 .button {
-  color: #e6e8ec;
+  color: #afb1b5;
   border-radius: 3px;
   background: rgba(6, 162, 171, 0.05);
   border: 1px solid #04737a;
@@ -286,7 +287,7 @@ textarea, input[type=text], input[type=password], input[type=number] {
   border-radius: 3px;
   outline: none;
   background: transparent;
-  color: #e6e8ec;
+  color: #afb1b5;
   border: 1px solid #04737a;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
 }
@@ -363,12 +364,12 @@ input[type=range]::-moz-range-thumb:hover {
   margin-bottom: 0.5rem;
   text-decoration: none;
   background: transparent;
-  color: #e6e8ec;
+  color: #afb1b5;
   border: 1px solid #04737a;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
 }
 .select-container:hover {
-  color: #e6e8ec;
+  color: #afb1b5;
   border: 1px solid #07c3cd;
 }
 .select-container select {
@@ -413,7 +414,7 @@ input[type=range]::-moz-range-thumb:hover {
 
 option {
   font-family: "Barlow", sans-serif;
-  color: #e6e8ec;
+  color: #afb1b5;
   background: #343639;
   border: none;
 }
@@ -434,7 +435,7 @@ option:hover, option:active {
   font-family: inherit;
 }
 #main .pcr-app .pcr-picker {
-  border: 1px solid #e6e8ec;
+  border: 1px solid #afb1b5;
 }
 #main .pcr-app .pcr-swatches {
   margin: 0;
@@ -443,7 +444,7 @@ option:hover, option:active {
   border-radius: 3px;
   outline: none;
   background: transparent;
-  color: #e6e8ec;
+  color: #afb1b5;
   border: 1px solid #04737a;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
 }
@@ -451,7 +452,7 @@ option:hover, option:active {
   border: 1px solid #07c3cd;
 }
 #main .pcr-app .pcr-type {
-  color: #e6e8ec;
+  color: #afb1b5;
   border-radius: 3px;
   background: rgba(6, 162, 171, 0.05);
   border: 1px solid #04737a;

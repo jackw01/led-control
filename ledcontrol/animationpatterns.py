@@ -22,6 +22,7 @@ default = {
         'name': 'Static Color',
         'primary_speed': 0.0,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return palette(0), hsv
@@ -31,6 +32,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Static White',
         'primary_speed': 0.0,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return (0, 0, 1), hsv
@@ -40,6 +42,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Static Gradient 1D',
         'primary_speed': 0.0,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return palette(x), hsv
@@ -49,6 +52,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Static Gradient Mirrored 1D',
         'primary_speed': 0.0,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return palette_mirrored(x), hsv
@@ -58,6 +62,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Hue Cycle 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return (t + x, 1, 1), hsv
@@ -67,6 +72,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Hue Cycle Quantized 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     hue = (t + x) % 1
@@ -77,6 +83,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Hue Scan 1D',
         'primary_speed': 0.1,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return (wave_triangle(t) + x, 1, 1), hsv
@@ -86,6 +93,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Hue Bounce 1D',
         'primary_speed': 0.1,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return (wave_sine(t) + x, 1, 1), hsv
@@ -95,6 +103,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Hue Waves 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     h = (x + t) * 0.5 + x + wave_sine(t)
@@ -105,6 +114,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Hue Ripples 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     wave1 = wave_sine(t / 4 + x)
@@ -120,6 +130,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Palette Cycle 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return palette(t + x), hsv
@@ -129,6 +140,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Palette Cycle Mirrored 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return palette_mirrored(t + x), hsv
@@ -138,6 +150,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Palette Cycle Quantized 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     t = (t + x) % 1
@@ -148,6 +161,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Palette Cycle Random 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     t = t + x
@@ -159,6 +173,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Palette Scan Mirrored 1D',
         'primary_speed': 0.1,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return palette_mirrored(wave_triangle(t) + x), hsv
@@ -168,6 +183,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Palette Bounce Mirrored 1D',
         'primary_speed': 0.1,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return palette_mirrored(wave_sine(t) + x), hsv
@@ -177,6 +193,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Palette Waves 1D',
         'primary_speed': 0.05,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     h = (x + t) * 0.1 + x + wave_sine(t)
@@ -188,6 +205,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Palette Ripples 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     wave1 = wave_sine(t / 4 + x)
@@ -201,6 +219,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Palette Ripples (Fast Cycle) 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     wave1 = wave_sine(t / 4 + x)
@@ -214,6 +233,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Palette Plasma 2D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
@@ -224,6 +244,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Palette Fractal Plasma 2D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     v = plasma_sines_octave(x, y, t, 7, 2.0, 0.5)
@@ -234,6 +255,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Palette Twinkle 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     v = prev_state[2] - dt
@@ -250,6 +272,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Palette Perlin Noise 2D',
         'primary_speed': 0.3,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return palette(perlin_noise_3d(x, y, t)), hsv
@@ -261,6 +284,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'RGB Sines 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return (wave_sine(t + x),
@@ -272,6 +296,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'RGB Cubics 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return (wave_cubic(t + x),
@@ -283,6 +308,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'RGB Ripples 1 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     v0 = x + (wave_sine(t)) + wave_sine(x + 0.666 * t)
@@ -295,6 +321,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'RGB Plasma (Spectrum Sines) 2D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
@@ -307,6 +334,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'RGB Plasma (Fire Sines) 2D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     v = plasma_sines(x, y, t, 1.0, 0.5, 0.5, 1.0)
@@ -319,6 +347,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'RGB Fractal Plasma (Fire Sines) 2D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     v = plasma_sines_octave(x, y, t, 7, 2.0, 0.5)
@@ -331,6 +360,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'name': 'Blackbody Cycle 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
+        'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     v = wave_triangle(t + x)

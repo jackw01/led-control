@@ -51,9 +51,10 @@ Python 3.7 or newer is required.
 
 1. `sudo apt-get install scons swig python3-dev python3-setuptools`
 2. `git clone --recurse-submodules https://github.com/jackw01/led-control.git`
-3. `cd led-control`
-4. `sudo python3 setup.py develop`
-5. `sudo ledcontrol --led_count 150` (add `--led_pixel_order GRBW` if using RGBW LEDs)
+3. `git checkout tags/v1.4.0`
+4. `cd led-control`
+5. `sudo python3 setup.py develop`
+6. `sudo ledcontrol --led_count 150` (add `--led_pixel_order GRBW` if using RGBW LEDs)
 
 ### Command Line Configuration Arguments
 Web server and LED hardware parameters must be specified as command line arguments when running ledcontrol.
@@ -160,7 +161,7 @@ Delta time in cycles.
 Normalized (0 to 1) value representing the position of the current LED in arbitrary units (after mapping LED indices to positions and scaling). By default, LEDs are mapped to the x axis only. One position unit represents the scale factor multiplied by the length of the axis. At a scale of less than 1, one position unit represents a fraction of the axis length and the animation is tiled to fill all the LEDs.
 
 ##### `prev_state`
-Previous color state of the current LED as an HSV or RGB tuple. Initialized to `(0, 0, 0)` when the program starts. 
+Previous color state of the current LED as an HSV or RGB tuple. Initialized to `(0, 0, 0)` when the program starts.
 
 #### Return Values
 Pattern functions must return a color in tuple form and either `hsv` or `rgb` depending on the format of the color. All values are expected to be in the 0 to 1 range, except for hue. Hue values less than 0 or greater than 1 will wrap. RGB values will be clamped to the 0 to 1 range.
