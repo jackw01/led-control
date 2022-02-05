@@ -301,7 +301,7 @@ function updateColorPickers(newKey) {
     pickr.index = i;
 
     if (!disabled) {
-      pickr.on('changestop', (instance) => {
+      pickr.on('changestop', (c, instance) => {
         const color = instance.getColor();
         palettes[getCurrentPaletteKey()].colors[instance.index] = [
           color.h / 360, color.s / 100, color.v / 100

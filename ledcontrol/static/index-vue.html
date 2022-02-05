@@ -1,0 +1,45 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>LED Control</title>
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=1.0,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+  <link rel="manifest" href="static/manifest.webmanifest">
+  <link rel="icon" href="static/favicon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="static/favicon.png" type="image/x-icon">
+  <link rel="apple-touch-icon" href="static/mobile-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#16181a">
+  <meta name="theme-color" content="#16181a">
+  <link rel="stylesheet" href="static/css/normalize.min.css">
+  <link rel="stylesheet" href="static/css/fonts.css">
+  <link rel="stylesheet" href="static/css/codemirror.css">
+  <link rel="stylesheet" href="static/css/codemirror-custom.css">
+  <link rel="stylesheet" href="static/css/picker-1.4.1-classic.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+</head>
+<body class="body-dark">
+  <div class="wrapper clearfix">
+    <main id="main">
+      <h2 class="header-stylized-text">LEDControl x</h2>
+      <br />
+      <div>
+        <router-link to="/setup">Setup</router-link> | <router-link to="/">Control</router-link>
+      </div>
+      <br />
+      <router-view></router-view>
+    </main>
+    <footer>
+      <small>
+        <a href="https://jackw01.github.io/led-control/">LEDControl</a> by <a
+          href="https://github.com/jackw01">jackw01</a>. Released under the MIT License.
+      </small>
+    </footer>
+  </div>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/vue@3"></script>
+  <script src="https://unpkg.com/vue-router@4"></script>
+  <script src="static/js/app.js" type="module"></script>
+</body>
+</html>
