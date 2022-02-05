@@ -96,7 +96,7 @@ def create_app(led_count,
             for k, v in settings['patterns'].items():
                 # JSON keys are always strings
                 if int(k) not in animpatterns.default and 'source' in v:
-                    v.default = False
+                    v['default'] = False
                     patterns[int(k)] = v
                     controller.set_pattern_function(int(k), v['source'])
                 else:
@@ -104,7 +104,7 @@ def create_app(led_count,
 
             # Read color palettes
             for k, v in settings['palettes'].items():
-                v.default = False
+                v['default'] = False
                 controller.set_palette(int(k), v)
             controller.calculate_palette_table()
             print(f'Loaded saved settings from {filename}.')

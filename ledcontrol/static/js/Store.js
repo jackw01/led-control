@@ -36,7 +36,17 @@ class Store {
     return this.palettes;
   }
 
-  updateOnBackend() {
+  setPalette(key, value) {
+    this.palettes[key] = value;
+    console.log('Palette set:', key, value);
+  }
+
+  removePalette(key) {
+    delete this.palettes[key];
+    console.log('Palette removed:', key);
+  }
+
+  saveSettings() {
     axios.post('/updatesettings', this.settings);
   }
 }

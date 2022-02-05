@@ -170,7 +170,7 @@ textarea {
 }
 
 .body-dark {
-  background: #16181a;
+  background: #161616;
   color: #afb1b5;
 }
 
@@ -430,7 +430,7 @@ option:hover, option:active {
   display: none;
 }
 #main .pcr-app {
-  background: #16181a;
+  background: #161616;
   box-shadow: none;
   font-family: inherit;
 }

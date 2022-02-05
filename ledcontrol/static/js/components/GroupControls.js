@@ -6,9 +6,12 @@ export default {
     'i': Number,
   },
   data() {
+    const functionKey = store.get('groups.' + this.name + '.function');
+    const paletteKey = store.get('groups.' + this.name + '.palette');
     return {
-      selectedFunction: store.get('groups.' + this.name + '.function'),
-      selectedPalette: store.get('groups.' + this.name + '.palette'),
+      functionKey,
+      paletteKey,
+      palette: store.getPalettes()[paletteKey],
     }
   },
   computed: {
@@ -20,28 +23,50 @@ export default {
     },
     palettes: function () {
       return store.getPalettes();
-    }
+    },
   },
   methods: {
-    updateFunction(event) {
-      store.set('groups.' + this.name + '.function', this.selectedFunction);
+    updateFunction() {
+      store.set('groups.' + this.name + '.function', this.functionKey);
     },
-    updatePalette(event) {
-      store.set('groups.' + this.name + '.palette', this.selectedPalette);
+    updatePalette() {
+      store.set('groups.' + this.name + '.palette', this.paletteKey);
+      this.palette = this.palettes[this.paletteKey];
       this.drawPalettePreview();
+      this.$nextTick(this.createColorPickers);
+    },
+    newPalette() {
+
+    },
+    deletePalette() {
+
+    },
+    updatePaletteContents() {
+      store.setPalette(this.paletteKey, this.palette);
+      this.drawPalettePreview();
+    },
+    addColor(i) {
+      palette.colors.splice(i + 1, 0, palette.colors[i].slice());
+      this.updatePaletteContents();
+    },
+    deleteColor(i) {
+      if (palette.colors.length > 2) {
+        palette.colors.splice(i, 1);
+        this.updatePaletteContents();
+      }
     },
     drawPalettePreview() {
       const c = document.getElementById('palette-color-bar');
       const ctx = c.getContext('2d');
       c.width = 64;
       c.height = 1;
-      const sectorSize = 1 / (this.palettes[this.selectedPalette].colors.length - 1);
+      const sectorSize = 1 / (this.palette.colors.length - 1);
       for (let i = 0; i < c.width; i++) {
         let f = i / c.width;
         const sector = Math.floor(f / sectorSize);
         f = f % sectorSize / sectorSize;
-        const c1 = this.palettes[this.selectedPalette].colors[sector];
-        const c2 = this.palettes[this.selectedPalette].colors[sector + 1];
+        const c1 = this.palette.colors[sector];
+        const c2 = this.palette.colors[sector + 1];
         let h1 = c2[0] - c1[0];
         // Allow full spectrum if extremes are 0 and 1 in any order
         // otherwise pick shortest path between colors
@@ -57,10 +82,41 @@ export default {
         ctx.fillStyle = `hsl(${h}, ${s}%, ${l}%)`
         ctx.fillRect(i, 0, 1, c.height);
       }
+    },
+    createColorPickers() {
+      for (let i = 0; i < this.palette.colors.length; i++) {
+        const pickr = Pickr.create({
+          el: `#color-picker-${i}`,
+          theme: 'classic',
+          showAlways: true,
+          inline: true,
+          lockOpacity: true,
+          comparison: false,
+          default: `hsv(${this.palette.colors[i][0] * 360}, ${this.palette.colors[i][1] * 100}%, ${this.palette.colors[i][2] * 100}%)`,
+          swatches: null,
+          components: {
+            preview: false,
+            opacity: false,
+            hue: true,
+            interaction: { hex: true, rgba: true, hsla: true, hsva: true, input: true },
+          },
+        });
+        pickr.index = i;
+        if (!this.palette.default) {
+          pickr.on('changestop', (c, instance) => {
+            const color = instance.getColor();
+            this.palette.colors[instance.index] = [
+              color.h / 360, color.s / 100, color.v / 100
+            ];
+            this.updatePaletteContents();
+          });
+        }
+      }
     }
   },
   mounted() {
     this.drawPalettePreview();
+    this.$nextTick(this.createColorPickers);
   },
   template: `
     <h4>Group {{ i + 1 }} ({{ name }})</h4>
@@ -94,7 +150,7 @@ export default {
           <select
             class="update-on-change"
             autocomplete="off"
-            v-model="selectedFunction"
+            v-model="functionKey"
             @change="updateFunction"
           >
             <option
@@ -128,7 +184,7 @@ export default {
           <select
             class="update-on-change"
             autocomplete="off"
-            v-model="selectedPalette"
+            v-model="paletteKey"
             @change="updatePalette"
           >
             <option
@@ -141,5 +197,42 @@ export default {
         </span>
       </div>
       <canvas id="palette-color-bar" style="display: block; border-radius: 3px; width: 100%; height: 0.7rem; margin-bottom: 0.5rem;"></canvas>
+      <div id="colors">
+        <div class="input-row input-row-bottom-margin">
+          <a
+            class="button"
+            @click="newPalette"
+          >New Palette</a>
+          <a
+            class="button"
+            v-show="!palette.default"
+            @click="deletePalette"
+          >Delete</a>
+          <input
+            type="text"
+            v-model="palette.name"
+            @change="updatePaletteContents"
+            v-bind:disabled="palette.default"
+          >
+        </div>
+        <div id="color-picker-container">
+          <div v-for="(color, i) in palette.colors" :key="paletteKey + '.' + i">
+            <div class="input-row input-row-top-margin">
+              <span class="label">Color {{ i + 1 }}:</span>
+              <a
+                class="button button-inline"
+                v-show="!palette.default"
+                @click="addColor(i)"
+              >+</a>
+              <a
+                class="button button-inline"
+                v-show="!palette.default"
+                @click="deleteColor(i)"
+              >-</a>
+            </div>
+            <span class="color-picker" v-bind:id="'color-picker-' + i"></span>
+          </div>
+        </div>
+      </div>
   `,
 };
