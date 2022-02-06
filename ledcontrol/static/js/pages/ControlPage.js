@@ -39,7 +39,6 @@ export default {
       v-for="(group, k, i) in groups"
       v-bind:name="k"
       v-bind:i="i"
-    >
-    </group-controls>
+    ></group-controls>
   `
 }

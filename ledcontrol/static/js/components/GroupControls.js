@@ -10,8 +10,12 @@ export default {
     const paletteKey = store.get('groups.' + this.name + '.palette');
     return {
       functionKey,
+      animFunction: store.getFunctions()[functionKey],
+      sourceStatus: '',
+      sourceStatusClass: '',
       paletteKey,
       palette: store.getPalettes()[paletteKey],
+      codeMirror: {},
     }
   },
   computed: {
@@ -28,6 +32,67 @@ export default {
   methods: {
     updateFunction() {
       store.set('groups.' + this.name + '.function', this.functionKey);
+      this.animFunction = this.functions[this.functionKey];
+      this.$nextTick(this.createCodeEditor);
+    },
+    updateFunctionSource() {
+      store.setFunction(this.functionKey, this.animFunction);
+    },
+    newFunction() {
+      const newKey = Date.now();
+      const newFunction = JSON.parse(JSON.stringify(this.animFunction));
+      newFunction.name = this.animFunction.name + ' (Copy)';
+      newFunction.default = false;
+      store.setFunction(newKey, newFunction);
+      this.functionKey = newKey;
+      this.updateFunction();
+    },
+    deleteFunction() {
+      if (confirm(`Delete pattern "${this.animFunction.name}?"`)) {
+        store.removeFunction(this.functionKey);
+        this.functionKey = 0;
+        this.updateFunction();
+      }
+    },
+    async compileFunction() {
+      const source = this.codeMirror.getValue();
+      this.animFunction .source = source;
+      this.updateFunctionSource();
+      const result = await store.requestCompile(this.functionKey);
+      console.log('Compile errors/warnings:', result.errors, result.warnings);
+      if (result.errors.length === 0) {
+        this.sourceStatusClass = 'status-success';
+        this.sourceStatus = 'Pattern compiled successfully';
+      } else if (result.errors.length === 0 && result.warnings.length > 0) {
+        this.sourceStatusClass = 'status-warning';
+        this.sourceStatus = 'Pattern generated warnings: ' + result.warnings.join(', ');
+      } else if (result.errors.length > 0) {
+        this.sourceStatusClass = 'status-error';
+        this.sourceStatus = result.errors.join(', ');
+      }
+    },
+    createCodeEditor() {
+      let code = this.animFunction.source.trim();
+      if (this.animFunction.default) {
+        code = '# Code editing and renaming disabled on default patterns. Click "New Pattern" to create and edit a copy of this pattern.\n\n' + code;
+      }
+      this.codeMirror = new CodeMirror(this.$refs.code, {
+        value: code,
+        mode: 'python',
+        indentUnit: 4,
+        lineNumbers: true,
+        lineWrapping: true,
+        theme: 'summer-night',
+        readOnly: this.animFunction.default,
+      });
+      this.codeMirror.setOption('extraKeys', {
+        Tab: function(cm) {
+          const spaces = Array(cm.getOption('indentUnit') + 1).join(' ');
+          cm.replaceSelection(spaces);
+        }
+      });
+      this.sourceStatus = 'Pattern not compiled yet';
+      this.sourceStatusClass = 'status-none';
     },
     updatePalette() {
       store.set('groups.' + this.name + '.palette', this.paletteKey);
@@ -96,25 +161,25 @@ export default {
       }
     },
     createColorPickers() {
-      for (let i = 0; i < this.palette.colors.length; i++) {
-        const pickr = Pickr.create({
-          el: `#color-picker-${i}`,
-          theme: 'classic',
-          showAlways: true,
-          inline: true,
-          lockOpacity: true,
-          comparison: false,
-          default: `hsv(${this.palette.colors[i][0] * 360}, ${this.palette.colors[i][1] * 100}%, ${this.palette.colors[i][2] * 100}%)`,
-          swatches: null,
-          components: {
-            preview: false,
-            opacity: false,
-            hue: true,
-            interaction: { hex: true, rgba: true, hsla: true, hsva: true, input: true },
-          },
-        });
-        pickr.index = i;
-        if (!this.palette.default) {
+      if (!this.palette.default) {
+        for (let i = 0; i < this.palette.colors.length; i++) {
+          const pickr = Pickr.create({
+            el: `#color-picker-${i}`,
+            theme: 'classic',
+            showAlways: true,
+            inline: true,
+            lockOpacity: true,
+            comparison: false,
+            default: `hsv(${this.palette.colors[i][0] * 360}, ${this.palette.colors[i][1] * 100}%, ${this.palette.colors[i][2] * 100}%)`,
+            swatches: null,
+            components: {
+              preview: false,
+              opacity: false,
+              hue: true,
+              interaction: { hex: true, rgba: true, hsla: true, hsva: true, input: true },
+            },
+          });
+          pickr.index = i;
           pickr.on('changestop', (c, instance) => {
             const color = instance.getColor();
             this.palette.colors[instance.index] = [
@@ -128,6 +193,7 @@ export default {
   },
   mounted() {
     this.drawPalettePreview();
+    this.$nextTick(this.createCodeEditor);
     this.$nextTick(this.createColorPickers);
   },
   template: `
@@ -190,6 +256,34 @@ export default {
         v-bind:max="10"
         v-bind:step="0.01"
       ></slider-number-input>
+      <div class="input-row input-row-top-margin">
+        <a
+          class="button"
+          @click="newFunction"
+        >New Pattern</a>
+        <a
+          class="button"
+          v-show="!animFunction.default"
+          @click="deleteFunction"
+        >Delete</a>
+        <input
+          type="text"
+          v-model="animFunction.name"
+          @change="updateFunctionSource"
+          v-bind:disabled="animFunction.default"
+        >
+      </div>
+      <div class="input-row input-row-top-margin input-row-bottom-margin">
+        <span
+          class="infotext"
+          v-bind:class="sourceStatusClass"
+        >{{ sourceStatus }}</span>
+        <a
+          class="button"
+          @click="compileFunction"
+        >Compile Pattern</a>
+      </div>
+      <div ref="code" :key="functionKey"></div>
       <div class="input-row input-row-top-margin input-toplevel">
         <span class="label select-label">Palette:</span>
         <span class="select-container">
@@ -227,8 +321,11 @@ export default {
             v-bind:disabled="palette.default"
           >
         </div>
-        <div id="color-picker-container">
-          <div v-for="(color, i) in palette.colors" :key="paletteKey + '.' + palette.colors.length + '.' + i">
+        <div id="color-picker-container" v-if="!palette.default">
+          <div
+            v-for="(color, i) in palette.colors"
+            :key="paletteKey + '.' + palette.colors.length + '.' + i"
+          >
             <div class="input-row input-row-top-margin">
               <span class="label">Color {{ i + 1 }}:</span>
               <a

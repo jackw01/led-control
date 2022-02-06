@@ -112,6 +112,12 @@ def create_app(led_count,
         except Exception:
             print(f'Some saved settings at {filename} are out of date or invalid, ignoring.')
 
+
+
+    # deprecated
+    # todo: sacn toggle on frontend
+    # todo: brightness limit (global_brightness_limit)
+
     # Define form and create user-facing labels based on keys
     form = [
         FormItem('range', 'brightness', float, 0, led_v_limit, 0.05),
@@ -138,8 +144,11 @@ def create_app(led_count,
         form.append(FormItem('select', 'sacn', int,
                              options=['Off', 'On'], label='E1.31 sACN Receiver Mode'))
 
+
+
+
     @app.route('/ui-test')
-    def index2():
+    def index():
         'Returns web app page'
         return app.send_static_file('index-vue.html')
 
@@ -151,10 +160,9 @@ def create_app(led_count,
     @app.route('/updatesettings', methods=['POST'])
     def update_settings():
         'Update settings'
+        print(request.json)
         new_settings = request.json
-        print(new_settings)
-
-        #controller.update_settings(new_settings)
+        controller.update_settings(new_settings)
         return jsonify(result='')
 
     @app.route('/getfunctions')
@@ -162,18 +170,70 @@ def create_app(led_count,
         'Get functions'
         return jsonify(patterns)
 
+    @app.route('/compilefunction', methods=['POST'])
+    def compile_function():
+        'Compiles a pattern, returns errors and warnings in JSON array form'
+        print(request.json)
+        key = request.json['key']
+        errors, warnings = controller.set_pattern_function(key, patterns[key]['source'])
+        return jsonify(errors=errors, warnings=warnings)
+
+    @app.route('/updatefunction', methods=['POST'])
+    def update_function():
+        'Update a pattern'
+        print(request.json)
+        patterns[request.json['key']] = request.json['value']
+        return jsonify(result='')
+
+    @app.route('/removefunction', methods=['POST'])
+    def remove_function():
+        'Remove a pattern'
+        print(request.json)
+        del patterns[request.json['key']]
+        return jsonify(result='')
+
     @app.route('/getpalettes')
-    def get_palettes2():
+    def get_palettes():
         'Get palettes'
         return jsonify(controller.get_palettes())
 
+    @app.route('/updatepalette', methods=['POST'])
+    def update_palette():
+        'Update a palette'
+        print(request.json)
+        controller.set_palette(request.json['key'], request.json['value'])
+        controller.calculate_palette_table()
+        return jsonify(result='')
+
+    @app.route('/removefunction', methods=['POST'])
+    def remove_palette():
+        'Remove a palette'
+        print(request.json)
+        controller.delete_palette(key)
+        return jsonify(result='')
+
+    @app.route('/getfps')
+    def get_fps():
+        'Returns latest animation frames per second'
+        return jsonify(fps=controller.timer.get_rate())
+
+    @app.route('/resettimer')
+    def reset_timer():
+        'Resets animation timer'
+        controller.reset_timer()
+        return jsonify(result='')
 
 
 
 
+
+
+
+    # deprecated
+    # todo: save pattern speed/scale on frontend
 
     @app.route('/')
-    def index():
+    def index_old():
         'Returns web app page'
         for item in form:
             if (item.key in controller.params):
@@ -244,7 +304,7 @@ def create_app(led_count,
         return jsonify(result='')
 
     @app.route('/getpalettes_old')
-    def get_palettes():
+    def get_palettes_old():
         'Returns palettes in JSON dict form'
         return jsonify(palettes=controller.palettes,
                        defaults=list(colorpalettes.default.keys()),
@@ -266,23 +326,15 @@ def create_app(led_count,
         controller.delete_palette(key)
         return jsonify(result='')
 
-    @app.route('/getfps')
-    def get_fps():
-        'Returns latest animation frames per second'
-        return jsonify(fps=controller.timer.get_rate())
-
-    @app.route('/resettimer')
-    def reset_timer():
-        'Resets animation timer'
-        controller.reset_timer()
-        return jsonify(result='')
-
     def save_current_pattern_params():
         'Remembers speed and scale for current pattern'
         patterns[controller.params['primary_pattern']]['primary_speed']\
             = controller.params['primary_speed']
         patterns[controller.params['primary_pattern']]['primary_scale']\
             = controller.params['primary_scale']
+
+
+    # todo: v2 save
 
     def save_settings():
         'Save controller settings'
@@ -317,7 +369,7 @@ def create_app(led_count,
 
     controller.begin_animation_thread()
     atexit.register(save_settings)
-    atexit.register(controller.clear_leds)
+    #atexit.register(controller.clear_leds)
     atexit.register(controller.end_animation)
     auto_save_settings()
 

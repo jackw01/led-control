@@ -23,31 +23,54 @@ class Store {
     return _.get(this.settings, path);
   }
 
-  set(path, value) {
+  async set(path, value) {
     _.set(this.settings, path, value);
     console.log('Store set:', path, value);
+
+    const delta = {};
+    _.set(delta, path, value);
+    await axios.post('/updatesettings', delta);
+  }
+
+  async pushAllSettings() {
+    await axios.post('/updatesettings', this.settings);
   }
 
   getFunctions() {
     return this.functions;
   }
 
+  async requestCompile(key) {
+    const req = await axios.post('/compilefunction', { key });
+    return req.data;
+  }
+
+  async setFunction(key, value) {
+    this.functions[key] = value;
+    console.log('Function set:', key, value);
+    await axios.post('/updatefunction', { key, value });
+  }
+
+  async removeFunction(key) {
+    delete this.functions[key];
+    console.log('Function removed:', key);
+    await axios.post('/removefunction', { key });
+  }
+
   getPalettes() {
     return this.palettes;
   }
 
-  setPalette(key, value) {
+  async setPalette(key, value) {
     this.palettes[key] = value;
     console.log('Palette set:', key, value);
+    await axios.post('/updatepalette', { key, value });
   }
 
-  removePalette(key) {
+  async removePalette(key) {
     delete this.palettes[key];
     console.log('Palette removed:', key);
-  }
-
-  saveSettings() {
-    axios.post('/updatesettings', this.settings);
+    await axios.post('/removepalette', { key });
   }
 }
 
