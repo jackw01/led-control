@@ -36,23 +36,35 @@ export default {
       this.$nextTick(this.createColorPickers);
     },
     newPalette() {
-
+      const newKey = Date.now();
+      const newPalette = JSON.parse(JSON.stringify(this.palette));
+      newPalette.name = this.palette.name + ' (Copy)';
+      newPalette.default = false;
+      store.setPalette(newKey, newPalette);
+      this.paletteKey = newKey;
+      this.updatePalette();
     },
     deletePalette() {
-
+      if (confirm(`Delete palette "${this.palette.name}?"`)) {
+        store.removePalette(this.paletteKey);
+        this.paletteKey = 0;
+        this.updatePalette();
+      }
     },
     updatePaletteContents() {
       store.setPalette(this.paletteKey, this.palette);
       this.drawPalettePreview();
     },
     addColor(i) {
-      palette.colors.splice(i + 1, 0, palette.colors[i].slice());
+      this.palette.colors.splice(i + 1, 0, this.palette.colors[i].slice());
       this.updatePaletteContents();
+      this.$nextTick(this.createColorPickers);
     },
     deleteColor(i) {
-      if (palette.colors.length > 2) {
-        palette.colors.splice(i, 1);
+      if (this.palette.colors.length > 2) {
+        this.palette.colors.splice(i, 1);
         this.updatePaletteContents();
+        this.$nextTick(this.createColorPickers);
       }
     },
     drawPalettePreview() {
@@ -216,7 +228,7 @@ export default {
           >
         </div>
         <div id="color-picker-container">
-          <div v-for="(color, i) in palette.colors" :key="paletteKey + '.' + i">
+          <div v-for="(color, i) in palette.colors" :key="paletteKey + '.' + palette.colors.length + '.' + i">
             <div class="input-row input-row-top-margin">
               <span class="label">Color {{ i + 1 }}:</span>
               <a
