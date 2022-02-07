@@ -139,6 +139,7 @@ def create_app(led_count,
 
     # todo: sacn toggle on frontend
     # todo: presets
+    # todo: color correction on frontend
 
     @app.route('/')
     def index():

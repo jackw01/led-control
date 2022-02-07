@@ -19,16 +19,13 @@ export default {
     }
   },
   computed: {
-    brightnessLimit: function () {
-      return store.get('global_brightness_limit');
-    },
-    groups: function () {
+    groups: function() {
       return store.get('groups');
     },
-    functions: function () {
+    functions: function() {
       return store.getFunctions();
     },
-    palettes: function () {
+    palettes: function() {
       return store.getPalettes();
     },
   },
@@ -206,7 +203,7 @@ export default {
         label="Brightness"
         unit=""
         v-bind:min="0"
-        v-bind:max="brightnessLimit"
+        v-bind:max="1"
         v-bind:step="0.01"
       ></slider-number-input>
       <slider-number-input

@@ -46,6 +46,7 @@ class AnimationController:
         # All user-editable animation settings stored here
         self._settings = {
             'global_brightness': 0.15,
+            'global_brightness_limit': global_brightness_limit,
             'global_color_temp': 6500,
             'global_saturation': 1.0,
             'sacn': 0,

@@ -3,7 +3,11 @@ import store from '../Store.js';
 export default {
   name: 'ControlPage',
   computed: {
-    groups: function () {
+    brightnessLimit: function() {
+      console.log(store.get('global_brightness_limit'));
+      return store.get('global_brightness_limit');
+    },
+    groups: function() {
       return store.get('groups');
     }
   },
@@ -14,7 +18,7 @@ export default {
         label="Brightness"
         unit=""
         v-bind:min="0"
-        v-bind:max="1"
+        v-bind:max="brightnessLimit"
         v-bind:step="0.01"
       ></slider-number-input>
       <slider-number-input
