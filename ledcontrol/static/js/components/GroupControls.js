@@ -19,6 +19,9 @@ export default {
     }
   },
   computed: {
+    brightnessLimit: function () {
+      return store.get('global_brightness_limit');
+    },
     groups: function () {
       return store.get('groups');
     },
@@ -31,7 +34,7 @@ export default {
   },
   methods: {
     updateFunction() {
-      store.set('groups.' + this.name + '.function', this.functionKey);
+      store.set('groups.' + this.name + '.function', parseInt(this.functionKey, 10));
       this.animFunction = this.functions[this.functionKey];
       this.$nextTick(this.createCodeEditor);
     },
@@ -95,7 +98,7 @@ export default {
       this.sourceStatusClass = 'status-none';
     },
     updatePalette() {
-      store.set('groups.' + this.name + '.palette', this.paletteKey);
+      store.set('groups.' + this.name + '.palette', parseInt(this.paletteKey, 10));
       this.palette = this.palettes[this.paletteKey];
       this.drawPalettePreview();
       this.$nextTick(this.createColorPickers);
@@ -203,7 +206,7 @@ export default {
         label="Brightness"
         unit=""
         v-bind:min="0"
-        v-bind:max="1"
+        v-bind:max="brightnessLimit"
         v-bind:step="0.01"
       ></slider-number-input>
       <slider-number-input
