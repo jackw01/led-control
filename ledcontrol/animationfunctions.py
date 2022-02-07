@@ -1,5 +1,5 @@
 # led-control WS2812B LED Controller Server
-# Copyright 2021 jackw01. Released under the MIT License (see LICENSE for details).
+# Copyright 2022 jackw01. Released under the MIT License (see LICENSE for details).
 
 from random import random
 from enum import Enum
@@ -9,13 +9,10 @@ import ledcontrol.utils as utils
 
 ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
 
-# Primary animations that generate patterns in HSV or RGB color spaces
-# return color, mode
-
 def blank(t, dt, x, y, prev_state):
     return (0, 0, 0), ColorMode.hsv
 
-static_patterns = [0, 1, 2] # pattern IDs that display a solid color
+static_function_ids = [0, 1, 2] # pattern IDs that display a solid color
 
 default = {
     0: {
@@ -154,7 +151,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     t = (t + x) % 1
-    return palette(t - (t % (1 / palette_length()))), hsv
+    return palette(t - (t % (1 / 6))), hsv
 '''
     },
     130: {
@@ -370,8 +367,7 @@ def pattern(t, dt, x, y, z, prev_state):
     },
 }
 
-# Secondary animations that transform finalized colors to add brightness effects
-# return brightness, colorRGB
+# deprecated
 
 def sine_1d(t, dt, x, y, z, prev_state, in_color):
     return in_color, driver.wave_sine(t + x)

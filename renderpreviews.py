@@ -1,13 +1,13 @@
 from PIL import Image
 from colorsys import hsv_to_rgb
 from ledcontrol.animationcontroller import AnimationController
-import ledcontrol.animationpatterns as animpatterns
+import ledcontrol.animationfunctions as animfunctions
 import ledcontrol.colorpalettes as colorpalettes
 import ledcontrol.pixelmappings as pixelmappings
 import ledcontrol.driver as driver
 import ledcontrol.utils as utils
 
-controller = AnimationController(None, 0, 256, pixelmappings.line(256), (0, 0, 0), False, True)
+controller = AnimationController(None, 0, 256, pixelmappings.line(256), (0, 0, 0), False, True, 1.0)
 
 s = 100 # LED strip length
 t = 400 # Time units
@@ -16,7 +16,7 @@ gif_t = 300 # Animated gif duration
 f = open('patterns.md', 'w')
 f.write('## Built-In Animation Patterns\n\n')
 
-for pattern_dict in animpatterns.default.values():
+for pattern_dict in animfunctions.default.values():
     errors, warnings, pattern = controller.compile_pattern(pattern_dict['source'])
 
     img = Image.new('RGB', (t, s), 'black')
@@ -35,7 +35,7 @@ for pattern_dict in animpatterns.default.values():
         for j in range(img.size[1]):
             p = pattern((pattern_dict['primary_speed'] / 0.2) * i / s, 1.0 / s, j / s, 0, 0, prev[j])
             prev[j] = p[0]
-            if p[1] == animpatterns.ColorMode.hsv:
+            if p[1] == animfunctions.ColorMode.hsv:
                 c = tuple([int(x * 255) for x in hsv_to_rgb(*p[0])])
                 pixels[i, j] = c
                 frame_pixels[j, 0] = c

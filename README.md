@@ -180,9 +180,6 @@ Returns the color from the current palette corresponding to a value `t` between 
 ##### `palette_mirrored(t)`
 Returns a color from a mirrored version of the current palette that wraps seamlessly. Functionally equivalent to `palette(wave_triangle(t))`, but performs just as well as `palette(t)`.
 
-##### `palette_length()`
-Returns the number of colors used to generate the current palette.
-
 ### Wave Functions
 All waveforms have a period of 1 time unit, a range from 0 to 1, and a peak (`f(t)=1`) at `t=0`. These wave functions are implemented in C which gives a suprisingly significant performance improvement over Python's builtins.
 
