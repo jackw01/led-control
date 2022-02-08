@@ -22,7 +22,6 @@ class AnimationController:
                  refresh_rate,
                  led_count,
                  mapping_func,
-                 led_color_correction,
                  enable_sacn,
                  no_timer_reset,
                  global_brightness_limit):
@@ -48,6 +47,9 @@ class AnimationController:
             'global_brightness': 0.15,
             'global_brightness_limit': global_brightness_limit,
             'global_color_temp': 6500,
+            'global_color_r': 255,
+            'global_color_g': 255,
+            'global_color_b': 255,
             'global_saturation': 1.0,
             'sacn': 0,
             'groups': {
@@ -81,7 +83,6 @@ class AnimationController:
         self.calculate_palette_tables()
 
         # Set default color temp
-        self._correction_original = led_color_correction
         self.calculate_color_correction()
 
         # Set default mapping
@@ -129,9 +130,9 @@ class AnimationController:
     def calculate_color_correction(self):
         'Calculate and store color temperature correction'
         rgb = driver.blackbody_to_rgb(self._settings['global_color_temp']) #todo
-        c = [self._correction_original[0] * int(rgb[0] * 255) // 255,
-             self._correction_original[1] * int(rgb[1] * 255) // 255,
-             self._correction_original[2] * int(rgb[2] * 255) // 255]
+        c = [self._settings['global_color_r'] * int(rgb[0] * 255) // 255,
+             self._settings['global_color_g'] * int(rgb[1] * 255) // 255,
+             self._settings['global_color_b'] * int(rgb[2] * 255) // 255]
         self._correction = (c[0] << 16) | (c[1] << 8) | c[2]
 
     def calculate_mapping(self):
@@ -169,7 +170,7 @@ class AnimationController:
                     d1[k] = v
 
                 # Perform checks for things that need to be recalculated
-                if k in ['global_color_temp', 'color_temp']:
+                if k in ['global_color_temp', 'global_color_r', 'global_color_g', 'global_color_b', 'color_temp']:
                     self.calculate_color_correction()
                 elif k == 'global_brightness':
                     d1[k] = min(d1[k], self._global_brightness_limit)

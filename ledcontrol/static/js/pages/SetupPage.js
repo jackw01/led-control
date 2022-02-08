@@ -16,6 +16,38 @@ export default {
     },
   },
   template: `
+    <slider-number-input
+      path="global_color_temp"
+      label="Global Color Temp"
+      unit="K"
+      v-bind:min="1000"
+      v-bind:max="12000"
+      v-bind:step="50"
+    ></slider-number-input>
+    <slider-number-input
+      path="global_color_r"
+      label="Color Correction (Red)"
+      unit=""
+      v-bind:min="0"
+      v-bind:max="255"
+      v-bind:step="1"
+    ></slider-number-input>
+    <slider-number-input
+      path="global_color_g"
+      label="Color Correction (Green)"
+      unit=""
+      v-bind:min="0"
+      v-bind:max="255"
+      v-bind:step="1"
+    ></slider-number-input>
+    <slider-number-input
+      path="global_color_b"
+      label="Color Correction (Blue)"
+      unit=""
+      v-bind:min="0"
+      v-bind:max="255"
+      v-bind:step="1"
+    ></slider-number-input>
     <div class="input-row input-row-top-margin input-toplevel">
       <span class="label select-label">E1.31 sACN Control:</span>
       <span class="select-container">

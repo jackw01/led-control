@@ -18,7 +18,7 @@ export default {
       sourceStatusClass: '',
       paletteKey,
       palette: store.getPalettes()[paletteKey],
-      codeMirror: {},
+      codeMirror: {}, // todo: show all palettes toggle
     }
   },
   computed: {
@@ -201,150 +201,150 @@ export default {
   },
   template: `
     <h4>Group {{ i + 1 }} ({{ name }})</h4>
-      <slider-number-input
-        v-bind:path="'groups.' + name + '.brightness'"
-        label="Brightness"
-        unit=""
-        v-bind:min="0"
-        v-bind:max="1"
-        v-bind:step="0.01"
-      ></slider-number-input>
-      <slider-number-input
-        v-bind:path="'groups.' + name + '.color_temp'"
-        label="Color Temp"
-        unit="K"
-        v-bind:min="1000"
-        v-bind:max="12000"
-        v-bind:step="10"
-      ></slider-number-input>
-      <slider-number-input
-        v-bind:path="'groups.' + name + '.saturation'"
-        label="Saturation"
-        unit=""
-        v-bind:min="0"
-        v-bind:max="1"
-        v-bind:step="0.01"
-      ></slider-number-input>
-      <div class="input-row input-row-top-margin input-toplevel">
-        <span class="label select-label">Pattern:</span>
-        <span class="select-container">
-          <select
-            class="update-on-change"
-            autocomplete="off"
-            v-model="functionKey"
-            @change="updateFunction"
+    <slider-number-input
+      v-bind:path="'groups.' + name + '.brightness'"
+      label="Brightness"
+      unit=""
+      v-bind:min="0"
+      v-bind:max="1"
+      v-bind:step="0.01"
+    ></slider-number-input>
+    <slider-number-input
+      v-bind:path="'groups.' + name + '.color_temp'"
+      label="Color Temp"
+      unit="K"
+      v-bind:min="1000"
+      v-bind:max="12000"
+      v-bind:step="50"
+    ></slider-number-input>
+    <slider-number-input
+      v-bind:path="'groups.' + name + '.saturation'"
+      label="Saturation"
+      unit=""
+      v-bind:min="0"
+      v-bind:max="1"
+      v-bind:step="0.01"
+    ></slider-number-input>
+    <div class="input-row input-row-top-margin input-toplevel">
+      <span class="label select-label">Pattern:</span>
+      <span class="select-container">
+        <select
+          class="update-on-change"
+          autocomplete="off"
+          v-model="functionKey"
+          @change="updateFunction"
+        >
+          <option
+            v-for="(f, id) in functions"
+            v-bind:value="id"
           >
-            <option
-              v-for="(f, id) in functions"
-              v-bind:value="id"
-            >
-              {{ f.name }}
-            </option>
-          </select>
-        </span>
-      </div>
-      <slider-number-input
-        v-bind:path="'groups.' + name + '.speed'"
-        label="Speed"
-        unit="Hz"
-        v-bind:min="0"
-        v-bind:max="2"
-        v-bind:step="0.01"
-      ></slider-number-input>
-      <slider-number-input
-        v-bind:path="'groups.' + name + '.scale'"
-        label="Scale"
-        unit=""
-        v-bind:min="-10"
-        v-bind:max="10"
-        v-bind:step="0.01"
-      ></slider-number-input>
-      <div class="input-row input-row-top-margin">
+            {{ f.name }}
+          </option>
+        </select>
+      </span>
+    </div>
+    <slider-number-input
+      v-bind:path="'groups.' + name + '.speed'"
+      label="Speed"
+      unit="Hz"
+      v-bind:min="0"
+      v-bind:max="2"
+      v-bind:step="0.01"
+    ></slider-number-input>
+    <slider-number-input
+      v-bind:path="'groups.' + name + '.scale'"
+      label="Scale"
+      unit=""
+      v-bind:min="-10"
+      v-bind:max="10"
+      v-bind:step="0.01"
+    ></slider-number-input>
+    <div class="input-row input-row-top-margin">
+      <a
+        class="button"
+        @click="newFunction"
+      >New Pattern</a>
+      <a
+        class="button"
+        v-show="!animFunction.default"
+        @click="deleteFunction"
+      >Delete</a>
+      <input
+        type="text"
+        v-model="animFunction.name"
+        @change="updateFunctionSource"
+        v-bind:disabled="animFunction.default"
+      >
+    </div>
+    <div class="input-row input-row-top-margin input-row-bottom-margin">
+      <span
+        class="infotext"
+        v-bind:class="sourceStatusClass"
+      >{{ sourceStatus }}</span>
+      <a
+        class="button"
+        @click="compileFunction"
+      >Compile Pattern</a>
+    </div>
+    <div ref="code" :key="functionKey"></div>
+    <div class="input-row input-row-top-margin input-toplevel">
+      <span class="label select-label">Palette:</span>
+      <span class="select-container">
+        <select
+          class="update-on-change"
+          autocomplete="off"
+          v-model="paletteKey"
+          @change="updatePalette"
+        >
+          <option
+            v-for="(p, id) in palettes"
+            v-bind:value="id"
+          >
+            {{ p.name }}
+          </option>
+        </select>
+      </span>
+    </div>
+    <canvas id="palette-color-bar" style="display: block; border-radius: 3px; width: 100%; height: 0.7rem; margin-bottom: 0.5rem;"></canvas>
+    <div id="colors">
+      <div class="input-row input-row-bottom-margin">
         <a
           class="button"
-          @click="newFunction"
-        >New Pattern</a>
+          @click="newPalette"
+        >New Palette</a>
         <a
           class="button"
-          v-show="!animFunction.default"
-          @click="deleteFunction"
+          v-show="!palette.default"
+          @click="deletePalette"
         >Delete</a>
         <input
           type="text"
-          v-model="animFunction.name"
-          @change="updateFunctionSource"
-          v-bind:disabled="animFunction.default"
+          v-model="palette.name"
+          @change="updatePaletteContents"
+          v-bind:disabled="palette.default"
         >
       </div>
-      <div class="input-row input-row-top-margin input-row-bottom-margin">
-        <span
-          class="infotext"
-          v-bind:class="sourceStatusClass"
-        >{{ sourceStatus }}</span>
-        <a
-          class="button"
-          @click="compileFunction"
-        >Compile Pattern</a>
-      </div>
-      <div ref="code" :key="functionKey"></div>
-      <div class="input-row input-row-top-margin input-toplevel">
-        <span class="label select-label">Palette:</span>
-        <span class="select-container">
-          <select
-            class="update-on-change"
-            autocomplete="off"
-            v-model="paletteKey"
-            @change="updatePalette"
-          >
-            <option
-              v-for="(p, id) in palettes"
-              v-bind:value="id"
-            >
-              {{ p.name }}
-            </option>
-          </select>
-        </span>
-      </div>
-      <canvas id="palette-color-bar" style="display: block; border-radius: 3px; width: 100%; height: 0.7rem; margin-bottom: 0.5rem;"></canvas>
-      <div id="colors">
-        <div class="input-row input-row-bottom-margin">
-          <a
-            class="button"
-            @click="newPalette"
-          >New Palette</a>
-          <a
-            class="button"
-            v-show="!palette.default"
-            @click="deletePalette"
-          >Delete</a>
-          <input
-            type="text"
-            v-model="palette.name"
-            @change="updatePaletteContents"
-            v-bind:disabled="palette.default"
-          >
-        </div>
-        <div id="color-picker-container" v-if="!palette.default">
-          <div
-            v-for="(color, i) in palette.colors"
-            :key="paletteKey + '.' + palette.colors.length + '.' + i"
-          >
-            <div class="input-row input-row-top-margin">
-              <span class="label">Color {{ i + 1 }}:</span>
-              <a
-                class="button button-inline"
-                v-show="!palette.default"
-                @click="addColor(i)"
-              >+</a>
-              <a
-                class="button button-inline"
-                v-show="!palette.default"
-                @click="deleteColor(i)"
-              >-</a>
-            </div>
-            <span class="color-picker" v-bind:id="'color-picker-' + i"></span>
+      <div id="color-picker-container" v-if="!palette.default">
+        <div
+          v-for="(color, i) in palette.colors"
+          :key="paletteKey + '.' + palette.colors.length + '.' + i"
+        >
+          <div class="input-row input-row-top-margin">
+            <span class="label">Color {{ i + 1 }}:</span>
+            <a
+              class="button button-inline"
+              v-show="!palette.default"
+              @click="addColor(i)"
+            >+</a>
+            <a
+              class="button button-inline"
+              v-show="!palette.default"
+              @click="deleteColor(i)"
+            >-</a>
           </div>
+          <span class="color-picker" v-bind:id="'color-picker-' + i"></span>
         </div>
       </div>
+    </div>
   `,
 };

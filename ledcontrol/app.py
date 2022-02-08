@@ -23,7 +23,6 @@ def create_app(led_count,
                led_data_rate,
                led_dma_channel,
                led_pixel_order,
-               led_color_correction,
                led_brightness_limit,
                save_interval,
                enable_sacn,
@@ -48,7 +47,6 @@ def create_app(led_count,
                                      refresh_rate,
                                      led_count,
                                      mapping_func,
-                                     led_color_correction,
                                      enable_sacn,
                                      no_timer_reset,
                                      led_brightness_limit)
@@ -78,6 +76,9 @@ def create_app(led_count,
                 settings['settings'] = {
                     'global_brightness': params['brightness'],
                     'global_color_temp': params['color_temp'],
+                    'global_color_r': 1.0,
+                    'global_color_g': 1.0,
+                    'global_color_b': 1.0,
                     'global_saturation': params['saturation'],
                     'groups': {
                         'main': {
@@ -138,7 +139,6 @@ def create_app(led_count,
             shutil.copyfile(filename, filename.with_suffix('.json.error'))
 
     # todo: presets
-    # todo: color correction on frontend
 
     @app.route('/')
     def index():
