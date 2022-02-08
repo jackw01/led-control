@@ -137,14 +137,13 @@ def create_app(led_count,
             print(f'Some saved settings at {filename} are out of date or invalid. Making a backup of the old file to {filename}.error and creating a new one with default settings.')
             shutil.copyfile(filename, filename.with_suffix('.json.error'))
 
-    # todo: sacn toggle on frontend
     # todo: presets
     # todo: color correction on frontend
 
     @app.route('/')
     def index():
         'Returns web app page'
-        return app.send_static_file('index-vue.html')
+        return app.send_static_file('index.html')
 
     @app.route('/getsettings')
     def get_settings():

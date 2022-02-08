@@ -1,3 +1,6 @@
+// led-control WS2812B LED Controller Server
+// Copyright 2022 jackw01. Released under the MIT License (see LICENSE for details).
+
 import store from '../Store.js';
 
 export default {
