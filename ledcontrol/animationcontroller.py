@@ -80,7 +80,7 @@ class AnimationController:
         self._palettes = dict(colorpalettes.default)
         self._palette_tables = {}
         self._current_palette_table = []
-        self.calculate_palette_tables() # todo: only calculate when needed
+        self.calculate_palette_tables()
 
         # Set default color temp
         self.calculate_color_correction()
@@ -101,31 +101,36 @@ class AnimationController:
 
     # Computing cached values
 
-    def calculate_palette_tables(self):
-        'Calculate and store the palette lookup tables'
-        for key, palette in self._palettes.items():
-            palette_table = []
-            sector_size = 1.0 / (len(palette['colors']) - 1)
-            for i in range(self._palette_table_size):
-                f = i / self._palette_table_size
-                sector = math.floor(f / sector_size)
-                f = f % sector_size / sector_size
-                c1, c2 = palette['colors'][sector], palette['colors'][sector + 1]
-                # Allow full spectrum if extremes are 0 and 1 in any order
-                # otherwise pick shortest path between colors
-                h1 = c2[0] - c1[0]
-                if abs(h1) != 1:
-                    if h1 < -0.5:
-                        h1 += 1
-                    if h1 > 0.5:
-                        h1 -= 1
-                palette_table.append((
-                    f * h1 + c1[0],
-                    f * (c2[1] - c1[1]) + c1[1],
-                    f * (c2[2] - c1[2]) + c1[2],
-                ))
-            self._palette_tables[key] = palette_table
+    def calculate_palette_table(self, key):
+        'Calculate and store the palette lookup table for one palette'
+        palette = self._palettes[key]
+        palette_table = []
+        sector_size = 1.0 / (len(palette['colors']) - 1)
+        for i in range(self._palette_table_size):
+            f = i / self._palette_table_size
+            sector = math.floor(f / sector_size)
+            f = f % sector_size / sector_size
+            c1, c2 = palette['colors'][sector], palette['colors'][sector + 1]
+            # Allow full spectrum if extremes are 0 and 1 in any order
+            # otherwise pick shortest path between colors
+            h1 = c2[0] - c1[0]
+            if abs(h1) != 1:
+                if h1 < -0.5:
+                    h1 += 1
+                if h1 > 0.5:
+                    h1 -= 1
+            palette_table.append((
+                f * h1 + c1[0],
+                f * (c2[1] - c1[1]) + c1[1],
+                f * (c2[2] - c1[2]) + c1[2],
+            ))
+        self._palette_tables[key] = palette_table
         self._update_needed = True
+
+    def calculate_palette_tables(self):
+        'Calculate and store the palette lookup tables for all palettes'
+        for key in self._palettes:
+            self.calculate_palette_table(key)
 
     def calculate_color_correction(self):
         'Calculate and store color temperature correction'
@@ -178,8 +183,6 @@ class AnimationController:
                     self.calculate_mapping()
                 elif k == 'function':
                     self._check_reset_animation_state()
-                elif k == 'palette':
-                    self.calculate_palette_tables()
                 elif k == 'sacn' and self._enable_sacn:
                     if v:
                         self._receiver = sacn.sACNreceiver()

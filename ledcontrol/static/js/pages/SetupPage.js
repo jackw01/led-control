@@ -13,7 +13,7 @@ export default {
   methods: {
     updateSACN() {
       store.set('sacn', parseInt(this.sacn, 10));
-    },
+    }
   },
   template: `
     <slider-number-input

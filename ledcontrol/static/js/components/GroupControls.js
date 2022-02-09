@@ -102,6 +102,7 @@ export default {
     updatePalette() {
       store.set('groups.' + this.name + '.palette', parseInt(this.paletteKey, 10));
       this.palette = this.palettes[this.paletteKey];
+      this.palettePreviewKey++;
       this.$nextTick(this.createColorPickers);
     },
     selectPalette(id) {
