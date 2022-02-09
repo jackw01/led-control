@@ -48,6 +48,7 @@ export default {
             :step="step"
             autocomplete="off"
             v-model="val"
+            @change="update"
           >
         </div>
       </div>

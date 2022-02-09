@@ -134,7 +134,7 @@ class AnimationController:
 
     def calculate_color_correction(self):
         'Calculate and store color temperature correction'
-        rgb = driver.blackbody_to_rgb(self._settings['global_color_temp']) #todo
+        rgb = driver.blackbody_to_rgb(self._settings['global_color_temp']) # todo
         c = [self._settings['global_color_r'] * int(rgb[0] * 255) // 255,
              self._settings['global_color_g'] * int(rgb[1] * 255) // 255,
              self._settings['global_color_b'] * int(rgb[2] * 255) // 255]
@@ -182,6 +182,8 @@ class AnimationController:
                 elif k == 'scale':
                     self.calculate_mapping()
                 elif k == 'function':
+                    if v not in self._functions: # for uncompiled functions
+                        self._functions[v] = animfunctions.blank
                     self._check_reset_animation_state()
                 elif k == 'sacn' and self._enable_sacn:
                     if v:
@@ -238,23 +240,21 @@ class AnimationController:
         restricted_locals = {}
         arg_names = ['t', 'dt', 'x', 'y', 'z', 'prev_state']
 
-        results = RestrictedPython.compile_restricted_exec(source)
-        warnings = list(results.warnings)
-        for name in results.used_names:
+        result = RestrictedPython.compile_restricted_exec(source)
+        warnings = list(result.warnings)
+        for name in result.used_names:
             if name not in restricted_globals and name not in arg_names:
                 warnings.append(f'NameError: name \'{name}\' is not defined')
 
-        if results.code:
-            exec(results.code, restricted_globals, restricted_locals)
+        if result.code:
+            exec(result.code, restricted_globals, restricted_locals)
 
-        if len(results.errors) == 0 and 'pattern' in restricted_locals:
+        if len(result.errors) == 0 and 'pattern' in restricted_locals:
             self._functions[key] = restricted_locals['pattern']
             self._check_reset_animation_state()
-        elif key not in self._functions:
-            self._functions[key] = animfunctions.blank
 
         self._update_needed = True
-        return results.errors, warnings
+        return result.errors, warnings
 
     # Palettes frontend
 

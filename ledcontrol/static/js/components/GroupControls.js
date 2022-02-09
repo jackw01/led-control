@@ -40,8 +40,8 @@ export default {
       this.animFunction = this.functions[this.functionKey];
       this.$nextTick(this.createCodeEditor);
     },
-    updateFunctionSource() {
-      store.setFunction(this.functionKey, this.animFunction);
+    async updateFunctionSource() {
+      await store.setFunction(parseInt(this.functionKey, 10), this.animFunction);
     },
     newFunction() {
       const newKey = Date.now();
@@ -54,7 +54,7 @@ export default {
     },
     deleteFunction() {
       if (confirm(`Delete pattern "${this.animFunction.name}?"`)) {
-        store.removeFunction(this.functionKey);
+        store.removeFunction(parseInt(this.functionKey, 10));
         this.functionKey = 0;
         this.updateFunction();
       }
@@ -62,15 +62,12 @@ export default {
     async compileFunction() {
       const source = this.codeMirror.getValue();
       this.animFunction.source = source;
-      this.updateFunctionSource();
-      const result = await store.requestCompile(this.functionKey);
+      await this.updateFunctionSource();
+      const result = await store.requestCompile(parseInt(this.functionKey, 10));
       console.log('Compile errors/warnings:', result.errors, result.warnings);
       if (result.errors.length === 0) {
         this.sourceStatusClass = 'status-success';
         this.sourceStatus = 'Pattern compiled successfully';
-      } else if (result.errors.length === 0 && result.warnings.length > 0) {
-        this.sourceStatusClass = 'status-warning';
-        this.sourceStatus = 'Pattern generated warnings: ' + result.warnings.join(', ');
       } else if (result.errors.length > 0) {
         this.sourceStatusClass = 'status-error';
         this.sourceStatus = result.errors.join(', ');
@@ -120,13 +117,13 @@ export default {
     },
     deletePalette() {
       if (confirm(`Delete palette "${this.palette.name}?"`)) {
-        store.removePalette(this.paletteKey);
+        store.removePalette(parseInt(this.paletteKey, 10));
         this.paletteKey = 0;
         this.updatePalette();
       }
     },
     updatePaletteContents() {
-      store.setPalette(this.paletteKey, this.palette);
+      store.setPalette(parseInt(this.paletteKey, 10), this.palette);
       this.palettePreviewKey++;
     },
     addColor(i) {

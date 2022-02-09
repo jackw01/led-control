@@ -9,10 +9,10 @@ import ledcontrol.utils as utils
 
 ColorMode = Enum('ColorMode', ['hsv', 'rgb'])
 
-def blank(t, dt, x, y, prev_state):
+def blank(t, dt, x, y, z, prev_state):
     return (0, 0, 0), ColorMode.hsv
 
-static_function_ids = [0, 1, 2] # pattern IDs that display a solid color
+static_function_ids = [0, 1, 2, 3] # pattern IDs that display a solid color
 
 default = {
     0: {
@@ -55,73 +55,40 @@ def pattern(t, dt, x, y, z, prev_state):
     return palette_mirrored(x), hsv
 '''
     },
-    10: {
-        'name': 'Hue Cycle 1D',
-        'primary_speed': 0.2,
-        'primary_scale': 1.0,
-        'default': True,
-        'source': '''
-def pattern(t, dt, x, y, z, prev_state):
-    return (t + x, 1, 1), hsv
-'''
-    },
-    20: {
-        'name': 'Hue Cycle Quantized 1D',
-        'primary_speed': 0.2,
-        'primary_scale': 1.0,
-        'default': True,
-        'source': '''
-def pattern(t, dt, x, y, z, prev_state):
-    hue = (t + x) % 1
-    return (hue - (hue % 0.1666), 1, 1), hsv
-'''
-    },
-    30: {
-        'name': 'Hue Scan 1D',
-        'primary_speed': 0.1,
-        'primary_scale': 1.0,
-        'default': True,
-        'source': '''
-def pattern(t, dt, x, y, z, prev_state):
-    return (wave_triangle(t) + x, 1, 1), hsv
-'''
-    },
-    31: {
-        'name': 'Hue Bounce 1D',
-        'primary_speed': 0.1,
-        'primary_scale': 1.0,
-        'default': True,
-        'source': '''
-def pattern(t, dt, x, y, z, prev_state):
-    return (wave_sine(t) + x, 1, 1), hsv
-'''
-    },
-    40: {
-        'name': 'Hue Waves 1D',
-        'primary_speed': 0.2,
-        'primary_scale': 1.0,
-        'default': True,
-        'source': '''
-def pattern(t, dt, x, y, z, prev_state):
-    h = (x + t) * 0.5 + x + wave_sine(t)
-    return (h, 1, wave_sine(h + t)), hsv
-'''
-    },
-    50: {
-        'name': 'Hue Ripples 1D',
-        'primary_speed': 0.2,
-        'primary_scale': 1.0,
-        'default': True,
-        'source': '''
-def pattern(t, dt, x, y, z, prev_state):
-    wave1 = wave_sine(t / 4 + x)
-    wave2 = wave_sine(t / 8 - x)
-    wave3 = wave_sine(x + wave1 + wave2)
-    return (wave3 % 0.15 + t, 1, wave1 + wave3), hsv
-'''
-    },
 
-
+    6: {
+        'name': 'Twinkle Color 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'default': True,
+        'source': '''
+def pattern(t, dt, x, y, z, prev_state):
+    v = prev_state[2] - dt
+    if v <= 0:
+        c = palette(0)
+        return (c[0], c[1], random.random()), hsv
+    elif v > 0:
+        return (prev_state[0], prev_state[1], v), hsv
+    else:
+        return (0, 0, 0), hsv
+'''
+    },
+    7: {
+        'name': 'Twinkle White 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'default': True,
+        'source': '''
+def pattern(t, dt, x, y, z, prev_state):
+    v = prev_state[2] - dt
+    if v <= 0:
+        return (0, 0, random.random()), hsv
+    elif v > 0:
+        return (prev_state[0], prev_state[1], v), hsv
+    else:
+        return (0, 0, 0), hsv
+'''
+    },
 
     100: {
         'name': 'Palette Cycle 1D',
@@ -141,6 +108,31 @@ def pattern(t, dt, x, y, z, prev_state):
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
     return palette_mirrored(t + x), hsv
+'''
+    },
+    112: {
+        'name': 'Palette Cycle Wipe 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'default': True,
+        'source': '''
+def pattern(t, dt, x, y, z, prev_state):
+    c = palette_mirrored(t + x)
+    return (c[0], c[1], ((t + x) % 1 > 0.5) * 1.0), hsv
+'''
+    },
+    114: {
+        'name': 'Palette Cycle Wipe From Center 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'default': True,
+        'source': '''
+def pattern(t, dt, x, y, z, prev_state):
+    c = palette_mirrored(t + x)
+    if x < 0.5:
+        return (c[0], c[1], ((t + x) % 1 < 0.5) * 1.0), hsv
+    else:
+        return (c[0], c[1], ((t - x) % 1 < 0.5) * 1.0), hsv
 '''
     },
     120: {
@@ -276,8 +268,73 @@ def pattern(t, dt, x, y, z, prev_state):
 '''
     },
 
+    310: {
+        'name': 'Hue Cycle 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'default': True,
+        'source': '''
+def pattern(t, dt, x, y, z, prev_state):
+    return (t + x, 1, 1), hsv
+'''
+    },
+    320: {
+        'name': 'Hue Cycle Quantized 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'default': True,
+        'source': '''
+def pattern(t, dt, x, y, z, prev_state):
+    hue = (t + x) % 1
+    return (hue - (hue % 0.1666), 1, 1), hsv
+'''
+    },
+    330: {
+        'name': 'Hue Scan 1D',
+        'primary_speed': 0.1,
+        'primary_scale': 1.0,
+        'default': True,
+        'source': '''
+def pattern(t, dt, x, y, z, prev_state):
+    return (wave_triangle(t) + x, 1, 1), hsv
+'''
+    },
+    331: {
+        'name': 'Hue Bounce 1D',
+        'primary_speed': 0.1,
+        'primary_scale': 1.0,
+        'default': True,
+        'source': '''
+def pattern(t, dt, x, y, z, prev_state):
+    return (wave_sine(t) + x, 1, 1), hsv
+'''
+    },
+    340: {
+        'name': 'Hue Waves 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'default': True,
+        'source': '''
+def pattern(t, dt, x, y, z, prev_state):
+    h = (x + t) * 0.5 + x + wave_sine(t)
+    return (h, 1, wave_sine(h + t)), hsv
+'''
+    },
+    350: {
+        'name': 'Hue Ripples 1D',
+        'primary_speed': 0.2,
+        'primary_scale': 1.0,
+        'default': True,
+        'source': '''
+def pattern(t, dt, x, y, z, prev_state):
+    wave1 = wave_sine(t / 4 + x)
+    wave2 = wave_sine(t / 8 - x)
+    wave3 = wave_sine(x + wave1 + wave2)
+    return (wave3 % 0.15 + t, 1, wave1 + wave3), hsv
+'''
+    },
 
-    300: {
+    400: {
         'name': 'RGB Sines 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -289,7 +346,7 @@ def pattern(t, dt, x, y, z, prev_state):
             wave_sine((t + x) * 1.4)), rgb
 '''
     },
-    310: {
+    410: {
         'name': 'RGB Cubics 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -301,8 +358,8 @@ def pattern(t, dt, x, y, z, prev_state):
             wave_cubic((t + x) * 1.4)), rgb
 '''
     },
-    320: {
-        'name': 'RGB Ripples 1 1D',
+    420: {
+        'name': 'RGB Ripples 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'default': True,
@@ -314,7 +371,7 @@ def pattern(t, dt, x, y, z, prev_state):
     return (0.01 / (wave_triangle(v0) + 0.01), 0.01 / (wave_triangle(v1) + 0.01), 0.01 / (wave_triangle(v2) + 0.01)), rgb
 '''
     },
-    330: {
+    430: {
         'name': 'RGB Plasma (Spectrum Sines) 2D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -327,7 +384,7 @@ def pattern(t, dt, x, y, z, prev_state):
             wave_sine(v + 0.666)), rgb
 '''
     },
-    340: {
+    440: {
         'name': 'RGB Plasma (Fire Sines) 2D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -340,7 +397,7 @@ def pattern(t, dt, x, y, z, prev_state):
             0.9 - wave_sine(v + 0.666)), rgb
 '''
     },
-    350: {
+    450: {
         'name': 'RGB Fractal Plasma (Fire Sines) 2D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
@@ -353,83 +410,4 @@ def pattern(t, dt, x, y, z, prev_state):
             1.0 - wave_sine(v + 0.666)), rgb
 '''
     },
-    360: {
-        'name': 'Blackbody Cycle 1D',
-        'primary_speed': 0.2,
-        'primary_scale': 1.0,
-        'default': True,
-        'source': '''
-def pattern(t, dt, x, y, z, prev_state):
-    v = wave_triangle(t + x)
-    c = blackbody_to_rgb(v * v * 5500 + 1000)
-    return (c[0] * v, c[1] * v, c[2] * v), rgb
-'''
-    },
-}
-
-# deprecated
-
-def sine_1d(t, dt, x, y, z, prev_state, in_color):
-    return in_color, driver.wave_sine(t + x)
-
-def cubic_1d(t, dt, x, y, z, prev_state, in_color):
-    return in_color, driver.wave_cubic(t + x)
-
-def ramp_1d(t, dt, x, y, z, prev_state, in_color):
-    return in_color, (t + x) % 1 # test ramp^2
-
-def bounce_linear_1d(t, dt, x, y, z, prev_state, in_color):
-    return in_color, driver.wave_sine(x + driver.wave_triangle(t))
-
-def bounce_sine_1d(t, dt, x, y, z, prev_state, in_color):
-    return in_color, driver.wave_sine(x + driver.wave_sine(t))
-
-def bounce_cubic_1d(t, dt, x, y, z, prev_state, in_color):
-    return in_color, driver.wave_sine(x + driver.wave_cubic(t))
-
-def perlin_noise_2d(t, dt, x, y, z, prev_state, in_color):
-    return in_color, driver.perlin_noise_3d(x, y, t)
-
-def twinkle_pulse_1d(t, dt, x, y, z, prev_state, in_color):
-    v = prev_state[1] - dt
-    if v <= -0.2:
-        return in_color, random()
-    elif v > 0:
-        return prev_state[0], v
-    else:
-        return (0, 0, 0), v
-
-def wipe_across_1d(t, dt, x, y, z, prev_state, in_color):
-    return in_color, ((t + x) % 1 > 0.5) * 1.0
-
-def wipe_from_center_1d(t, dt, x, y, z, prev_state, in_color):
-    if x < 0.5:
-        return in_color, ((t + x) % 1 < 0.5) * 1.0
-    else:
-        return in_color, ((x - t) % 1 < 0.5) * 1.0
-
-def wipe_from_ends_1d(t, dt, x, y, z, prev_state, in_color):
-    if x < 0.5:
-        return in_color, ((x - t) % 1 < 0.5) * 1.0
-    else:
-        return in_color, ((t + x) % 1 < 0.5) * 1.0
-
-
-default_secondary = {
-    0: None,
-    1: sine_1d,
-    2: cubic_1d,
-    3: ramp_1d,
-    4: bounce_linear_1d,
-    5: bounce_sine_1d,
-    6: bounce_cubic_1d,
-    7: perlin_noise_2d,
-    8: twinkle_pulse_1d,
-    9: wipe_across_1d,
-    10: wipe_from_center_1d,
-    11: wipe_from_ends_1d,
-}
-
-default_secondary_names = {
-    k: utils.snake_to_title(v.__name__) if v else 'None' for k, v in default_secondary.items()
 }

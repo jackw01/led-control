@@ -123,7 +123,7 @@ def create_app(led_count,
                 if v['default'] == False:
                     functions[int(k)] = v
                     controller.set_pattern_function(int(k), v['source'])
-                else:
+                elif int(k) in functions:
                     functions[int(k)].update(v)
 
             # Read color palettes
@@ -138,7 +138,9 @@ def create_app(led_count,
             print(f'Some saved settings at {filename} are out of date or invalid. Making a backup of the old file to {filename}.error and creating a new one with default settings.')
             shutil.copyfile(filename, filename.with_suffix('.json.error'))
 
+    # todo: pixel mapping on frontend
     # todo: presets
+    # todo: cleanup default palettes
 
     @app.route('/')
     def index():
@@ -198,7 +200,7 @@ def create_app(led_count,
         controller.calculate_palette_table(request.json['key'])
         return jsonify(result='')
 
-    @app.route('/removefunction', methods=['POST'])
+    @app.route('/removepalette', methods=['POST'])
     def remove_palette():
         'Remove a palette'
         print(request.json)
@@ -221,11 +223,11 @@ def create_app(led_count,
         functions_2 = {}
         for k, v in functions.items():
             if not v['default']:
-                functions_2[k] = v
+                functions_2[str(k)] = v
             else:
-                functions_2[k] = {n: v[n] for n in ('default', 'primary_speed', 'primary_scale')}
+                functions_2[str(k)] = {n: v[n] for n in ('default', 'primary_speed', 'primary_scale')}
 
-        palettes_2 = {k: v for (k, v) in controller.get_palettes().items() if not v['default']}
+        palettes_2 = {str(k): v for (k, v) in controller.get_palettes().items() if not v['default']}
 
         data = {
             'save_version': 2,
@@ -237,7 +239,8 @@ def create_app(led_count,
             try:
                 json.dump(data, data_file, sort_keys=True, indent=4)
                 print(f'Saved settings to {filename}.')
-            except Exception:
+            except Exception as e:
+                traceback.print_exc()
                 print(f'Could not save settings to {filename}.')
 
     def auto_save_settings():
