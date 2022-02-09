@@ -7,6 +7,7 @@ import SetupPage from './pages/SetupPage.js';
 import ControlPage from './pages/ControlPage.js';
 
 import SliderNumberInput from './components/SliderNumberInput.js';
+import PaletteColorBar from './components/PaletteColorBar.js';
 import GroupControls from './components/GroupControls.js';
 
 await store.load();
@@ -23,6 +24,7 @@ const router = VueRouter.createRouter({
 
 const app = Vue.createApp({});
 app.component('slider-number-input', SliderNumberInput);
+app.component('palette-color-bar', PaletteColorBar);
 app.component('group-controls', GroupControls);
 app.use(router);
 app.mount('#main');

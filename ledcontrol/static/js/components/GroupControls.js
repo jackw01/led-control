@@ -18,7 +18,9 @@ export default {
       sourceStatusClass: '',
       paletteKey,
       palette: store.getPalettes()[paletteKey],
-      codeMirror: {}, // todo: show all palettes toggle
+      codeMirror: {},
+      palettePreviewKey: 0,
+      showPaletteList: false,
     }
   },
   computed: {
@@ -59,7 +61,7 @@ export default {
     },
     async compileFunction() {
       const source = this.codeMirror.getValue();
-      this.animFunction .source = source;
+      this.animFunction.source = source;
       this.updateFunctionSource();
       const result = await store.requestCompile(this.functionKey);
       console.log('Compile errors/warnings:', result.errors, result.warnings);
@@ -100,8 +102,11 @@ export default {
     updatePalette() {
       store.set('groups.' + this.name + '.palette', parseInt(this.paletteKey, 10));
       this.palette = this.palettes[this.paletteKey];
-      this.drawPalettePreview();
       this.$nextTick(this.createColorPickers);
+    },
+    selectPalette(id) {
+      this.paletteKey = id;
+      this.updatePalette();
     },
     newPalette() {
       const newKey = Date.now();
@@ -121,7 +126,7 @@ export default {
     },
     updatePaletteContents() {
       store.setPalette(this.paletteKey, this.palette);
-      this.drawPalettePreview();
+      this.palettePreviewKey++;
     },
     addColor(i) {
       this.palette.colors.splice(i + 1, 0, this.palette.colors[i].slice());
@@ -135,33 +140,8 @@ export default {
         this.$nextTick(this.createColorPickers);
       }
     },
-    drawPalettePreview() {
-      const c = document.getElementById('palette-color-bar');
-      const ctx = c.getContext('2d');
-      c.width = 64;
-      c.height = 1;
-      const sectorSize = 1 / (this.palette.colors.length - 1);
-      for (let i = 0; i < c.width; i++) {
-        let f = i / c.width;
-        const sector = Math.floor(f / sectorSize);
-        f = f % sectorSize / sectorSize;
-        const c1 = this.palette.colors[sector];
-        const c2 = this.palette.colors[sector + 1];
-        let h1 = c2[0] - c1[0];
-        // Allow full spectrum if extremes are 0 and 1 in any order
-        // otherwise pick shortest path between colors
-        if (Math.abs(h1) != 1) {
-          if (h1 < -0.5) h1++;
-          if (h1 > 0.5) h1--;
-        }
-        const h = (f * h1 + c1[0]) * 360;
-        const s = (f * (c2[1] - c1[1]) + c1[1]) * 100;
-        const v = (f * (c2[2] - c1[2]) + c1[2]) * 100;
-        const l = (2 - s / 100) * v / 2;
-        const s2 = s * v / (l < 50 ? l * 2 : 200 - l * 2);
-        ctx.fillStyle = `hsl(${h}, ${s}%, ${l}%)`
-        ctx.fillRect(i, 0, 1, c.height);
-      }
+    togglePaletteList() {
+      this.showPaletteList = !this.showPaletteList;
     },
     createColorPickers() {
       if (!this.palette.default) {
@@ -195,7 +175,6 @@ export default {
     }
   },
   mounted() {
-    this.drawPalettePreview();
     this.$nextTick(this.createCodeEditor);
     this.$nextTick(this.createColorPickers);
   },
@@ -287,6 +266,7 @@ export default {
       >Compile Pattern</a>
     </div>
     <div ref="code" :key="functionKey"></div>
+    <br />
     <div class="input-row input-row-top-margin input-toplevel">
       <span class="label select-label">Palette:</span>
       <span class="select-container">
@@ -304,8 +284,28 @@ export default {
           </option>
         </select>
       </span>
+      <a
+        class="button"
+        @click="togglePaletteList"
+        v-bind:class="{'active': showPaletteList}"
+      >Show All</a>
     </div>
-    <canvas id="palette-color-bar" style="display: block; border-radius: 3px; width: 100%; height: 0.7rem; margin-bottom: 0.5rem;"></canvas>
+    <palette-color-bar
+      v-bind:colors="palette.colors"
+      v-if="!showPaletteList"
+      :key="palettePreviewKey">
+    </palette-color-bar>
+    <table class="palette-list" v-if="showPaletteList">
+      <tr v-for="(p, id) in palettes" @click="selectPalette(id)">
+        <td>{{ p.name }}</td>
+        <td>
+          <palette-color-bar
+            v-bind:colors="p.colors"
+            :key="palettePreviewKey">
+          </palette-color-bar>
+        </td>
+      </tr>
+    </table>
     <div id="colors">
       <div class="input-row input-row-bottom-margin">
         <a

@@ -195,7 +195,7 @@ def create_app(led_count,
         'Update a palette'
         print(request.json)
         controller.set_palette(request.json['key'], request.json['value'])
-        controller.calculate_palette_table()
+        controller.calculate_palette_tables()
         return jsonify(result='')
 
     @app.route('/removefunction', methods=['POST'])

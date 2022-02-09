@@ -130,7 +130,7 @@ textarea {
   resize: vertical; }
 
 .wrapper {
-  width: 42rem;
+  width: 40rem;
   max-width: 90%;
   margin: 0 auto;
   padding: 1rem 0;
@@ -221,7 +221,7 @@ textarea {
   -webkit-user-select: none;
   -ms-user-select: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important; }
-  .button:hover {
+  .button:hover, .button.active {
     background: rgba(6, 162, 171, 0.15);
     border: 1px solid #07c3cd; }
   .button.button-inline {
@@ -382,7 +382,7 @@ option {
     background: rgba(6, 162, 171, 0.05);
     border: 1px solid #04737a;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important; }
-    #main .pcr-app .pcr-type:hover {
+    #main .pcr-app .pcr-type:hover, #main .pcr-app .pcr-type.active {
       background: rgba(6, 162, 171, 0.15);
       border: 1px solid #07c3cd; }
   #main .pcr-app input:focus {
@@ -391,5 +391,24 @@ option {
 .router-link-active {
   color: #caccd0;
   font-weight: 600; }
+
+.palette-list {
+  width: 100%;
+  margin-bottom: 0.7rem; }
+  .palette-list tr {
+    height: 2.0rem; }
+    .palette-list tr td:first-child {
+      width: 7rem;
+      max-width: 7rem;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; }
+    .palette-list tr:hover {
+      color: #07c3cd;
+      text-decoration: underline; }
+  .palette-list canvas {
+    margin-top: 0;
+    margin-bottom: 0 !important; }
 
 /*# sourceMappingURL=index.css.map */

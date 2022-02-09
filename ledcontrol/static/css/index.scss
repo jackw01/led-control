@@ -260,7 +260,7 @@ textarea {
   background: rgba($input-border-color, 0.05);
   border: 1px solid darken($input-border-color, 10%);
 
-  &:hover {
+  &:hover, &.active {
     background: rgba($input-border-color, 0.15);
     border: 1px solid $input-border-focus;
   }
@@ -512,4 +512,30 @@ option {
   font-weight: 600;
 }
 
+.palette-list {
+  width: 100%;
+  margin-bottom: 0.7rem;
 
+  & tr {
+    height: 2.0rem;
+
+    & td:first-child {
+      width: 7rem;
+      max-width: 7rem;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &:hover {
+      color: $color-accent-lighter;
+      text-decoration: underline;
+    }
+  }
+
+  & canvas {
+    margin-top: 0;
+    margin-bottom: 0 !important;
+  }
+}

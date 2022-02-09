@@ -80,7 +80,7 @@ class AnimationController:
         self._palettes = dict(colorpalettes.default)
         self._palette_tables = {}
         self._current_palette_table = []
-        self.calculate_palette_tables()
+        self.calculate_palette_tables() # todo: only calculate when needed
 
         # Set default color temp
         self.calculate_color_correction()
