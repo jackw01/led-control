@@ -52,7 +52,6 @@ export default {
       <span class="label select-label">E1.31 sACN Control:</span>
       <span class="select-container">
         <select
-          class="update-on-change"
           autocomplete="off"
           v-model="sacn"
           @change="updateSACN"

@@ -51,6 +51,7 @@ def create_app(led_count,
                                      no_timer_reset,
                                      led_brightness_limit)
 
+    presets = {}
     functions = dict(animfunctions.default)
 
     # Create file if it doesn't exist already
@@ -118,6 +119,10 @@ def create_app(led_count,
             # Set controller settings, (automatically) recalculate things that depend on them
             controller.update_settings(settings['settings'])
 
+            # Read presets
+            if 'presets' in settings:
+                presets.update(settings['presets'])
+
             # Read custom animations and changed params for default animations
             for k, v in settings['functions'].items():
                 if v['default'] == False:
@@ -139,7 +144,6 @@ def create_app(led_count,
             shutil.copyfile(filename, filename.with_suffix('.json.error'))
 
     # todo: pixel mapping on frontend
-    # todo: presets
     # todo: cleanup default palettes
 
     @app.route('/')
@@ -158,6 +162,25 @@ def create_app(led_count,
         print(request.json)
         new_settings = request.json
         controller.update_settings(new_settings)
+        return jsonify(result='')
+
+    @app.route('/getpresets')
+    def get_presets():
+        'Get presets'
+        return jsonify(presets)
+
+    @app.route('/updatepreset', methods=['POST'])
+    def update_preset():
+        'Update a preset'
+        print(request.json)
+        presets[request.json['key']] = request.json['value']
+        return jsonify(result='')
+
+    @app.route('/removepreset', methods=['POST'])
+    def remove_preset():
+        'Remove a preset'
+        print(request.json)
+        del presets[request.json['key']]
         return jsonify(result='')
 
     @app.route('/getfunctions')
@@ -204,7 +227,7 @@ def create_app(led_count,
     def remove_palette():
         'Remove a palette'
         print(request.json)
-        controller.delete_palette(key)
+        controller.delete_palette(request.json['key'])
         return jsonify(result='')
 
     @app.route('/getfps')
@@ -232,6 +255,7 @@ def create_app(led_count,
         data = {
             'save_version': 2,
             'settings': controller.get_settings(),
+            'presets': presets,
             'functions': functions_2,
             'palettes': palettes_2,
         }

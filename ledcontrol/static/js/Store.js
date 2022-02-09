@@ -4,6 +4,7 @@
 class Store {
   constructor() {
     this.settings = {};
+    this.presets = {};
     this.functions = {};
     this.palettes = {};
   }
@@ -12,6 +13,10 @@ class Store {
     let req = await axios.get('/getsettings');
     this.settings = req.data;
     console.log('Settings loaded:', this.settings);
+
+    req = await axios.get('/getpresets');
+    this.presets = req.data;
+    console.log('Presets loaded:', this.presets);
 
     req = await axios.get('/getfunctions');
     this.functions = req.data;
@@ -37,6 +42,54 @@ class Store {
 
   async pushAllSettings() {
     await axios.post('/updatesettings', this.settings);
+  }
+
+  getPresets() {
+    return this.presets;
+  }
+
+  async savePreset(key) {
+    this.presets[key] = {};
+    Object.entries(this.settings.groups).forEach(([k, v]) => {
+      this.presets[key][k] = {
+        brightness: v.brightness,
+        color_temp: v.color_temp,
+        saturation: v.saturation,
+        function: v.function,
+        palette: v.palette,
+        scale: v.scale,
+        speed: v.speed,
+      };
+    });
+    console.log('Preset saved:', key);
+    console.log(this.presets);
+    await axios.post('/updatepreset', { key, value: this.presets[key] });
+  }
+
+  loadPreset(key) {
+    console.log('Loading preset:', key);
+    Object.entries(this.presets[key]).forEach(([k, v]) => {
+      if (this.settings.groups.hasOwnProperty(k)) {
+        let warn = false;
+        if (!this.functions.hasOwnProperty(v.function)) {
+          v.function = 0;
+          warn = true;
+        }
+        if (!this.palettes.hasOwnProperty(v.palette)) {
+          v.palette = 0;
+          warn = true;
+        }
+        if (warn) alert('Preset contained a reference to an animation pattern or palette which has been deleted.')
+        Object.assign(this.settings.groups[k], v);
+      }
+    });
+    this.pushAllSettings();
+  }
+
+  async removePreset(key) {
+    delete this.presets[key];
+    console.log('Preset removed:', key);
+    await axios.post('/removepreset', { key });
   }
 
   getFunctions() {

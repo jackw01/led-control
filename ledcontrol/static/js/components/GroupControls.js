@@ -177,7 +177,6 @@ export default {
     this.$nextTick(this.createColorPickers);
   },
   template: `
-    <h4>Group {{ i + 1 }} ({{ name }})</h4>
     <slider-number-input
       v-bind:path="'groups.' + name + '.brightness'"
       label="Brightness"
@@ -193,6 +192,7 @@ export default {
       v-bind:min="1000"
       v-bind:max="12000"
       v-bind:step="50"
+      v-if="false"
     ></slider-number-input>
     <slider-number-input
       v-bind:path="'groups.' + name + '.saturation'"
@@ -206,7 +206,6 @@ export default {
       <span class="label select-label">Pattern:</span>
       <span class="select-container">
         <select
-          class="update-on-change"
           autocomplete="off"
           v-model="functionKey"
           @change="updateFunction"
@@ -269,7 +268,6 @@ export default {
       <span class="label select-label">Palette:</span>
       <span class="select-container">
         <select
-          class="update-on-change"
           autocomplete="off"
           v-model="paletteKey"
           @change="updatePalette"
