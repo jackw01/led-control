@@ -27,6 +27,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Soho"
         },
         "1643867215549": {
@@ -58,6 +59,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Vaporwave"
         },
         "1643867291233": {
@@ -89,6 +91,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Magneto"
         },
         "1643867372711": {
@@ -120,6 +123,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Tyrell"
         },
         "1643867640709": {
@@ -151,6 +155,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Disturbia"
         },
         "1643867715992": {
@@ -182,6 +187,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Hal"
         },
         "1643867874427": {
@@ -213,6 +219,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Tropical"
         },
         "1643867987789": {
@@ -234,6 +241,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Ruby"
         },
         "1643868294996": {
@@ -255,6 +263,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Honolulu"
         },
         "1643868342476": {
@@ -276,6 +285,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Savanna"
         },
         "1643868470574": {
@@ -302,6 +312,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Red"
         },
         "1643868738750": {
@@ -333,6 +344,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Fairfax"
         },
         "1643868844488": {
@@ -364,6 +376,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Tokyo"
         },
         "1643868899926": {
@@ -395,6 +408,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Osaka"
         },
         "1643868967979": {
@@ -416,6 +430,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Winter"
         },
         "1643869092297": {
@@ -437,6 +452,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Lily"
         },
         "1643869211882": {
@@ -458,6 +474,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Spring"
         },
         "1643869276245": {
@@ -479,6 +496,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Mountain Breeze"
         },
         "1643869402261": {
@@ -505,6 +523,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Lake"
         },
         "1643869543543": {
@@ -536,6 +555,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Palm Beach"
         },
         "1643869689949": {
@@ -567,6 +587,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Galaxy"
         },
         "1643869762156": {
@@ -598,6 +619,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Starlight"
         },
         "1643869851104": {
@@ -629,6 +651,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Blood Moon"
         },
         "1643869943404": {
@@ -660,6 +683,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Nebula"
         },
         "1643870031952": {
@@ -691,6 +715,7 @@
                 ]
             ],
             "mode": 0,
+            "default": false,
             "name": "[Hue] Sundown"
         }
     },

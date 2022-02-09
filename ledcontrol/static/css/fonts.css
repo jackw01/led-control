@@ -2,12 +2,10 @@
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url('../fonts/MaterialIcons-Regular.eot'); /* For IE6-8 */
   src: local('Material Icons'),
     local('MaterialIcons-Regular'),
     url('../fonts/MaterialIcons-Regular.woff2') format('woff2'),
-    url('../fonts/MaterialIcons-Regular.woff') format('woff'),
-    url('../fonts/MaterialIcons-Regular.ttf') format('truetype');
+    url('../fonts/MaterialIcons-Regular.woff') format('woff');
 }
 
 .material-icons {
@@ -83,16 +81,6 @@
        url('../fonts/barlow-v4-latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
-/* barlow-500 - latin */
-@font-face {
-  font-family: 'Barlow';
-  font-style: normal;
-  font-weight: 500;
-  src: local('Barlow Medium'), local('Barlow-Medium'),
-       url('../fonts/barlow-v4-latin-500.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../fonts/barlow-v4-latin-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-
 /* barlow-600 - latin */
 @font-face {
   font-family: 'Barlow';
@@ -101,34 +89,4 @@
   src: local('Barlow SemiBold'), local('Barlow-SemiBold'),
        url('../fonts/barlow-v4-latin-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
        url('../fonts/barlow-v4-latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-
-/* barlow-600italic - latin */
-@font-face {
-  font-family: 'Barlow';
-  font-style: italic;
-  font-weight: 600;
-  src: local('Barlow SemiBold Italic'), local('Barlow-SemiBoldItalic'),
-       url('../fonts/barlow-v4-latin-600italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../fonts/barlow-v4-latin-600italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-
-/* barlow-700 - latin */
-@font-face {
-  font-family: 'Barlow';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Barlow Bold'), local('Barlow-Bold'),
-       url('../fonts/barlow-v4-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../fonts/barlow-v4-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-
-/* barlow-700italic - latin */
-@font-face {
-  font-family: 'Barlow';
-  font-style: italic;
-  font-weight: 700;
-  src: local('Barlow Bold Italic'), local('Barlow-BoldItalic'),
-       url('../fonts/barlow-v4-latin-700italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../fonts/barlow-v4-latin-700italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
