@@ -87,9 +87,8 @@ color_rgb_float blackbody_correction_rgb(color_rgb_float rgb, float kelvin) {
 }
 
 // Render float HSV to LEDs with "Rainbow" color transform from FastLED
-uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
-                                      color_rgb corr_rgb, float saturation,
-                                      float brightness, float gamma,
+uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv, color_rgb corr_rgb,
+                                      float saturation, float brightness,
                                       uint8_t has_white) {
   uint8_t hue = fmod(hsv.hue, 1.0) * 255.0;
   uint8_t sat = hsv.sat * saturation * 255.0;
@@ -227,9 +226,8 @@ uint32_t render_hsv2rgb_rainbow_float(color_hsv_float hsv,
 }
 
 // Render float RGB to LEDs
-uint32_t render_rgb_float(color_rgb_float rgb,
-                          color_rgb corr_rgb, float saturation,
-                          float brightness, float gamma,
+uint32_t render_rgb_float(color_rgb_float rgb, color_rgb corr_rgb,
+                          float saturation, float brightness,
                           uint8_t has_white) {
   float r = clamp(rgb.r, 0, 1);
   float g = clamp(rgb.g, 0, 1);
@@ -295,34 +293,49 @@ uint32_t render_rgb_float(color_rgb_float rgb,
 }
 
 // Render array of hsv pixels and display
-int ws2811_hsv_render_array_float(ws2811_t *ws, ws2811_channel_t *channel,
-                                  color_hsv_float values[], int count,
-                                  uint32_t correction, float saturation,
-                                  float brightness, float gamma,
-                                  uint8_t has_white){
+int ws2811_hsv_render_all_float(ws2811_t *ws, ws2811_channel_t *channel,
+                                color_hsv_float values[], int count,
+                                uint32_t correction, float saturation,
+                                float brightness, float gamma,
+                                uint8_t has_white){
   if (count > channel->count) return -1;
   color_rgb corr_rgb = unpack_rgb(correction);
   for (int i = 0; i < count; i++) {
     channel->leds[i] = render_hsv2rgb_rainbow_float(values[i], corr_rgb,
                                                     saturation, brightness,
-                                                    gamma, has_white);
+                                                    has_white);
   }
   ws2811_render(ws);
   return 1;
 }
 
+// Render array of hsv pixels and display
+void ws2811_hsv_render_range_float(ws2811_channel_t *channel,
+                                   color_hsv_float values[], int start, int end,
+                                   uint32_t correction, float saturation,
+                                   float brightness, float gamma,
+                                   uint8_t has_white) {
+  if (end - start > channel->count) return;
+  color_rgb corr_rgb = unpack_rgb(correction);
+  for (int i = start; i < end; i++) {
+    channel->leds[i] = render_hsv2rgb_rainbow_float(values[i], corr_rgb,
+                                                    saturation, brightness,
+                                                    has_white);
+  }
+}
+
 // Render array of rgb pixels and display
-int ws2811_rgb_render_array_float(ws2811_t *ws, ws2811_channel_t *channel,
-                                  color_rgb_float values[], int count,
-                                  uint32_t correction, float saturation,
-                                  float brightness, float gamma,
-                                  uint8_t has_white){
+int ws2811_rgb_render_all_float(ws2811_t *ws, ws2811_channel_t *channel,
+                                color_rgb_float values[], int count,
+                                uint32_t correction, float saturation,
+                                float brightness, float gamma,
+                                uint8_t has_white) {
   if (count > channel->count) return -1;
   color_rgb corr_rgb = unpack_rgb(correction);
   for (int i = 0; i < count; i++) {
     channel->leds[i] = render_rgb_float(values[i], corr_rgb,
                                         saturation, brightness,
-                                        gamma, has_white);
+                                        has_white);
   }
   ws2811_render(ws);
   return 1;

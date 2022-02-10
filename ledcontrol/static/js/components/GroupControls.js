@@ -6,7 +6,6 @@ import store from '../Store.js';
 export default {
   props: {
     'name': String,
-    'i': Number,
   },
   data() {
     const functionKey = store.get('groups.' + this.name + '.function');
@@ -76,7 +75,7 @@ export default {
     createCodeEditor() {
       let code = this.animFunction.source.trim();
       if (this.animFunction.default) {
-        code = '# Code editing and renaming disabled on default patterns. Click "New Pattern" to create and edit a copy of this pattern.\n\n' + code;
+        code = '# Editing and renaming disabled on default patterns. Click "New Pattern" to create and edit a copy of this pattern.\n\n' + code;
       }
       this.codeMirror = new CodeMirror(this.$refs.code, {
         value: code,
@@ -250,6 +249,7 @@ export default {
         v-model="animFunction.name"
         @change="updateFunctionSource"
         v-bind:disabled="animFunction.default"
+        autocomplete="off"
       >
     </div>
     <div class="input-row input-row-top-margin input-row-bottom-margin">
@@ -318,6 +318,7 @@ export default {
           v-model="palette.name"
           @change="updatePaletteContents"
           v-bind:disabled="palette.default"
+          autocomplete="off"
         >
       </div>
       <div id="color-picker-container" v-if="!palette.default">

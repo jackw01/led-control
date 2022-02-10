@@ -83,12 +83,20 @@ class LEDController:
             self._leds = None
             self._channel = None
 
-    def set_all_pixels_hsv_float(self, pixels, correction, saturation, brightness):
-        driver.ws2811_hsv_render_array_float(self._leds, self._channel, pixels, len(pixels),
+    def set_all_hsv(self, pixels, correction, saturation, brightness):
+        driver.ws2811_hsv_render_all_float(self._leds, self._channel, pixels, len(pixels),
+                                           correction, saturation, brightness, 1.0,
+                                           self._has_white)
+
+    def set_range_hsv(self, pixels, start, end, correction, saturation, brightness):
+        driver.ws2811_hsv_render_range_float(self._channel, pixels, start, end,
                                              correction, saturation, brightness, 1.0,
                                              self._has_white)
 
-    def set_all_pixels_rgb_float(self, pixels, correction, saturation, brightness):
-        driver.ws2811_rgb_render_array_float(self._leds, self._channel, pixels, len(pixels),
-                                             correction, saturation, brightness, 1.0,
-                                             self._has_white)
+    def set_all_rgb(self, pixels, correction, saturation, brightness):
+        driver.ws2811_rgb_render_all_float(self._leds, self._channel, pixels, len(pixels),
+                                           correction, saturation, brightness, 1.0,
+                                           self._has_white)
+
+    def render(self):
+        driver.ws2811_render(self._leds)

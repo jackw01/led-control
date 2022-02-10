@@ -166,7 +166,7 @@ textarea {
   .input-row .button {
     white-space: nowrap;
     flex-basis: content; }
-  .input-row input[type='text'] {
+  .input-row input[type='text'], .input-row input[type="number"].input-inline {
     flex-basis: 100%;
     margin-top: 0;
     margin-bottom: 0;
@@ -285,7 +285,7 @@ input[type="range"] {
       border: 1px solid #07c3cd; }
 
 .select-label {
-  line-height: 34px; }
+  line-height: 32px; }
 
 .select-container {
   display: inline-block;
@@ -314,7 +314,7 @@ input[type="range"] {
     position: absolute;
     display: inline-block;
     width: 98%;
-    height: 32px;
+    height: 30px;
     margin-top: 0px;
     padding-left: 6px;
     border: none;

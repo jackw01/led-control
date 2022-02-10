@@ -93,14 +93,14 @@ export default {
         type="text"
         v-model="presetKey"
         placeholder="preset name"
+        autocomplete="off"
       >
     </div>
     <br />
     <div v-for="(group, k, i) in groups">
-      <h4>Group {{ i + 1 }} ({{ k }})</h4>
+      <h4>Group {{ i + 1 }} ({{ group.name }})</h4>
       <group-controls
         v-bind:name="k"
-        v-bind:i="i"
         :key="presetKey"
       ></group-controls>
     </div>

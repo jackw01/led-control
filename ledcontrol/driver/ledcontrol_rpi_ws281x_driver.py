@@ -493,21 +493,25 @@ def blackbody_correction_rgb(rgb, kelvin):
     return _ledcontrol_rpi_ws281x_driver.blackbody_correction_rgb(rgb, kelvin)
 blackbody_correction_rgb = _ledcontrol_rpi_ws281x_driver.blackbody_correction_rgb
 
-def render_hsv2rgb_rainbow_float(hsv, corr_rgb, saturation, brightness, gamma, has_white):
-    return _ledcontrol_rpi_ws281x_driver.render_hsv2rgb_rainbow_float(hsv, corr_rgb, saturation, brightness, gamma, has_white)
+def render_hsv2rgb_rainbow_float(hsv, corr_rgb, saturation, brightness, has_white):
+    return _ledcontrol_rpi_ws281x_driver.render_hsv2rgb_rainbow_float(hsv, corr_rgb, saturation, brightness, has_white)
 render_hsv2rgb_rainbow_float = _ledcontrol_rpi_ws281x_driver.render_hsv2rgb_rainbow_float
 
-def render_rgb_float(rgb, corr_rgb, saturation, brightness, gamma, has_white):
-    return _ledcontrol_rpi_ws281x_driver.render_rgb_float(rgb, corr_rgb, saturation, brightness, gamma, has_white)
+def render_rgb_float(rgb, corr_rgb, saturation, brightness, has_white):
+    return _ledcontrol_rpi_ws281x_driver.render_rgb_float(rgb, corr_rgb, saturation, brightness, has_white)
 render_rgb_float = _ledcontrol_rpi_ws281x_driver.render_rgb_float
 
-def ws2811_hsv_render_array_float(ws, channel, values, count, correction, saturation, brightness, gamma, has_white):
-    return _ledcontrol_rpi_ws281x_driver.ws2811_hsv_render_array_float(ws, channel, values, count, correction, saturation, brightness, gamma, has_white)
-ws2811_hsv_render_array_float = _ledcontrol_rpi_ws281x_driver.ws2811_hsv_render_array_float
+def ws2811_hsv_render_all_float(ws, channel, values, count, correction, saturation, brightness, gamma, has_white):
+    return _ledcontrol_rpi_ws281x_driver.ws2811_hsv_render_all_float(ws, channel, values, count, correction, saturation, brightness, gamma, has_white)
+ws2811_hsv_render_all_float = _ledcontrol_rpi_ws281x_driver.ws2811_hsv_render_all_float
 
-def ws2811_rgb_render_array_float(ws, channel, values, count, correction, saturation, brightness, gamma, has_white):
-    return _ledcontrol_rpi_ws281x_driver.ws2811_rgb_render_array_float(ws, channel, values, count, correction, saturation, brightness, gamma, has_white)
-ws2811_rgb_render_array_float = _ledcontrol_rpi_ws281x_driver.ws2811_rgb_render_array_float
+def ws2811_hsv_render_range_float(channel, values, start, end, correction, saturation, brightness, gamma, has_white):
+    return _ledcontrol_rpi_ws281x_driver.ws2811_hsv_render_range_float(channel, values, start, end, correction, saturation, brightness, gamma, has_white)
+ws2811_hsv_render_range_float = _ledcontrol_rpi_ws281x_driver.ws2811_hsv_render_range_float
+
+def ws2811_rgb_render_all_float(ws, channel, values, count, correction, saturation, brightness, gamma, has_white):
+    return _ledcontrol_rpi_ws281x_driver.ws2811_rgb_render_all_float(ws, channel, values, count, correction, saturation, brightness, gamma, has_white)
+ws2811_rgb_render_all_float = _ledcontrol_rpi_ws281x_driver.ws2811_rgb_render_all_float
 
 def float_to_int_1000(t):
     return _ledcontrol_rpi_ws281x_driver.float_to_int_1000(t)

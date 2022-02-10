@@ -10,6 +10,11 @@ export default {
       sacn: store.get('sacn'),
     }
   },
+  computed: {
+    groups: function() {
+      return store.get('groups');
+    }
+  },
   methods: {
     updateSACN() {
       store.set('sacn', parseInt(this.sacn, 10));
@@ -60,6 +65,23 @@ export default {
           <option value="1">On</option>
         </select>
       </span>
+    </div>
+    <div v-for="(group, k, i) in groups">
+      <h4>Group {{ i + 1 }}</h4>
+      <group-config
+        v-bind:name="k"
+      ></group-config>
+      <div class="input-row input-row-top-margin">
+        <a
+          class="button"
+          @click="addGroup(i)"
+        >Add</a>
+        <a
+          class="button"
+          v-show="k !== 'main'"
+          @click="deleteGroup(i)"
+        >Remove</a>
+      </div>
     </div>
   `,
 }

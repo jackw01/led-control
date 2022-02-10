@@ -40,6 +40,16 @@ class Store {
     await axios.post('/updatesettings', delta);
   }
 
+  async setMultiple(pairs) {
+    const delta = {};
+    Object.entries(pairs).forEach(([path, value]) => {
+      _.set(this.settings, path, value);
+      console.log('Store set:', path, value);
+      _.set(delta, path, value);
+    });
+    await axios.post('/updatesettings', delta);
+  }
+
   async pushAllSettings() {
     await axios.post('/updatesettings', this.settings);
   }

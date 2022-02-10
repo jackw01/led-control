@@ -233,7 +233,7 @@ textarea {
     flex-basis: content;
   }
 
-  & input[type='text'] {
+  & input[type='text'], & input[type="number"].input-inline {
     flex-basis: 100%;
     margin-top: 0;
     margin-bottom: 0;
@@ -389,7 +389,7 @@ input[type="range"] {
 }
 
 .select-label {
-  line-height: 34px;
+  line-height: 32px;
 }
 
 .select-container {
@@ -422,7 +422,7 @@ input[type="range"] {
     position: absolute;
     display: inline-block;
     width: 98%;
-    height: 32px;
+    height: 30px;
     margin-top: 0px;
     padding-left: 6px;
     border: none;

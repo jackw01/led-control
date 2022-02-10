@@ -6842,8 +6842,7 @@ SWIGINTERN PyObject *_wrap_render_hsv2rgb_rainbow_float(PyObject *SWIGUNUSEDPARM
   color_rgb arg2 ;
   float arg3 ;
   float arg4 ;
-  float arg5 ;
-  uint8_t arg6 ;
+  uint8_t arg5 ;
   void *argp1 ;
   int res1 = 0 ;
   void *argp2 ;
@@ -6852,19 +6851,16 @@ SWIGINTERN PyObject *_wrap_render_hsv2rgb_rainbow_float(PyObject *SWIGUNUSEDPARM
   int ecode3 = 0 ;
   float val4 ;
   int ecode4 = 0 ;
-  float val5 ;
+  unsigned char val5 ;
   int ecode5 = 0 ;
-  unsigned char val6 ;
-  int ecode6 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   PyObject * obj4 = 0 ;
-  PyObject * obj5 = 0 ;
   uint32_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:render_hsv2rgb_rainbow_float",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:render_hsv2rgb_rainbow_float",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
   {
     res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_color_hsv_float,  0 );
     if (!SWIG_IsOK(res1)) {
@@ -6897,17 +6893,12 @@ SWIGINTERN PyObject *_wrap_render_hsv2rgb_rainbow_float(PyObject *SWIGUNUSEDPARM
     SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "render_hsv2rgb_rainbow_float" "', argument " "4"" of type '" "float""'");
   } 
   arg4 = (float)(val4);
-  ecode5 = SWIG_AsVal_float(obj4, &val5);
+  ecode5 = SWIG_AsVal_unsigned_SS_char(obj4, &val5);
   if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "render_hsv2rgb_rainbow_float" "', argument " "5"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "render_hsv2rgb_rainbow_float" "', argument " "5"" of type '" "uint8_t""'");
   } 
-  arg5 = (float)(val5);
-  ecode6 = SWIG_AsVal_unsigned_SS_char(obj5, &val6);
-  if (!SWIG_IsOK(ecode6)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "render_hsv2rgb_rainbow_float" "', argument " "6"" of type '" "uint8_t""'");
-  } 
-  arg6 = (uint8_t)(val6);
-  result = (uint32_t)render_hsv2rgb_rainbow_float(arg1,arg2,arg3,arg4,arg5,arg6);
+  arg5 = (uint8_t)(val5);
+  result = (uint32_t)render_hsv2rgb_rainbow_float(arg1,arg2,arg3,arg4,arg5);
   resultobj = SWIG_From_unsigned_SS_int((unsigned int)(result));
   return resultobj;
 fail:
@@ -6921,8 +6912,7 @@ SWIGINTERN PyObject *_wrap_render_rgb_float(PyObject *SWIGUNUSEDPARM(self), PyOb
   color_rgb arg2 ;
   float arg3 ;
   float arg4 ;
-  float arg5 ;
-  uint8_t arg6 ;
+  uint8_t arg5 ;
   void *argp1 ;
   int res1 = 0 ;
   void *argp2 ;
@@ -6931,19 +6921,16 @@ SWIGINTERN PyObject *_wrap_render_rgb_float(PyObject *SWIGUNUSEDPARM(self), PyOb
   int ecode3 = 0 ;
   float val4 ;
   int ecode4 = 0 ;
-  float val5 ;
+  unsigned char val5 ;
   int ecode5 = 0 ;
-  unsigned char val6 ;
-  int ecode6 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   PyObject * obj4 = 0 ;
-  PyObject * obj5 = 0 ;
   uint32_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:render_rgb_float",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:render_rgb_float",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
   {
     res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_color_rgb_float,  0 );
     if (!SWIG_IsOK(res1)) {
@@ -6976,17 +6963,12 @@ SWIGINTERN PyObject *_wrap_render_rgb_float(PyObject *SWIGUNUSEDPARM(self), PyOb
     SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "render_rgb_float" "', argument " "4"" of type '" "float""'");
   } 
   arg4 = (float)(val4);
-  ecode5 = SWIG_AsVal_float(obj4, &val5);
+  ecode5 = SWIG_AsVal_unsigned_SS_char(obj4, &val5);
   if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "render_rgb_float" "', argument " "5"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "render_rgb_float" "', argument " "5"" of type '" "uint8_t""'");
   } 
-  arg5 = (float)(val5);
-  ecode6 = SWIG_AsVal_unsigned_SS_char(obj5, &val6);
-  if (!SWIG_IsOK(ecode6)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "render_rgb_float" "', argument " "6"" of type '" "uint8_t""'");
-  } 
-  arg6 = (uint8_t)(val6);
-  result = (uint32_t)render_rgb_float(arg1,arg2,arg3,arg4,arg5,arg6);
+  arg5 = (uint8_t)(val5);
+  result = (uint32_t)render_rgb_float(arg1,arg2,arg3,arg4,arg5);
   resultobj = SWIG_From_unsigned_SS_int((unsigned int)(result));
   return resultobj;
 fail:
@@ -6994,7 +6976,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ws2811_hsv_render_array_float(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ws2811_hsv_render_all_float(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ws2811_t *arg1 = (ws2811_t *) 0 ;
   ws2811_channel_t *arg2 = (ws2811_channel_t *) 0 ;
@@ -7032,15 +7014,15 @@ SWIGINTERN PyObject *_wrap_ws2811_hsv_render_array_float(PyObject *SWIGUNUSEDPAR
   PyObject * obj8 = 0 ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOO:ws2811_hsv_render_array_float",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOO:ws2811_hsv_render_all_float",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ws2811_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ws2811_hsv_render_array_float" "', argument " "1"" of type '" "ws2811_t *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ws2811_hsv_render_all_float" "', argument " "1"" of type '" "ws2811_t *""'"); 
   }
   arg1 = (ws2811_t *)(argp1);
   res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_ws2811_channel_t, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ws2811_hsv_render_array_float" "', argument " "2"" of type '" "ws2811_channel_t *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ws2811_hsv_render_all_float" "', argument " "2"" of type '" "ws2811_channel_t *""'"); 
   }
   arg2 = (ws2811_channel_t *)(argp2);
   {
@@ -7059,35 +7041,35 @@ SWIGINTERN PyObject *_wrap_ws2811_hsv_render_array_float(PyObject *SWIGUNUSEDPAR
   }
   ecode4 = SWIG_AsVal_int(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ws2811_hsv_render_array_float" "', argument " "4"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ws2811_hsv_render_all_float" "', argument " "4"" of type '" "int""'");
   } 
   arg4 = (int)(val4);
   ecode5 = SWIG_AsVal_unsigned_SS_int(obj4, &val5);
   if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "ws2811_hsv_render_array_float" "', argument " "5"" of type '" "uint32_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "ws2811_hsv_render_all_float" "', argument " "5"" of type '" "uint32_t""'");
   } 
   arg5 = (uint32_t)(val5);
   ecode6 = SWIG_AsVal_float(obj5, &val6);
   if (!SWIG_IsOK(ecode6)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "ws2811_hsv_render_array_float" "', argument " "6"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "ws2811_hsv_render_all_float" "', argument " "6"" of type '" "float""'");
   } 
   arg6 = (float)(val6);
   ecode7 = SWIG_AsVal_float(obj6, &val7);
   if (!SWIG_IsOK(ecode7)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "ws2811_hsv_render_array_float" "', argument " "7"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "ws2811_hsv_render_all_float" "', argument " "7"" of type '" "float""'");
   } 
   arg7 = (float)(val7);
   ecode8 = SWIG_AsVal_float(obj7, &val8);
   if (!SWIG_IsOK(ecode8)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "ws2811_hsv_render_array_float" "', argument " "8"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "ws2811_hsv_render_all_float" "', argument " "8"" of type '" "float""'");
   } 
   arg8 = (float)(val8);
   ecode9 = SWIG_AsVal_unsigned_SS_char(obj8, &val9);
   if (!SWIG_IsOK(ecode9)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "ws2811_hsv_render_array_float" "', argument " "9"" of type '" "uint8_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "ws2811_hsv_render_all_float" "', argument " "9"" of type '" "uint8_t""'");
   } 
   arg9 = (uint8_t)(val9);
-  result = (int)ws2811_hsv_render_array_float(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
+  result = (int)ws2811_hsv_render_all_float(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
   resultobj = SWIG_From_int((int)(result));
   {
     if (arg3) free(arg3);
@@ -7101,7 +7083,113 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ws2811_rgb_render_array_float(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ws2811_hsv_render_range_float(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ws2811_channel_t *arg1 = (ws2811_channel_t *) 0 ;
+  color_hsv_float *arg2 ;
+  int arg3 ;
+  int arg4 ;
+  uint32_t arg5 ;
+  float arg6 ;
+  float arg7 ;
+  float arg8 ;
+  uint8_t arg9 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  unsigned int val5 ;
+  int ecode5 = 0 ;
+  float val6 ;
+  int ecode6 = 0 ;
+  float val7 ;
+  int ecode7 = 0 ;
+  float val8 ;
+  int ecode8 = 0 ;
+  unsigned char val9 ;
+  int ecode9 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOO:ws2811_hsv_render_range_float",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ws2811_channel_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ws2811_hsv_render_range_float" "', argument " "1"" of type '" "ws2811_channel_t *""'"); 
+  }
+  arg1 = (ws2811_channel_t *)(argp1);
+  {
+    int len = PyObject_Length(obj1);
+    arg2 = malloc(sizeof(color_hsv_float) * len);
+    int i, j;
+    for (i = 0; i < len; i++) {
+      PyObject *o = PySequence_GetItem(obj1, i);
+      for (j = 0; j < 3; j++) {
+        PyObject *o2 = PySequence_GetItem(o, j);
+        arg2[i].raw[j] = (float)PyFloat_AsDouble(o2);
+        Py_DECREF(o2);
+      }
+      Py_DECREF(o);
+    }
+  }
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "ws2811_hsv_render_range_float" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = (int)(val3);
+  ecode4 = SWIG_AsVal_int(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ws2811_hsv_render_range_float" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = (int)(val4);
+  ecode5 = SWIG_AsVal_unsigned_SS_int(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "ws2811_hsv_render_range_float" "', argument " "5"" of type '" "uint32_t""'");
+  } 
+  arg5 = (uint32_t)(val5);
+  ecode6 = SWIG_AsVal_float(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "ws2811_hsv_render_range_float" "', argument " "6"" of type '" "float""'");
+  } 
+  arg6 = (float)(val6);
+  ecode7 = SWIG_AsVal_float(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "ws2811_hsv_render_range_float" "', argument " "7"" of type '" "float""'");
+  } 
+  arg7 = (float)(val7);
+  ecode8 = SWIG_AsVal_float(obj7, &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "ws2811_hsv_render_range_float" "', argument " "8"" of type '" "float""'");
+  } 
+  arg8 = (float)(val8);
+  ecode9 = SWIG_AsVal_unsigned_SS_char(obj8, &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "ws2811_hsv_render_range_float" "', argument " "9"" of type '" "uint8_t""'");
+  } 
+  arg9 = (uint8_t)(val9);
+  ws2811_hsv_render_range_float(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
+  resultobj = SWIG_Py_Void();
+  {
+    if (arg2) free(arg2);
+  }
+  return resultobj;
+fail:
+  {
+    if (arg2) free(arg2);
+  }
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ws2811_rgb_render_all_float(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ws2811_t *arg1 = (ws2811_t *) 0 ;
   ws2811_channel_t *arg2 = (ws2811_channel_t *) 0 ;
@@ -7139,15 +7227,15 @@ SWIGINTERN PyObject *_wrap_ws2811_rgb_render_array_float(PyObject *SWIGUNUSEDPAR
   PyObject * obj8 = 0 ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOO:ws2811_rgb_render_array_float",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOO:ws2811_rgb_render_all_float",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ws2811_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ws2811_rgb_render_array_float" "', argument " "1"" of type '" "ws2811_t *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ws2811_rgb_render_all_float" "', argument " "1"" of type '" "ws2811_t *""'"); 
   }
   arg1 = (ws2811_t *)(argp1);
   res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_ws2811_channel_t, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ws2811_rgb_render_array_float" "', argument " "2"" of type '" "ws2811_channel_t *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ws2811_rgb_render_all_float" "', argument " "2"" of type '" "ws2811_channel_t *""'"); 
   }
   arg2 = (ws2811_channel_t *)(argp2);
   {
@@ -7166,35 +7254,35 @@ SWIGINTERN PyObject *_wrap_ws2811_rgb_render_array_float(PyObject *SWIGUNUSEDPAR
   }
   ecode4 = SWIG_AsVal_int(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ws2811_rgb_render_array_float" "', argument " "4"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ws2811_rgb_render_all_float" "', argument " "4"" of type '" "int""'");
   } 
   arg4 = (int)(val4);
   ecode5 = SWIG_AsVal_unsigned_SS_int(obj4, &val5);
   if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "ws2811_rgb_render_array_float" "', argument " "5"" of type '" "uint32_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "ws2811_rgb_render_all_float" "', argument " "5"" of type '" "uint32_t""'");
   } 
   arg5 = (uint32_t)(val5);
   ecode6 = SWIG_AsVal_float(obj5, &val6);
   if (!SWIG_IsOK(ecode6)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "ws2811_rgb_render_array_float" "', argument " "6"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "ws2811_rgb_render_all_float" "', argument " "6"" of type '" "float""'");
   } 
   arg6 = (float)(val6);
   ecode7 = SWIG_AsVal_float(obj6, &val7);
   if (!SWIG_IsOK(ecode7)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "ws2811_rgb_render_array_float" "', argument " "7"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "ws2811_rgb_render_all_float" "', argument " "7"" of type '" "float""'");
   } 
   arg7 = (float)(val7);
   ecode8 = SWIG_AsVal_float(obj7, &val8);
   if (!SWIG_IsOK(ecode8)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "ws2811_rgb_render_array_float" "', argument " "8"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "ws2811_rgb_render_all_float" "', argument " "8"" of type '" "float""'");
   } 
   arg8 = (float)(val8);
   ecode9 = SWIG_AsVal_unsigned_SS_char(obj8, &val9);
   if (!SWIG_IsOK(ecode9)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "ws2811_rgb_render_array_float" "', argument " "9"" of type '" "uint8_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "ws2811_rgb_render_all_float" "', argument " "9"" of type '" "uint8_t""'");
   } 
   arg9 = (uint8_t)(val9);
-  result = (int)ws2811_rgb_render_array_float(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
+  result = (int)ws2811_rgb_render_all_float(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
   resultobj = SWIG_From_int((int)(result));
   {
     if (arg3) free(arg3);
@@ -7872,8 +7960,9 @@ static PyMethodDef SwigMethods[] = {
 	 { "blackbody_correction_rgb", _wrap_blackbody_correction_rgb, METH_VARARGS, NULL},
 	 { "render_hsv2rgb_rainbow_float", _wrap_render_hsv2rgb_rainbow_float, METH_VARARGS, NULL},
 	 { "render_rgb_float", _wrap_render_rgb_float, METH_VARARGS, NULL},
-	 { "ws2811_hsv_render_array_float", _wrap_ws2811_hsv_render_array_float, METH_VARARGS, NULL},
-	 { "ws2811_rgb_render_array_float", _wrap_ws2811_rgb_render_array_float, METH_VARARGS, NULL},
+	 { "ws2811_hsv_render_all_float", _wrap_ws2811_hsv_render_all_float, METH_VARARGS, NULL},
+	 { "ws2811_hsv_render_range_float", _wrap_ws2811_hsv_render_range_float, METH_VARARGS, NULL},
+	 { "ws2811_rgb_render_all_float", _wrap_ws2811_rgb_render_all_float, METH_VARARGS, NULL},
 	 { "float_to_int_1000", _wrap_float_to_int_1000, METH_VARARGS, NULL},
 	 { "float_to_int_1000_mirror", _wrap_float_to_int_1000_mirror, METH_VARARGS, NULL},
 	 { "wave_pulse", _wrap_wave_pulse, METH_VARARGS, NULL},
