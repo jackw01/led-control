@@ -102,6 +102,21 @@ class Store {
     await axios.post('/removepreset', { key });
   }
 
+  async createGroup(key) {
+    const newGroup = _.cloneDeep(this.settings.groups[key]);
+    newGroup.name = `untitled ${Object.keys(this.settings.groups).length}`;
+    this.settings.groups[`g_${Date.now()}`] = newGroup;
+    console.log('Group duplicated:', key);
+    console.log(this.settings.groups);
+    await this.pushAllSettings();
+  }
+
+  async removeGroup(key) {
+    delete this.settings.groups[key];
+    console.log('Group removed:', key);
+    await axios.post('/removegroup', { key });
+  }
+
   getFunctions() {
     return this.functions;
   }

@@ -25,7 +25,7 @@ export default {
   template: `
     <div class="input-toplevel">
       <span class="label">{{ label }}:
-        <span class="number-units" v-if="unit.length > 0">({{ unit }})</span>
+        <span class="dim" v-if="unit.length > 0">({{ unit }})</span>
       </span>
       <div class="input-row">
         <div class="input-slider-container">

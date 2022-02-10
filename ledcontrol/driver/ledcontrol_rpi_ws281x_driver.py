@@ -513,6 +513,10 @@ def ws2811_rgb_render_all_float(ws, channel, values, count, correction, saturati
     return _ledcontrol_rpi_ws281x_driver.ws2811_rgb_render_all_float(ws, channel, values, count, correction, saturation, brightness, gamma, has_white)
 ws2811_rgb_render_all_float = _ledcontrol_rpi_ws281x_driver.ws2811_rgb_render_all_float
 
+def ws2811_rgb_render_range_float(channel, values, start, end, correction, saturation, brightness, gamma, has_white):
+    return _ledcontrol_rpi_ws281x_driver.ws2811_rgb_render_range_float(channel, values, start, end, correction, saturation, brightness, gamma, has_white)
+ws2811_rgb_render_range_float = _ledcontrol_rpi_ws281x_driver.ws2811_rgb_render_range_float
+
 def float_to_int_1000(t):
     return _ledcontrol_rpi_ws281x_driver.float_to_int_1000(t)
 float_to_int_1000 = _ledcontrol_rpi_ws281x_driver.float_to_int_1000

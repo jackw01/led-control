@@ -7296,6 +7296,112 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_ws2811_rgb_render_range_float(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ws2811_channel_t *arg1 = (ws2811_channel_t *) 0 ;
+  color_rgb_float *arg2 ;
+  int arg3 ;
+  int arg4 ;
+  uint32_t arg5 ;
+  float arg6 ;
+  float arg7 ;
+  float arg8 ;
+  uint8_t arg9 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  unsigned int val5 ;
+  int ecode5 = 0 ;
+  float val6 ;
+  int ecode6 = 0 ;
+  float val7 ;
+  int ecode7 = 0 ;
+  float val8 ;
+  int ecode8 = 0 ;
+  unsigned char val9 ;
+  int ecode9 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOO:ws2811_rgb_render_range_float",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ws2811_channel_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ws2811_rgb_render_range_float" "', argument " "1"" of type '" "ws2811_channel_t *""'"); 
+  }
+  arg1 = (ws2811_channel_t *)(argp1);
+  {
+    int len = PyObject_Length(obj1);
+    arg2 = malloc(sizeof(color_rgb_float) * len);
+    int i, j;
+    for (i = 0; i < len; i++) {
+      PyObject *o = PySequence_GetItem(obj1, i);
+      for (j = 0; j < 3; j++) {
+        PyObject *o2 = PySequence_GetItem(o, j);
+        arg2[i].raw[j] = (float)PyFloat_AsDouble(o2);
+        Py_DECREF(o2);
+      }
+      Py_DECREF(o);
+    }
+  }
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "ws2811_rgb_render_range_float" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = (int)(val3);
+  ecode4 = SWIG_AsVal_int(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ws2811_rgb_render_range_float" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = (int)(val4);
+  ecode5 = SWIG_AsVal_unsigned_SS_int(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "ws2811_rgb_render_range_float" "', argument " "5"" of type '" "uint32_t""'");
+  } 
+  arg5 = (uint32_t)(val5);
+  ecode6 = SWIG_AsVal_float(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "ws2811_rgb_render_range_float" "', argument " "6"" of type '" "float""'");
+  } 
+  arg6 = (float)(val6);
+  ecode7 = SWIG_AsVal_float(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "ws2811_rgb_render_range_float" "', argument " "7"" of type '" "float""'");
+  } 
+  arg7 = (float)(val7);
+  ecode8 = SWIG_AsVal_float(obj7, &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "ws2811_rgb_render_range_float" "', argument " "8"" of type '" "float""'");
+  } 
+  arg8 = (float)(val8);
+  ecode9 = SWIG_AsVal_unsigned_SS_char(obj8, &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "ws2811_rgb_render_range_float" "', argument " "9"" of type '" "uint8_t""'");
+  } 
+  arg9 = (uint8_t)(val9);
+  ws2811_rgb_render_range_float(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
+  resultobj = SWIG_Py_Void();
+  {
+    if (arg2) free(arg2);
+  }
+  return resultobj;
+fail:
+  {
+    if (arg2) free(arg2);
+  }
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_float_to_int_1000(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   float arg1 ;
@@ -7963,6 +8069,7 @@ static PyMethodDef SwigMethods[] = {
 	 { "ws2811_hsv_render_all_float", _wrap_ws2811_hsv_render_all_float, METH_VARARGS, NULL},
 	 { "ws2811_hsv_render_range_float", _wrap_ws2811_hsv_render_range_float, METH_VARARGS, NULL},
 	 { "ws2811_rgb_render_all_float", _wrap_ws2811_rgb_render_all_float, METH_VARARGS, NULL},
+	 { "ws2811_rgb_render_range_float", _wrap_ws2811_rgb_render_range_float, METH_VARARGS, NULL},
 	 { "float_to_int_1000", _wrap_float_to_int_1000, METH_VARARGS, NULL},
 	 { "float_to_int_1000_mirror", _wrap_float_to_int_1000_mirror, METH_VARARGS, NULL},
 	 { "wave_pulse", _wrap_wave_pulse, METH_VARARGS, NULL},

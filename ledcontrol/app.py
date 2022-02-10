@@ -144,9 +144,6 @@ def create_app(led_count,
             print(f'Some saved settings at {filename} are out of date or invalid. Making a backup of the old file to {filename}.error and creating a new one with default settings.')
             shutil.copyfile(filename, filename.with_suffix('.json.error'))
 
-    # todo: pixel mapping on frontend
-    # todo: cleanup default palettes
-
     @app.route('/')
     def index():
         'Returns web app page'
@@ -182,6 +179,13 @@ def create_app(led_count,
         'Remove a preset'
         print(request.json)
         del presets[request.json['key']]
+        return jsonify(result='')
+
+    @app.route('/removegroup', methods=['POST'])
+    def remove_group():
+        'Remove a group'
+        print(request.json)
+        controller.delete_group(request.json['key'])
         return jsonify(result='')
 
     @app.route('/getfunctions')

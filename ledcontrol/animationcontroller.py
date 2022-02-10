@@ -166,6 +166,9 @@ class AnimationController:
 
     def update_settings(self, new_settings):
         'Update settings dict with new values'
+        self._flag_correction = False
+        self._flag_mapping = False
+        self._flag_clear = False
         def recursive_update(d1, d2):
             for k, v in d2.items():
                 if isinstance(v, collections.abc.Mapping):
@@ -175,17 +178,17 @@ class AnimationController:
 
                 # Perform checks for things that need to be recalculated
                 if k in ['global_color_temp', 'global_color_r', 'global_color_g', 'global_color_b', 'color_temp']:
-                    self.calculate_color_correction()
+                    self._flag_correction = True
                 elif k == 'global_brightness':
                     d1[k] = min(d1[k], self._global_brightness_limit)
                 elif k == 'scale':
-                    self.calculate_mapping()
+                    self._flag_mapping = True
                 elif k == 'function':
                     if v not in self._functions: # for uncompiled functions
                         self._functions[v] = animfunctions.blank
                     self._check_reset_animation_state()
                 elif k in ['range_start', 'range_end']:
-                    self.clear_leds() # clear LEDs to make range selection less ambiguous
+                    self._flag_clear = True # clear LEDs to make range selection less ambiguous
                 elif k == 'sacn' and self._enable_sacn:
                     if v:
                         self._receiver = sacn.sACNreceiver()
@@ -197,7 +200,18 @@ class AnimationController:
             return d1
 
         recursive_update(self._settings, new_settings)
+        if self._flag_correction:
+            self.calculate_color_correction()
+        if self._flag_mapping:
+            self.calculate_mapping()
+        if self._flag_clear:
+            self.clear_leds()
         self._update_needed = True
+
+    def delete_group(self, key):
+        'Delete a group'
+        if key != 'main':
+            del self._settings['groups'][key]
 
     # Functions frontend
 
@@ -303,71 +317,6 @@ class AnimationController:
         'Reset animation timer'
         self._start = time.perf_counter()
 
-    def update_leds2(self): # left here for performance evaluation
-        'Determine time, render frame, and display'
-        last_t = self._time
-        self._time = self._timer.last_start - self._start
-        delta_t = self._time - last_t
-
-        if self._update_needed and self._settings['sacn'] == 0:
-            # todo: Only use main group for now
-            group = 'main'
-            settings = self._settings['groups'][group]
-            mapping = self._mappings[group]
-
-            # Begin render
-            self._current_palette_table = self._palette_tables[settings['palette']]
-            computed_brightness = self._settings['global_brightness'] * settings['brightness']
-            computed_saturation = self._settings['global_saturation'] * settings['saturation']
-            function_1 = self._functions[settings['function']]
-
-            # Calculate times
-            # Reset time every week to prevent strange math issues
-            time_fix = self._time % 604800
-            # time component = time (s) * speed (cycle/s)
-            time_1 = time_fix * settings['speed']
-            delta_t_1 = delta_t * settings['speed']
-
-            try:
-                # Determine current pattern mode
-                c, mode = function_1(0, 0.1, 0, 0, 0, (0, 0, 0))
-
-                # Run pattern to determine color
-                s_1 = [function_1(time_1,
-                                  delta_t_1,
-                                  mapping[i][0],
-                                  mapping[i][1],
-                                  mapping[i][2],
-                                  self._prev_state[i])[0]
-                       for i in range(self._led_count)]
-                self._prev_state = s_1
-
-                # Write colors to LEDs
-                if mode == animfunctions.ColorMode.hsv:
-                    self._led_controller.set_all_hsv(s_1,
-                                                     self._correction,
-                                                     computed_saturation,
-                                                     computed_brightness)
-                elif mode == animfunctions.ColorMode.rgb:
-                    self._led_controller.set_all_rgb(s_1,
-                                                     self._correction,
-                                                     computed_saturation,
-                                                     computed_brightness)
-
-            except Exception as e:
-                msg = traceback.format_exception(type(e), e, e.__traceback__)
-                print(f'Animation execution: {msg}')
-                r = 0.1 * driver.wave_pulse(time_fix, 0.5)
-                self._led_controller.set_all_rgb([(r, 0, 0) for i in range(self._led_count)],
-                                                 self._correction,
-                                                 1.0,
-                                                 1.0)
-
-            # If displaying a static pattern, brightness is 0, or speed is 0:
-            # no update is needed the next frame
-            self._update_needed = not (
-                settings['function'] in animfunctions.static_function_ids or settings['speed'] == 0 or computed_brightness == 0)
-
     def update_leds(self):
         'Determine time, render frame, and display'
         last_t = self._time
@@ -376,8 +325,10 @@ class AnimationController:
 
         if self._update_needed and self._settings['sacn'] == 0:
             self._update_needed = False
-            for group in self._settings['groups']:
-                settings = self._settings['groups'][group]
+            # Store dict keys as list in case they are changed during iteration
+            for group, settings in list(self._settings['groups'].items()):
+                if group not in self._mappings: # Ignore groups that haven't been processed yet
+                    continue
                 mapping = self._mappings[group]
                 range_start = settings['range_start']
                 range_end = min(self._led_count, settings['range_end'])
@@ -406,7 +357,7 @@ class AnimationController:
                                         mapping[i][1],
                                         mapping[i][2],
                                         self._prev_state[i])[0]
-                            for i in range(range_start, range_end)]
+                             for i in range(range_start, range_end)]
                     self._prev_state[range_start:range_end] = state
 
                     # Write colors to LEDs
@@ -429,8 +380,7 @@ class AnimationController:
                                                      self._correction,
                                                      1.0,
                                                      1.0)
-
-                self._led_controller.render()
+                    return
 
                 # If displaying a static pattern, brightness is 0, or speed is 0:
                 # no update is needed the next frame
@@ -439,6 +389,8 @@ class AnimationController:
                     and settings['speed'] != 0
                     and computed_brightness > 0):
                     self._update_needed = True
+
+            self._led_controller.render()
 
     def _sacn_callback(self, packet):
         'Callback for sACN / E1.31 client'

@@ -98,5 +98,10 @@ class LEDController:
                                            correction, saturation, brightness, 1.0,
                                            self._has_white)
 
+    def set_range_rgb(self, pixels, start, end, correction, saturation, brightness):
+        driver.ws2811_rgb_render_range_float(self._channel, pixels, start, end,
+                                             correction, saturation, brightness, 1.0,
+                                             self._has_white)
+
     def render(self):
         driver.ws2811_render(self._leds)

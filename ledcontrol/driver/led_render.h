@@ -315,10 +315,10 @@ void ws2811_hsv_render_range_float(ws2811_channel_t *channel,
                                    uint32_t correction, float saturation,
                                    float brightness, float gamma,
                                    uint8_t has_white) {
-  if (end - start > channel->count) return;
+  if (end > channel->count) return;
   color_rgb corr_rgb = unpack_rgb(correction);
   for (int i = start; i < end; i++) {
-    channel->leds[i] = render_hsv2rgb_rainbow_float(values[i], corr_rgb,
+    channel->leds[i] = render_hsv2rgb_rainbow_float(values[i - start], corr_rgb,
                                                     saturation, brightness,
                                                     has_white);
   }
@@ -339,6 +339,21 @@ int ws2811_rgb_render_all_float(ws2811_t *ws, ws2811_channel_t *channel,
   }
   ws2811_render(ws);
   return 1;
+}
+
+// Render array of rgb pixels and display
+void ws2811_rgb_render_range_float(ws2811_channel_t *channel,
+                                   color_rgb_float values[], int start, int end,
+                                   uint32_t correction, float saturation,
+                                   float brightness, float gamma,
+                                   uint8_t has_white) {
+  if (end > channel->count) return;
+  color_rgb corr_rgb = unpack_rgb(correction);
+  for (int i = start; i < end; i++) {
+    channel->leds[i] = render_rgb_float(values[i - start], corr_rgb,
+                                        saturation, brightness,
+                                        has_white);
+  }
 }
 
 #endif

@@ -19,6 +19,11 @@ export default {
     groups: function() {
       return store.get('groups');
     },
+    orderedGroups: function() {
+      return _.fromPairs(_.sortBy(_.toPairs(this.groups), (g) => {
+        return g[1].range_start;
+      }));
+    },
     presets: function() {
       return store.getPresets();
     }
@@ -97,12 +102,13 @@ export default {
       >
     </div>
     <br />
-    <div v-for="(group, k, i) in groups">
+    <div v-for="(group, k, i) in orderedGroups" :key="k">
       <h4>Group {{ i + 1 }} ({{ group.name }})</h4>
       <group-controls
         v-bind:name="k"
         :key="presetKey"
       ></group-controls>
+      <br />
     </div>
   `
 }

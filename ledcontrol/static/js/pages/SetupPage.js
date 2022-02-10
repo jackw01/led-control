@@ -8,6 +8,7 @@ export default {
   data() {
     return {
       sacn: store.get('sacn'),
+      groupListKey: 0,
     }
   },
   computed: {
@@ -18,6 +19,22 @@ export default {
   methods: {
     updateSACN() {
       store.set('sacn', parseInt(this.sacn, 10));
+    },
+    async addGroup(key) {
+      await store.createGroup(key);
+      this.groupListKey++;
+    },
+    async deleteGroup(key) {
+      if (confirm(`Delete group "${this.groups[key].name}?"`)) {
+        await store.removeGroup(key);
+        this.groupListKey++;
+      }
+    },
+    getOrderedGroups() {
+      // Does not work in computed properties
+      return _.fromPairs(_.sortBy(_.toPairs(this.groups), (g) => {
+        return g[1].range_start;
+      }));
     }
   },
   template: `
@@ -66,7 +83,8 @@ export default {
         </select>
       </span>
     </div>
-    <div v-for="(group, k, i) in groups">
+    <br />
+    <div v-for="(group, k, i) in getOrderedGroups()" :key="k + groupListKey">
       <h4>Group {{ i + 1 }}</h4>
       <group-config
         v-bind:name="k"
@@ -74,12 +92,12 @@ export default {
       <div class="input-row input-row-top-margin">
         <a
           class="button"
-          @click="addGroup(i)"
+          @click="addGroup(k)"
         >Add</a>
         <a
           class="button"
           v-show="k !== 'main'"
-          @click="deleteGroup(i)"
+          @click="deleteGroup(k)"
         >Remove</a>
       </div>
     </div>
