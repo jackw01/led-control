@@ -323,6 +323,9 @@ class AnimationController:
         self._time = self._timer.last_start - self._start
         delta_t = self._time - last_t
 
+        if self._timer.get_count() % 100 == 0:
+            print(f'Execution time: {self._timer.get_perf_avg():0.5f}s, {self._timer.get_rate():05.1f} FPS')
+
         if self._update_needed and self._settings['sacn'] == 0:
             self._update_needed = False
             # Store dict keys as list in case they are changed during iteration

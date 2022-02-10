@@ -26,7 +26,8 @@ def create_app(led_count,
                led_brightness_limit,
                save_interval,
                enable_sacn,
-               no_timer_reset):
+               no_timer_reset,
+               dev):
     app = Flask(__name__)
 
     # Create pixel mapping function
@@ -137,12 +138,19 @@ def create_app(led_count,
                 controller.set_palette(int(k), v)
             controller.calculate_palette_tables()
 
-            print(f'Loaded saved settings from {filename}.')
+            print(f'Loaded saved settings from {filename}')
 
         except Exception as e:
             traceback.print_exc()
             print(f'Some saved settings at {filename} are out of date or invalid. Making a backup of the old file to {filename}.error and creating a new one with default settings.')
             shutil.copyfile(filename, filename.with_suffix('.json.error'))
+
+    @app.before_request
+    def before_request():
+        'Log post request json for testing'
+        if dev and request.method == 'POST':
+            print(request.endpoint)
+            print(request.json)
 
     @app.route('/')
     def index():
@@ -157,7 +165,6 @@ def create_app(led_count,
     @app.post('/updatesettings')
     def update_settings():
         'Update settings'
-        print(request.json)
         new_settings = request.json
         controller.update_settings(new_settings)
         return jsonify(result='')
@@ -170,21 +177,18 @@ def create_app(led_count,
     @app.post('/updatepreset')
     def update_preset():
         'Update a preset'
-        print(request.json)
         presets[request.json['key']] = request.json['value']
         return jsonify(result='')
 
     @app.post('/removepreset')
     def remove_preset():
         'Remove a preset'
-        print(request.json)
         del presets[request.json['key']]
         return jsonify(result='')
 
     @app.post('/removegroup')
     def remove_group():
         'Remove a group'
-        print(request.json)
         controller.delete_group(request.json['key'])
         return jsonify(result='')
 
@@ -196,7 +200,6 @@ def create_app(led_count,
     @app.post('/compilefunction')
     def compile_function():
         'Compiles a function, returns errors and warnings in JSON array form'
-        print(request.json)
         key = request.json['key']
         errors, warnings = controller.set_pattern_function(key, functions[key]['source'])
         return jsonify(errors=errors, warnings=warnings)
@@ -204,14 +207,12 @@ def create_app(led_count,
     @app.post('/updatefunction')
     def update_function():
         'Update a function'
-        print(request.json)
         functions[request.json['key']] = request.json['value']
         return jsonify(result='')
 
     @app.post('/removefunction')
     def remove_function():
         'Remove a function'
-        print(request.json)
         del functions[request.json['key']]
         return jsonify(result='')
 
@@ -223,7 +224,6 @@ def create_app(led_count,
     @app.post('/updatepalette')
     def update_palette():
         'Update a palette'
-        print(request.json)
         controller.set_palette(request.json['key'], request.json['value'])
         controller.calculate_palette_table(request.json['key'])
         return jsonify(result='')
@@ -231,7 +231,6 @@ def create_app(led_count,
     @app.post('/removepalette')
     def remove_palette():
         'Remove a palette'
-        print(request.json)
         controller.delete_palette(request.json['key'])
         return jsonify(result='')
 
@@ -267,10 +266,10 @@ def create_app(led_count,
         with open(str(filename), 'w') as data_file:
             try:
                 json.dump(data, data_file, sort_keys=True, indent=4)
-                print(f'Saved settings to {filename}.')
+                print(f'Saved settings to {filename}')
             except Exception as e:
                 traceback.print_exc()
-                print(f'Could not save settings to {filename}.')
+                print(f'Could not save settings to {filename}')
 
     def auto_save_settings():
         'Timer for automatically saving settings'

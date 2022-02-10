@@ -8,50 +8,58 @@ class IntervalTimer:
     'Repeat function call at a regular interval'
 
     def __init__(self, interval, function, *args, **kwargs):
-        self.interval = interval
-        self.function = function
-        self.args = args
-        self.kwargs = kwargs
-        self.count = 0
-        self.wait_time = 0
+        self._interval = interval
+        self._function = function
+        self._args = args
+        self._kwargs = kwargs
+        self._count = 0
+        self._last_perf_avg_count = -1
+        self._wait_time = 0
         self.last_start = time.perf_counter()
-        self.last_measurement_c = 0
-        self.last_measurement_t = 0
-        self.perf_avg = 0
-        self.event = Event()
-        self.thread = Thread(target=self.target, daemon=True)
+        self._last_measurement_c = 0
+        self._last_measurement_t = 0
+        self._perf_avg = 0
+        self._event = Event()
+        self._thread = Thread(target=self.target, daemon=True)
 
     def start(self):
         'Starts the timer thread'
-        self.thread.start()
+        self._thread.start()
 
     def target(self):
         'Waits until ready and executes target function'
-        while not self.event.wait(self.wait_time):
+        while not self._event.wait(self._wait_time):
             self.last_start = time.perf_counter()
-            self.function(*self.args, **self.kwargs)
-            self.perf_avg += (time.perf_counter() - self.last_start)
-
-            self.count += 1
-            if self.count % 100 == 0:
-                print('Average execution time (s): {}'.format(self.perf_avg / 100))
-                print('Average speed (cycles/s): {}'.format(self.get_rate()))
-                self.perf_avg = 0
+            self._function(*self._args, **self._kwargs)
+            self._count += 1
+            cycle_time = time.perf_counter() - self.last_start
+            self._perf_avg += cycle_time
 
             # Calculate wait for next iteration
-            self.wait_time = self.interval - (time.perf_counter() - self.last_start)
-            if (self.wait_time < 0):
-                self.wait_time = 0
+            self._wait_time = self._interval - cycle_time
+            if (self._wait_time < 0):
+                self._wait_time = 0
+
+    def get_count(self):
+        'Returns cycle count'
+        return self._count
+
+    def get_perf_avg(self):
+        'Returns average function execution time and clears accumulator'
+        average = self._perf_avg / (self._count - self._last_perf_avg_count)
+        self._perf_avg = 0
+        self._last_perf_avg_count = self._count
+        return average
 
     def get_rate(self):
         'Returns current rate in cycles per second'
-        result = ((self.count - self.last_measurement_c) /
-                  (self.last_start - self.last_measurement_t))
-        self.last_measurement_c = self.count
-        self.last_measurement_t = self.last_start
+        result = ((self._count - self._last_measurement_c) /
+                  (self.last_start - self._last_measurement_t))
+        self._last_measurement_c = self._count
+        self._last_measurement_t = self.last_start
         return result
 
     def stop(self):
         'Stops the timer thread'
-        self.event.set()
-        self.thread.join()
+        self._event.set()
+        self._thread.join()

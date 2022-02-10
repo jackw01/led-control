@@ -1,10 +1,9 @@
 # led-control WS2812B LED Controller Server
 # Copyright 2022 jackw01. Released under the MIT License (see LICENSE for details).
 
-__version__ = '1.0.0'
-
 import argparse
 import json
+import logging
 import waitress
 from ledcontrol.app import create_app
 
@@ -36,8 +35,8 @@ def main():
                         help='Enable sACN / E1.31 support. Default: False')
     parser.add_argument('--no_timer_reset', action='store_true',
                         help='Do not reset the animation timer when patterns are changed. Default: False')
-    parser.add_argument('--dev_server', action='store_true',
-                        help='Use development server. Default: False')
+    parser.add_argument('--dev', action='store_true',
+                        help='Development flag. Default: False')
     args = parser.parse_args()
 
     pixel_mapping = None
@@ -55,9 +54,11 @@ def main():
                      args.led_brightness_limit,
                      args.save_interval,
                      args.sacn,
-                     args.no_timer_reset)
+                     args.no_timer_reset,
+                     args.dev)
 
-    if args.dev_server:
+    if args.dev:
         app.run(host=args.host, port=args.port)
     else:
-        waitress.serve(app, host=args.host, port=args.port, _quiet=True)
+        logging.getLogger("waitress.queue").setLevel(logging.ERROR)
+        waitress.serve(app, host=args.host, port=args.port)
