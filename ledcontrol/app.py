@@ -149,12 +149,12 @@ def create_app(led_count,
         'Returns web app page'
         return app.send_static_file('index.html')
 
-    @app.route('/getsettings')
+    @app.get('/getsettings')
     def get_settings():
         'Get settings'
         return jsonify(controller.get_settings())
 
-    @app.route('/updatesettings', methods=['POST'])
+    @app.post('/updatesettings')
     def update_settings():
         'Update settings'
         print(request.json)
@@ -162,38 +162,38 @@ def create_app(led_count,
         controller.update_settings(new_settings)
         return jsonify(result='')
 
-    @app.route('/getpresets')
+    @app.get('/getpresets')
     def get_presets():
         'Get presets'
         return jsonify(presets)
 
-    @app.route('/updatepreset', methods=['POST'])
+    @app.post('/updatepreset')
     def update_preset():
         'Update a preset'
         print(request.json)
         presets[request.json['key']] = request.json['value']
         return jsonify(result='')
 
-    @app.route('/removepreset', methods=['POST'])
+    @app.post('/removepreset')
     def remove_preset():
         'Remove a preset'
         print(request.json)
         del presets[request.json['key']]
         return jsonify(result='')
 
-    @app.route('/removegroup', methods=['POST'])
+    @app.post('/removegroup')
     def remove_group():
         'Remove a group'
         print(request.json)
         controller.delete_group(request.json['key'])
         return jsonify(result='')
 
-    @app.route('/getfunctions')
+    @app.get('/getfunctions')
     def get_functions():
         'Get functions'
         return jsonify(functions)
 
-    @app.route('/compilefunction', methods=['POST'])
+    @app.post('/compilefunction')
     def compile_function():
         'Compiles a function, returns errors and warnings in JSON array form'
         print(request.json)
@@ -201,26 +201,26 @@ def create_app(led_count,
         errors, warnings = controller.set_pattern_function(key, functions[key]['source'])
         return jsonify(errors=errors, warnings=warnings)
 
-    @app.route('/updatefunction', methods=['POST'])
+    @app.post('/updatefunction')
     def update_function():
         'Update a function'
         print(request.json)
         functions[request.json['key']] = request.json['value']
         return jsonify(result='')
 
-    @app.route('/removefunction', methods=['POST'])
+    @app.post('/removefunction')
     def remove_function():
         'Remove a function'
         print(request.json)
         del functions[request.json['key']]
         return jsonify(result='')
 
-    @app.route('/getpalettes')
+    @app.get('/getpalettes')
     def get_palettes():
         'Get palettes'
         return jsonify(controller.get_palettes())
 
-    @app.route('/updatepalette', methods=['POST'])
+    @app.post('/updatepalette')
     def update_palette():
         'Update a palette'
         print(request.json)
@@ -228,19 +228,19 @@ def create_app(led_count,
         controller.calculate_palette_table(request.json['key'])
         return jsonify(result='')
 
-    @app.route('/removepalette', methods=['POST'])
+    @app.post('/removepalette')
     def remove_palette():
         'Remove a palette'
         print(request.json)
         controller.delete_palette(request.json['key'])
         return jsonify(result='')
 
-    @app.route('/getfps')
+    @app.get('/getfps')
     def get_fps():
         'Returns latest animation frames per second'
         return jsonify(fps=controller.get_frame_rate())
 
-    @app.route('/resettimer')
+    @app.get('/resettimer')
     def reset_timer():
         'Resets animation timer'
         controller.reset_timer()

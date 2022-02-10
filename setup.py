@@ -21,8 +21,9 @@ class PreInstallCommand(install):
         install.run(self)
 
 requirements = [
-    'Flask>=1.0.2',
-    'RestrictedPython>=4.0',
+    'Flask>=2.0.2',
+    'waitress>=2.0.0'
+    'RestrictedPython>=5.2',
     'sacn>=1.8.1',
 ]
 

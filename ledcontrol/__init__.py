@@ -5,8 +5,8 @@ __version__ = '1.0.0'
 
 import argparse
 import json
+import waitress
 from ledcontrol.app import create_app
-from werkzeug.serving import run_simple
 
 def main():
     parser = argparse.ArgumentParser()
@@ -36,6 +36,8 @@ def main():
                         help='Enable sACN / E1.31 support. Default: False')
     parser.add_argument('--no_timer_reset', action='store_true',
                         help='Do not reset the animation timer when patterns are changed. Default: False')
+    parser.add_argument('--dev_server', action='store_true',
+                        help='Use development server. Default: False')
     args = parser.parse_args()
 
     pixel_mapping = None
@@ -54,7 +56,8 @@ def main():
                      args.save_interval,
                      args.sacn,
                      args.no_timer_reset)
-    run_simple(args.host, args.port, app,
-               use_reloader=False,
-               use_debugger=True,
-               use_evalex=True)
+
+    if args.dev_server:
+        app.run(host=args.host, port=args.port)
+    else:
+        waitress.serve(app, host=args.host, port=args.port, _quiet=True)
