@@ -356,4 +356,20 @@ void ws2811_rgb_render_range_float(ws2811_channel_t *channel,
   }
 }
 
+// Render calibration
+int ws2811_rgb_render_calibration(ws2811_t *ws, ws2811_channel_t *channel,
+                                  int count, uint32_t correction, float brightness) {
+  if (count > channel->count) return -1;
+  color_rgb corr_rgb = unpack_rgb(correction);
+  uint8_t r8 = (float)corr_rgb.r * brightness;
+  uint8_t g8 = (float)corr_rgb.g * brightness;
+  uint8_t b8 = (float)corr_rgb.b * brightness;
+  uint32_t c = pack_rgbw(r8, g8, b8, 0);
+  for (int i = 0; i < count; i++) {
+    channel->leds[i] = c;
+  }
+  ws2811_render(ws);
+  return 1;
+}
+
 #endif

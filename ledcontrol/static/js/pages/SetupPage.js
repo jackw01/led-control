@@ -8,6 +8,7 @@ export default {
   data() {
     return {
       sacn: store.get('sacn'),
+      calibration: store.get('calibration'),
       groupListKey: 0,
     }
   },
@@ -19,6 +20,9 @@ export default {
   methods: {
     updateSACN() {
       store.set('sacn', parseInt(this.sacn, 10));
+    },
+    updateCalibration() {
+      store.set('calibration', parseInt(this.calibration, 10));
     },
     async addGroup(key) {
       await store.createGroup(key);
@@ -77,6 +81,19 @@ export default {
           autocomplete="off"
           v-model="sacn"
           @change="updateSACN"
+        >
+          <option value="0">Off</option>
+          <option value="1">On</option>
+        </select>
+      </span>
+    </div>
+    <div class="input-row input-row-top-margin input-toplevel">
+      <span class="label select-label">Test Color Correction:</span>
+      <span class="select-container">
+        <select
+          autocomplete="off"
+          v-model="calibration"
+          @change="updateCalibration"
         >
           <option value="0">Off</option>
           <option value="1">On</option>

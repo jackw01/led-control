@@ -52,6 +52,7 @@ class AnimationController:
             'global_color_b': 255,
             'global_saturation': 1.0,
             'sacn': 0,
+            'calibration': 0,
             'groups': {
                 'main': {
                     'range_start': 0,
@@ -326,28 +327,36 @@ class AnimationController:
         if self._timer.get_count() % 100 == 0:
             print(f'Execution time: {self._timer.get_perf_avg():0.5f}s, {self._timer.get_rate():05.1f} FPS')
 
+        if self._settings['calibration'] == 1:
+            self._led_controller.show_calibration_color(self._led_count,
+                                                        self._correction,
+                                                        self._settings['global_brightness'])
+            return
+
         if self._update_needed and self._settings['sacn'] == 0:
             self._update_needed = False
             # Store dict keys as list in case they are changed during iteration
             for group, settings in list(self._settings['groups'].items()):
-                if group not in self._mappings: # Ignore groups that haven't been processed yet
+                try:
+                    mapping = self._mappings[group]
+                    range_start = settings['range_start']
+                    range_end = min(self._led_count, settings['range_end'])
+
+                    # Begin render
+                    self._current_palette_table = self._palette_tables[settings['palette']]
+                    computed_brightness = self._settings['global_brightness'] * settings['brightness']
+                    computed_saturation = self._settings['global_saturation'] * settings['saturation']
+                    function_1 = self._functions[settings['function']]
+
+                    # Calculate times
+                    # Reset time every week to prevent strange math issues
+                    time_fix = self._time % 604800
+                    # time component = time (s) * speed (cycle/s)
+                    time_1 = time_fix * settings['speed']
+                    delta_t_1 = delta_t * settings['speed']
+
+                except KeyError as e: # Ignore if settings haven't been calculated yet
                     continue
-                mapping = self._mappings[group]
-                range_start = settings['range_start']
-                range_end = min(self._led_count, settings['range_end'])
-
-                # Begin render
-                self._current_palette_table = self._palette_tables[settings['palette']]
-                computed_brightness = self._settings['global_brightness'] * settings['brightness']
-                computed_saturation = self._settings['global_saturation'] * settings['saturation']
-                function_1 = self._functions[settings['function']]
-
-                # Calculate times
-                # Reset time every week to prevent strange math issues
-                time_fix = self._time % 604800
-                # time component = time (s) * speed (cycle/s)
-                time_1 = time_fix * settings['speed']
-                delta_t_1 = delta_t * settings['speed']
 
                 try:
                     # Determine current pattern mode

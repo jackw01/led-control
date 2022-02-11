@@ -91,10 +91,10 @@ def create_app(led_count,
                             'brightness': 1.0,
                             'color_temp': 6500,
                             'saturation': 1.0,
-                            'function': params['primary_pattern'],
+                            'function': 0,
                             'speed': params['primary_speed'],
                             'scale': params['primary_scale'],
-                            'palette': params['palette'],
+                            'palette': 0,
                         }
                     }
                 }
@@ -117,6 +117,7 @@ def create_app(led_count,
 
             # Enforce sACN off when starting up
             settings['settings']['sacn'] = 0
+            settings['settings']['calibration'] = 0
 
             # Set controller settings, (automatically) recalculate things that depend on them
             controller.update_settings(settings['settings'])

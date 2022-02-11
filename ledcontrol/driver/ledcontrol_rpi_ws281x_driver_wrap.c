@@ -7402,6 +7402,64 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_ws2811_rgb_render_calibration(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ws2811_t *arg1 = (ws2811_t *) 0 ;
+  ws2811_channel_t *arg2 = (ws2811_channel_t *) 0 ;
+  int arg3 ;
+  uint32_t arg4 ;
+  float arg5 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  unsigned int val4 ;
+  int ecode4 = 0 ;
+  float val5 ;
+  int ecode5 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:ws2811_rgb_render_calibration",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ws2811_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ws2811_rgb_render_calibration" "', argument " "1"" of type '" "ws2811_t *""'"); 
+  }
+  arg1 = (ws2811_t *)(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_ws2811_channel_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ws2811_rgb_render_calibration" "', argument " "2"" of type '" "ws2811_channel_t *""'"); 
+  }
+  arg2 = (ws2811_channel_t *)(argp2);
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "ws2811_rgb_render_calibration" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = (int)(val3);
+  ecode4 = SWIG_AsVal_unsigned_SS_int(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ws2811_rgb_render_calibration" "', argument " "4"" of type '" "uint32_t""'");
+  } 
+  arg4 = (uint32_t)(val4);
+  ecode5 = SWIG_AsVal_float(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "ws2811_rgb_render_calibration" "', argument " "5"" of type '" "float""'");
+  } 
+  arg5 = (float)(val5);
+  result = (int)ws2811_rgb_render_calibration(arg1,arg2,arg3,arg4,arg5);
+  resultobj = SWIG_From_int((int)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_float_to_int_1000(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   float arg1 ;
@@ -8070,6 +8128,7 @@ static PyMethodDef SwigMethods[] = {
 	 { "ws2811_hsv_render_range_float", _wrap_ws2811_hsv_render_range_float, METH_VARARGS, NULL},
 	 { "ws2811_rgb_render_all_float", _wrap_ws2811_rgb_render_all_float, METH_VARARGS, NULL},
 	 { "ws2811_rgb_render_range_float", _wrap_ws2811_rgb_render_range_float, METH_VARARGS, NULL},
+	 { "ws2811_rgb_render_calibration", _wrap_ws2811_rgb_render_calibration, METH_VARARGS, NULL},
 	 { "float_to_int_1000", _wrap_float_to_int_1000, METH_VARARGS, NULL},
 	 { "float_to_int_1000_mirror", _wrap_float_to_int_1000_mirror, METH_VARARGS, NULL},
 	 { "wave_pulse", _wrap_wave_pulse, METH_VARARGS, NULL},

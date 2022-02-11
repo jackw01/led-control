@@ -103,5 +103,9 @@ class LEDController:
                                              correction, saturation, brightness, 1.0,
                                              self._has_white)
 
+    def show_calibration_color(self, count, correction, brightness):
+        driver.ws2811_rgb_render_calibration(self._leds, self._channel, count,
+                                             correction, brightness)
+
     def render(self):
         driver.ws2811_render(self._leds)
