@@ -2,7 +2,6 @@
 # Copyright 2022 jackw01. Released under the MIT License (see LICENSE for details).
 
 import argparse
-import json
 import logging
 import waitress
 from ledcontrol.app import create_app
@@ -15,6 +14,8 @@ def main():
                         help='Hostname to use for web interface. Default: 0.0.0.0')
     parser.add_argument('--led_count', type=int, default=0,
                         help='Number of LEDs')
+    parser.add_argument('--config_file',
+                        help='Location of config file. Default: /etc/ledcontrol.json')
     parser.add_argument('--pixel_mapping_json', type=argparse.FileType('r'),
                         help='JSON file containing pixel mapping (see README)')
     parser.add_argument('--fps', type=int, default=60,
@@ -39,13 +40,9 @@ def main():
                         help='Development flag. Default: False')
     args = parser.parse_args()
 
-    pixel_mapping = None
-    if args.pixel_mapping_json is not None:
-        pixel_mapping = json.load(args.pixel_mapping_json)
-        args.pixel_mapping_json.close()
-
     app = create_app(args.led_count,
-                     pixel_mapping,
+                     args.config_file,
+                     args.pixel_mapping_json,
                      args.fps,
                      args.led_pin,
                      args.led_data_rate,

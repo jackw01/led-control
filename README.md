@@ -60,19 +60,23 @@ Python 3.7 or newer is required.
 Web server and LED hardware parameters must be specified as command line arguments when running ledcontrol.
 ```
 usage: ledcontrol [-h] [--port PORT] [--host HOST] [--led_count LED_COUNT]
+                  [--config_file CONFIG_FILE]
                   [--pixel_mapping_json PIXEL_MAPPING_JSON] [--fps FPS]
                   [--led_pin LED_PIN] [--led_data_rate LED_DATA_RATE]
                   [--led_dma_channel LED_DMA_CHANNEL]
                   [--led_pixel_order LED_PIXEL_ORDER]
-                  [--led_color_correction LED_COLOR_CORRECTION]
                   [--led_brightness_limit LED_BRIGHTNESS_LIMIT]
-                  [--save_interval SAVE_INTERVAL] [--sacn]
+                  [--save_interval SAVE_INTERVAL] [--sacn] [--no_timer_reset]
+                  [--dev]
 
 optional arguments:
   -h, --help            show this help message and exit
   --port PORT           Port to use for web interface. Default: 80
   --host HOST           Hostname to use for web interface. Default: 0.0.0.0
-  --led_count LED_COUNT Number of LEDs
+  --led_count LED_COUNT
+                        Number of LEDs
+  --config_file CONFIG_FILE
+                        Location of config file. Default: /etc/ledcontrol.json
   --pixel_mapping_json PIXEL_MAPPING_JSON
                         JSON file containing pixel mapping (see README)
   --fps FPS             Refresh rate limit for LEDs, in FPS. Default: 60
@@ -87,11 +91,6 @@ optional arguments:
                         LED color channel order. Any combination of RGB with
                         or without a W at the end. Default: GRB, try GRBW for
                         SK6812
-  --led_color_correction LED_COLOR_CORRECTION
-                        LED color correction in RGB hex form. Use #FFB0F0 for
-                        5050 package RGB LEDs, #FFA8FF for 5050 RGBW LEDs, and
-                        #FFE08C for through-hole package LEDs or light
-                        strings. Default: #FFB0F0
   --led_brightness_limit LED_BRIGHTNESS_LIMIT
                         LED maximum brightness limit for the web UI. Float
                         from 0.0-1.0. Default: 1.0
@@ -101,6 +100,7 @@ optional arguments:
   --sacn                Enable sACN / E1.31 support. Default: False
   --no_timer_reset      Do not reset the animation timer when patterns are
                         changed. Default: False
+  --dev                 Development flag. Default: False
 ```
 
 ### Built-In Animation Patterns

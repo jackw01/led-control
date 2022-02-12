@@ -17,7 +17,8 @@ import ledcontrol.colorpalettes as colorpalettes
 import ledcontrol.utils as utils
 
 def create_app(led_count,
-               pixel_mapping,
+               config_file,
+               pixel_mapping_file,
                refresh_rate,
                led_pin,
                led_data_rate,
@@ -31,9 +32,11 @@ def create_app(led_count,
     app = Flask(__name__)
 
     # Create pixel mapping function
-    if pixel_mapping is not None:
-        print(f'Using pixel mapping from file ({len(pixel_mapping)} LEDs)')
+    if pixel_mapping_file is not None:
+        pixel_mapping = json.load(pixel_mapping_file)
+        pixel_mapping_file.close()
         led_count = len(pixel_mapping)
+        print(f'Using pixel mapping from file ({led_count} LEDs)')
         mapping_func = pixelmappings.from_array(pixel_mapping)
     else:
         print(f'Using default linear pixel mapping ({led_count} LEDs)')
@@ -56,11 +59,14 @@ def create_app(led_count,
     functions = dict(animfunctions.default)
 
     # Create file if it doesn't exist already
-    filename = Path('/etc') / 'ledcontrol.json'
+    if config_file is not None:
+        filename = Path(config_file)
+    else:
+        filename = Path('/etc') / 'ledcontrol.json'
     filename.touch(exist_ok=True)
 
     # Init controller params and custom animations from settings file
-    with open(str(filename), mode='r') as data_file:
+    with filename.open('r') as data_file:
         try:
             settings_str = data_file.read()
             # Apply updates to old versions of settings file
@@ -142,9 +148,11 @@ def create_app(led_count,
             print(f'Loaded saved settings from {filename}')
 
         except Exception as e:
-            traceback.print_exc()
-            print(f'Some saved settings at {filename} are out of date or invalid. Making a backup of the old file to {filename}.error and creating a new one with default settings.')
-            shutil.copyfile(filename, filename.with_suffix('.json.error'))
+            if settings_str == '':
+                print(f'Creating new settings file at {filename}.')
+            else:
+                print(f'Some saved settings at {filename} are out of date or invalid. Making a backup of the old file to {filename}.error and creating a new one with default settings.')
+                shutil.copyfile(filename, filename.with_suffix('.json.error'))
 
     @app.before_request
     def before_request():
@@ -264,7 +272,7 @@ def create_app(led_count,
             'functions': functions_2,
             'palettes': palettes_2,
         }
-        with open(str(filename), 'w') as data_file:
+        with filename.open('w') as data_file:
             try:
                 json.dump(data, data_file, sort_keys=True, indent=4)
                 print(f'Saved settings to {filename}')
@@ -281,7 +289,7 @@ def create_app(led_count,
 
     controller.begin_animation_thread()
     atexit.register(save_settings)
-    #atexit.register(controller.clear_leds) todo
+    atexit.register(controller.clear_leds)
     atexit.register(controller.end_animation)
     auto_save_settings()
 
