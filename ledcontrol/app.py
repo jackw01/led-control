@@ -281,7 +281,7 @@ def create_app(led_count,
 
     controller.begin_animation_thread()
     atexit.register(save_settings)
-    #atexit.register(controller.clear_leds)
+    #atexit.register(controller.clear_leds) todo
     atexit.register(controller.end_animation)
     auto_save_settings()
 
