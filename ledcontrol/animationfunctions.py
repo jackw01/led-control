@@ -267,6 +267,17 @@ def pattern(t, dt, x, y, z, prev_state):
     return palette(perlin_noise_3d(x, y, t)), hsv
 '''
     },
+    210: {
+        'name': 'Palette fBm Noise 2D',
+        'primary_speed': 0.3,
+        'primary_scale': 1.0,
+        'default': True,
+        'source': '''
+def pattern(t, dt, x, y, z, prev_state):
+    v = fbm_noise_3d(x, y, t * 0.5, 7, 2.0, 0.5)
+    return palette(wave_triangle(v * 2)), hsv
+'''
+    },
 
     310: {
         'name': 'Hue Cycle 1D',

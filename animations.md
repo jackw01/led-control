@@ -63,6 +63,9 @@
 ## Palette Perlin Noise 2D
 <img src="img/Palette-Perlin-Noise-2D.gif" width="800"/>
 
+## Palette fBm Noise 2D
+<img src="img/Palette-fBm-Noise-2D.gif" width="800"/>
+
 ## Hue Cycle 1D
 <img src="img/Hue-Cycle-1D.gif" width="800"/>
 
