@@ -3,35 +3,32 @@
 ## Static Color
 <img src="img/Static-Color.gif" width="800"/>
 
+## Static White
+<img src="img/Static-White.gif" width="800"/>
+
 ## Static Gradient 1D
 <img src="img/Static-Gradient-1D.gif" width="800"/>
 
 ## Static Gradient Mirrored 1D
 <img src="img/Static-Gradient-Mirrored-1D.gif" width="800"/>
 
-## Hue Cycle 1D
-<img src="img/Hue-Cycle-1D.gif" width="800"/>
+## Twinkle Color 1D
+<img src="img/Twinkle-Color-1D.gif" width="800"/>
 
-## Hue Cycle Quantized 1D
-<img src="img/Hue-Cycle-Quantized-1D.gif" width="800"/>
-
-## Hue Scan 1D
-<img src="img/Hue-Scan-1D.gif" width="800"/>
-
-## Hue Bounce 1D
-<img src="img/Hue-Bounce-1D.gif" width="800"/>
-
-## Hue Waves 1D
-<img src="img/Hue-Waves-1D.gif" width="800"/>
-
-## Hue Ripples 1D
-<img src="img/Hue-Ripples-1D.gif" width="800"/>
+## Twinkle White 1D
+<img src="img/Twinkle-White-1D.gif" width="800"/>
 
 ## Palette Cycle 1D
 <img src="img/Palette-Cycle-1D.gif" width="800"/>
 
 ## Palette Cycle Mirrored 1D
 <img src="img/Palette-Cycle-Mirrored-1D.gif" width="800"/>
+
+## Palette Cycle Wipe 1D
+<img src="img/Palette-Cycle-Wipe-1D.gif" width="800"/>
+
+## Palette Cycle Wipe From Center 1D
+<img src="img/Palette-Cycle-Wipe-From-Center-1D.gif" width="800"/>
 
 ## Palette Cycle Quantized 1D
 <img src="img/Palette-Cycle-Quantized-1D.gif" width="800"/>
@@ -66,14 +63,32 @@
 ## Palette Perlin Noise 2D
 <img src="img/Palette-Perlin-Noise-2D.gif" width="800"/>
 
+## Hue Cycle 1D
+<img src="img/Hue-Cycle-1D.gif" width="800"/>
+
+## Hue Cycle Quantized 1D
+<img src="img/Hue-Cycle-Quantized-1D.gif" width="800"/>
+
+## Hue Scan 1D
+<img src="img/Hue-Scan-1D.gif" width="800"/>
+
+## Hue Bounce 1D
+<img src="img/Hue-Bounce-1D.gif" width="800"/>
+
+## Hue Waves 1D
+<img src="img/Hue-Waves-1D.gif" width="800"/>
+
+## Hue Ripples 1D
+<img src="img/Hue-Ripples-1D.gif" width="800"/>
+
 ## RGB Sines 1D
 <img src="img/RGB-Sines-1D.gif" width="800"/>
 
 ## RGB Cubics 1D
 <img src="img/RGB-Cubics-1D.gif" width="800"/>
 
-## RGB Ripples 1 1D
-<img src="img/RGB-Ripples-1-1D.gif" width="800"/>
+## RGB Ripples 1D
+<img src="img/RGB-Ripples-1D.gif" width="800"/>
 
 ## RGB Plasma (Spectrum Sines) 2D
 <img src="img/RGB-Plasma-(Spectrum-Sines)-2D.gif" width="800"/>
@@ -83,7 +98,4 @@
 
 ## RGB Fractal Plasma (Fire Sines) 2D
 <img src="img/RGB-Fractal-Plasma-(Fire-Sines)-2D.gif" width="800"/>
-
-## Blackbody Cycle 1D
-<img src="img/Blackbody-Cycle-1D.gif" width="800"/>
 

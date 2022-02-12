@@ -7,17 +7,20 @@ import ledcontrol.pixelmappings as pixelmappings
 import ledcontrol.driver as driver
 import ledcontrol.utils as utils
 
-controller = AnimationController(None, 0, 256, pixelmappings.line(256), (0, 0, 0), False, True, 1.0)
+controller = AnimationController(None, 0, 256, pixelmappings.line(256), False, True, 1.0)
+
+controller._current_palette_table = controller._palette_tables[0]
 
 s = 100 # LED strip length
 t = 400 # Time units
 gif_t = 300 # Animated gif duration
 
-f = open('patterns.md', 'w')
+f = open('animations.md', 'w')
 f.write('## Built-In Animation Patterns\n\n')
 
-for pattern_dict in animfunctions.default.values():
-    errors, warnings, pattern = controller.compile_pattern(pattern_dict['source'])
+for k, pattern_dict in animfunctions.default.items():
+    errors, warnings = controller.set_pattern_function(k, pattern_dict['source'])
+    pattern = controller._functions[k]
 
     img = Image.new('RGB', (t, s), 'black')
     pixels = img.load()
