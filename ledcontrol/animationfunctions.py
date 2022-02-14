@@ -274,8 +274,8 @@ def pattern(t, dt, x, y, z, prev_state):
         'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
-    v = fbm_noise_3d(x, y, t * 0.5, 7, 2.0, 0.5)
-    return palette(wave_triangle(v * 2)), hsv
+    v = fbm_noise_3d(x, y, t * 0.25, 7, 2.0, 0.5)
+    return palette(wave_triangle(v * 4)), hsv
 '''
     },
 

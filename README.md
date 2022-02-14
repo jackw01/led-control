@@ -14,7 +14,8 @@
 ### Technical Details
 * Animation patterns are defined as Python functions that work similarly to fragment shaders
 * Capable of achieving up to 150 FPS on 150 RGBW LEDs on a Raspberry Pi Zero
-* Web backend and animation code are written in Python using the [Flask](https://github.com/pallets/flask) web framework for ease of development
+* Web backend and animation code are written in Python using the [Flask](https://flask.palletsprojects.com/en/2.0.x/) web framework for ease of development
+* Web frontend UI is implenented using [Vue 3](https://vuejs.org/)
 * Color conversions, color correction, and final rendering operations are implemented in a C extension module for maximum performance
 
 #### Framerate Note
@@ -51,7 +52,7 @@ Python 3.7 or newer is required.
 
 1. `sudo apt-get install scons swig python3-dev python3-setuptools`
 2. `git clone --recurse-submodules https://github.com/jackw01/led-control.git`
-3. `git checkout tags/v1.4.0`
+3. `git checkout tags/v2.0.0`
 4. `cd led-control`
 5. `sudo python3 setup.py develop`
 6. `sudo ledcontrol --led_count 150` (add `--led_pixel_order GRBW` if using RGBW LEDs)
@@ -104,7 +105,7 @@ optional arguments:
 ```
 
 ### Built-In Animation Patterns
-Animated GIF previews of all built-in animations can be seen at [patterns.md](patterns).
+Animated GIF previews of all built-in animations can be seen at [animations.md](animations.md).
 
 ### E1.31 sACN, Music Visualization, and LedFx Use
 LEDControl can function as a E1.31 streaming ACN receiver, allowing the connected LEDs to be directly controlled over the network. [LedFx](https://github.com/LedFx/LedFx) is recommended for music visualization over sACN.
@@ -136,7 +137,7 @@ LEDControl supports pixel mapping, which allows 2- and 3-dimensional animation p
 ]
 ```
 
-## Pattern Editing
+## Animation Editing
 Animation patterns are defined as Python functions that work similarly to GLSL fragment shaders or DirectX pixel shaders. The LEDControl web interface allows editing and creation of patterns using a subset of Python.
 
 Patterns are compiled using [RestrictedPython](https://github.com/zopefoundation/RestrictedPython) and run with a restricted set of builtin functions and global variables. This should prevent filesystem access and code execution, but the scripting system **should not be considered completely secure** and the web interface **should not be exposed to untrusted users**.
