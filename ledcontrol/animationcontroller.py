@@ -48,8 +48,8 @@ class AnimationController:
             'global_brightness_limit': global_brightness_limit,
             'global_color_temp': 6500,
             'global_color_r': 255,
-            'global_color_g': 255,
-            'global_color_b': 255,
+            'global_color_g': 190,
+            'global_color_b': 170,
             'global_saturation': 1.0,
             'sacn': 0,
             'calibration': 0,
@@ -330,7 +330,7 @@ class AnimationController:
         if self._settings['calibration'] == 1:
             self._led_controller.show_calibration_color(self._led_count,
                                                         self._correction,
-                                                        self._settings['global_brightness'])
+                                                        self._settings['global_brightness'] / 2)
             return
 
         if self._update_needed and self._settings['sacn'] == 0:

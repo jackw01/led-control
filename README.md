@@ -14,7 +14,7 @@
 ### Technical Details
 * Animation patterns are defined as Python functions that work similarly to fragment shaders
 * Capable of achieving up to 150 FPS on 150 RGBW LEDs on a Raspberry Pi Zero
-* Web backend and animation code are written in Python using the [Flask](https://flask.palletsprojects.com/en/2.0.x/) web framework for ease of development
+* Web backend and animation code are written in Python using the [Flask](https://flask.palletsprojects.com/en/2.0.x/) web framework for ease of development and served using [bjoern](https://github.com/jonashaag/bjoern)
 * Web frontend UI is implenented using [Vue 3](https://vuejs.org/)
 * Color conversions, color correction, and final rendering operations are implemented in a C extension module for maximum performance
 
@@ -50,7 +50,7 @@ The flexible PCBs and connectors used in these LED strips are not really designe
 ### Software Setup
 Python 3.7 or newer is required.
 
-1. `sudo apt-get install scons swig python3-dev python3-setuptools`
+1. `sudo apt-get install scons swig libev-dev python3-dev python3-setuptools`
 2. `git clone --recurse-submodules https://github.com/jackw01/led-control.git`
 3. `git checkout tags/v2.0.0`
 4. `cd led-control`
@@ -103,6 +103,12 @@ optional arguments:
                         changed. Default: False
   --dev                 Development flag. Default: False
 ```
+
+### Color Correction
+By default, the color correction values on the web interface are set to (255, 190, 170) which is a good starting point for SK6812 RGBW LEDs, but not all LEDs are the same. You should adjust these values as well as the global color temperature while using the "Test Color Correction" feature, which displays the white point of the RGB subpixels in your LEDs, even if you are using RGBW LEDs.
+
+### Built-In Color Palettes
+![palettes.png](palettes.png)
 
 ### Built-In Animation Patterns
 Animated GIF previews of all built-in animations can be seen at [animations.md](animations.md).
