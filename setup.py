@@ -22,7 +22,7 @@ class PreInstallCommand(install):
 
 requirements = [
     'Flask>=2.0.2',
-    'waitress>=2.0.0'
+    'bjoern>=3.2.1',
     'RestrictedPython>=5.2',
     'sacn>=1.8.1',
 ]

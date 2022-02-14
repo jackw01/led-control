@@ -2,8 +2,7 @@
 # Copyright 2022 jackw01. Released under the MIT License (see LICENSE for details).
 
 import argparse
-import logging
-import waitress
+import bjoern
 from ledcontrol.app import create_app
 
 def main():
@@ -57,5 +56,4 @@ def main():
     if args.dev:
         app.run(host=args.host, port=args.port)
     else:
-        logging.getLogger("waitress.queue").setLevel(logging.ERROR)
-        waitress.serve(app, host=args.host, port=args.port)
+        bjoern.run(app, host=args.host, port=args.port)
