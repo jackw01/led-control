@@ -57,7 +57,7 @@ def pattern(t, dt, x, y, z, prev_state):
     },
 
     6: {
-        'name': 'Twinkle Color 1D',
+        'name': 'Twinkle Gradient 1D',
         'primary_speed': 0.2,
         'primary_scale': 1.0,
         'default': True,
@@ -65,7 +65,7 @@ def pattern(t, dt, x, y, z, prev_state):
 def pattern(t, dt, x, y, z, prev_state):
     v = prev_state[2] - dt
     if v <= 0:
-        c = palette(0)
+        c = palette(x)
         return (c[0], c[1], random.random()), hsv
     elif v > 0:
         return (prev_state[0], prev_state[1], v), hsv
@@ -274,7 +274,7 @@ def pattern(t, dt, x, y, z, prev_state):
         'default': True,
         'source': '''
 def pattern(t, dt, x, y, z, prev_state):
-    v = fbm_noise_3d(x, y, t * 0.25, 7, 2.0, 0.5)
+    v = fbm_noise_3d(x, y, t * 0.5, 7, 2.0, 0.5)
     return palette(wave_triangle(v * 4)), hsv
 '''
     },

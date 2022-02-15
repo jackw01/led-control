@@ -34,7 +34,7 @@ class AnimationController:
         self._global_brightness_limit = global_brightness_limit
 
         # Initialize prev state array
-        self._prev_state = [((0, 0, 0), 0) for i in range(self._led_count)]
+        self._prev_state = [(0, 0, 0) for i in range(self._led_count)]
 
         # Map led indices to normalized position vectors
         self._mapped = [self._mapping_func(i) for i in range(self._led_count)]
