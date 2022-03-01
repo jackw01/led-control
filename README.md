@@ -52,8 +52,8 @@ Python 3.7 or newer is required.
 
 1. `sudo apt-get install scons swig libev-dev python3-dev python3-setuptools`
 2. `git clone --recurse-submodules https://github.com/jackw01/led-control.git`
-3. `git checkout tags/v2.0.0`
-4. `cd led-control`
+3. `cd led-control`
+4. `git checkout tags/v2.0.0`
 5. `sudo python3 setup.py develop`
 6. `sudo ledcontrol --led_count 150` (add `--led_pixel_order GRBW` if using RGBW LEDs)
 
