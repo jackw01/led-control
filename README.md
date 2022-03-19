@@ -57,6 +57,9 @@ Python 3.7 or newer is required.
 5. `sudo python3 setup.py develop`
 6. `sudo ledcontrol --led_count 150` (add `--led_pixel_order GRBW` if using RGBW LEDs)
 
+#### Common Issues
+LEDControl and the Raspberry Pi audio subsystem cannot be use together since they both use the PWM hardware. On some Linux distributions, you must disable the audio kernel module by commenting out the line `dtparam=audio=on` in `/boot/config.txt` or by creating a file `/etc/modprobe.d/snd-blacklist.conf` with the contents `blacklist snd_bcm2835`.
+
 ### Command Line Configuration Arguments
 Web server and LED hardware parameters must be specified as command line arguments when running ledcontrol.
 ```
