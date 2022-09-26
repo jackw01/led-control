@@ -10,6 +10,7 @@ from pathlib import Path
 from flask import Flask, render_template, request, jsonify
 from ledcontrol.animationcontroller import AnimationController
 from ledcontrol.ledcontroller import LEDController
+from ledcontrol.homekit import homekit_start
 
 import ledcontrol.pixelmappings as pixelmappings
 import ledcontrol.animationfunctions as animfunctions
@@ -27,6 +28,7 @@ def create_app(led_count,
                led_brightness_limit,
                save_interval,
                enable_sacn,
+               enable_hap,
                no_timer_reset,
                dev):
     app = Flask(__name__)
@@ -292,5 +294,8 @@ def create_app(led_count,
     atexit.register(controller.clear_leds)
     atexit.register(controller.end_animation)
     auto_save_settings()
+
+    if enable_hap:
+        homekit_start()
 
     return app

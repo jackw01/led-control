@@ -21,10 +21,11 @@ class PreInstallCommand(install):
         install.run(self)
 
 requirements = [
-    'Flask>=2.0.2',
+    'Flask==2.1.3',
     'bjoern>=3.2.1',
     'RestrictedPython>=5.2',
     'sacn>=1.8.1',
+    'HAP-python==4.4.0'
 ]
 
 setup(

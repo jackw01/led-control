@@ -33,6 +33,8 @@ def main():
                         help='Interval for automatically saving settings in seconds. Default: 60')
     parser.add_argument('--sacn', action='store_true',
                         help='Enable sACN / E1.31 support. Default: False')
+    parser.add_argument('--hap', action='store_true',
+                        help='Enable HomeKit Accessory Protocol support. Default: False')
     parser.add_argument('--no_timer_reset', action='store_true',
                         help='Do not reset the animation timer when patterns are changed. Default: False')
     parser.add_argument('--dev', action='store_true',
@@ -50,6 +52,7 @@ def main():
                      args.led_brightness_limit,
                      args.save_interval,
                      args.sacn,
+                     args.hap,
                      args.no_timer_reset,
                      args.dev)
 

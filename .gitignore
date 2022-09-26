@@ -110,3 +110,4 @@ ledcontrol.json
 restrictedtest.py
 *.scssc
 testmapping.json
+accessory.state
