@@ -44,6 +44,7 @@ class AnimationController:
 
         # All user-editable animation settings stored here
         self._settings = {
+            'on': 1,
             'global_brightness': 0.15,
             'global_brightness_limit': global_brightness_limit,
             'global_color_temp': 6500,
@@ -344,7 +345,7 @@ class AnimationController:
 
                     # Begin render
                     self._current_palette_table = self._palette_tables[settings['palette']]
-                    computed_brightness = self._settings['global_brightness'] * settings['brightness']
+                    computed_brightness = self._settings['on'] * self._settings['global_brightness'] * settings['brightness']
                     computed_saturation = self._settings['global_saturation'] * settings['saturation']
                     function_1 = self._functions[settings['function']]
 

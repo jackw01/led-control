@@ -296,6 +296,19 @@ def create_app(led_count,
     auto_save_settings()
 
     if enable_hap:
-        homekit_start()
+        def setter_callback(char_values):
+            new_settings = {}
+            if 'On' in char_values:
+                new_settings['on'] = char_values['On']
+            if 'Brightness' in char_values:
+                new_settings['global_brightness'] = char_values['Brightness'] / 100.0
+            if 'Saturation' in char_values:
+                new_settings['global_saturation'] = char_values['Saturation'] / 100.0
+            controller.update_settings(new_settings)
+
+        hap_accessory = homekit_start(setter_callback)
+        hap_accessory.on.set_value(controller.get_settings()['on'])
+        hap_accessory.brightness.set_value(controller.get_settings()['global_brightness'] * 100.0)
+        hap_accessory.saturation.set_value(controller.get_settings()['global_saturation'] * 100.0)
 
     return app
