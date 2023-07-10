@@ -111,3 +111,6 @@ restrictedtest.py
 *.scssc
 testmapping.json
 accessory.state
+
+cmake-*
+config.json

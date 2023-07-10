@@ -29,14 +29,15 @@ class IntervalTimer:
     def target(self):
         'Waits until ready and executes target function'
         while not self._event.wait(self._wait_time):
-            self.last_start = time.perf_counter()
+            current_start = time.perf_counter()
             self._function(*self._args, **self._kwargs)
             self._count += 1
-            cycle_time = time.perf_counter() - self.last_start
+            cycle_time = time.perf_counter() - current_start
             self._perf_avg += cycle_time
 
             # Calculate wait for next iteration
-            self._wait_time = self._interval - cycle_time
+            self._wait_time = self._interval - (current_start - self.last_start)
+            self.last_start = current_start
             if (self._wait_time < 0):
                 self._wait_time = 0
 

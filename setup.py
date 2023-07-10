@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
 from setuptools import find_packages, setup, Extension
 from setuptools.command.develop import develop
 from setuptools.command.install import install
@@ -8,7 +9,8 @@ from subprocess import check_call
 
 def pre_install():
     print('preinstall')
-    check_call('scons', cwd='ledcontrol/driver/rpi_ws281x/')
+    if is_raspberrypi():
+        check_call('scons', cwd='ledcontrol/driver/rpi_ws281x/')
 
 class PreDevelopCommand(develop):
     def run(self):
@@ -20,12 +22,30 @@ class PreInstallCommand(install):
         pre_install()
         install.run(self)
 
+def is_raspberrypi():
+    try:
+        with io.open('/sys/firmware/devicetree/base/model', 'r') as m:
+            if 'raspberry pi' in m.read().lower():
+                return True
+    except Exception:
+        pass
+    return False
+
 requirements = [
     'Flask==2.2.2',
-    'bjoern>=3.2.1',
     'RestrictedPython>=5.2',
     'sacn>=1.8.1',
-    'HAP-python==4.4.0'
+    'HAP-python==4.4.0',
+    'pyopenssl==22.1.0',
+    'numpy>=1.21.0',
+] + (['bjoern>=3.2.1'] if sys.platform.startswith('linux') else [])
+
+extensions = [
+    Extension('_ledcontrol_rpi_ws281x_driver',
+              sources=['ledcontrol/driver/ledcontrol_rpi_ws281x_driver_wrap.c'],
+              include_dirs=['ledcontrol/driver'],
+              library_dirs=['ledcontrol/driver/rpi_ws281x/'],
+              libraries=['ws2811'])
 ]
 
 setup(
@@ -41,13 +61,7 @@ setup(
     zip_safe=False,
     install_requires=requirements,
     setup_requires=requirements,
-    ext_modules=[
-        Extension('_ledcontrol_rpi_ws281x_driver',
-                  sources=['ledcontrol/driver/ledcontrol_rpi_ws281x_driver_wrap.c'],
-                  include_dirs=['ledcontrol/driver'],
-                  library_dirs=['ledcontrol/driver/rpi_ws281x/'],
-                  libraries=['ws2811'])
-    ],
+    ext_modules=extensions if is_raspberrypi() else [],
     include_package_data=True,
     entry_points={
         'console_scripts': [
