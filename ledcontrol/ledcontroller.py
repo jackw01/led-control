@@ -100,7 +100,7 @@ class LEDController:
             data = 255 * data
             data = data.astype(np.uint8)
             self._ser.write(b'\x00\x02'
-                            + int((end - start) * 3 + 9).to_bytes(2, 'big')
+                            + int((end - start) * 3 + 13).to_bytes(2, 'big')
                             + correction.to_bytes(3, 'big')
                             + int(saturation * 255).to_bytes(1, 'big')
                             + int(brightness * 255).to_bytes(1, 'big')
