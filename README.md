@@ -35,7 +35,6 @@ Obtain a WS2812B or SK6812B LED strip (**SK6812 RGB/White LEDs are highly recomm
     - MCU GPIO12 to LED Data in
     - Power supply ground to LED GND
     - Power supply 5V to LED 5V
-3. Flash the firmware onto your microcontroller board: hold down the BOOTSEL button when connecting it to your computer with a USB cable and it should enumerate as a USB storage device. Drag and drop or copy and paste the `.uf2` binary file, which can be downloaded on the [Releases](https://github.com/jackw01/led-control/releases) page, into the microcontroller. The provided binaries are compiled for the Raspberry Pi Pico and have been tested to also run on Adafruit Feather RP2040 boards.
 
 ### Hardware Setup (Raspberry Pi)
 1. Obtain a Raspberry Pi single-board computer (any model). Due to the unavailability of Raspberry Pis, using any other computer with an external LED driver is recommended (see above).
@@ -64,13 +63,16 @@ The flexible PCBs and connectors used in these LED strips are not really designe
 ### Software Setup (With Pi Pico LED Driver)
 Python 3.7 or newer is required.
 
-1. Ensure that git, python, and pip are installed.
-2. Determine the serial port ID of your microcontroller board. On Windows, this can be done through Device Manager.
-3. `git clone https://github.com/jackw01/led-control.git`
-4. `cd led-control`
-5. `git checkout tags/v2.1.0`
-6. `python setup.py develop`
-7. `ledcontrol --led_count 150 --serial_port SERIAL_PORT_HERE` (add `--led_pixel_order GRBW` if using RGBW LEDs)
+1. Ensure that git, python, pip, and the Raspberry Pi Pico SDK are installed.
+2. `git clone https://github.com/jackw01/led-control.git`
+3. `cd led-control`
+4. `git checkout tags/v2.1.0`
+5. `python setup.py develop`
+6. Modify `firmware/config.h` with the correct parameters for your hardware setup.
+7. Following instructions in the Raspberry Pi Pico SDK documentation, build the firmware (located in the `firmware` folder).
+8. Flash the firmware onto your microcontroller board: hold down the BOOTSEL button when connecting it to your computer with a USB cable and it should enumerate as a USB storage device. Drag and drop or copy and paste the `.uf2` binary file in `build/firmware` into the microcontroller.
+9. Determine the serial port ID of your microcontroller. On Windows, this can be done through Device Manager.
+10. `ledcontrol --led_count NUMBER_OF_LEDS_HERE --serial_port SERIAL_PORT_HERE` (add `--led_pixel_order GRBW` if using RGBW LEDs)
 
 ### Software Setup (Raspberry Pi)
 Python 3.7 or newer is required.
@@ -78,9 +80,9 @@ Python 3.7 or newer is required.
 1. `sudo apt-get install scons swig libev-dev python3-dev python3-setuptools git python3-pip`
 2. `git clone --recurse-submodules https://github.com/jackw01/led-control.git`
 3. `cd led-control`
-4. `git checkout tags/v2.0.0`
+4. `git checkout tags/v2.1.0`
 5. `sudo python3 setup.py develop`
-6. `sudo ledcontrol --led_count 150` (add `--led_pixel_order GRBW` if using RGBW LEDs)
+6. `sudo ledcontrol --led_count NUMBER_OF_LEDS_HERE` (add `--led_pixel_order GRBW` if using RGBW LEDs)
 
 #### Common Issues
 LEDControl and the Raspberry Pi audio subsystem cannot be use together since they both use the PWM hardware. On some Linux distributions, you must disable the audio kernel module by commenting out the line `dtparam=audio=on` in `/boot/config.txt` or by creating a file `/etc/modprobe.d/snd-blacklist.conf` with the contents `blacklist snd_bcm2835`.

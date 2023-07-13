@@ -2,6 +2,6 @@
 
 #include "ws2812b.h"
 
-#define StripType SK6812_STRIP_GRBW
-#define LEDPin 12
-#define LEDCount 60
+#define StripType SK6812_STRIP_GRBW // See definitions in ws2812b.h
+#define LEDPin 12 // RP2040 GPIO Pin
+#define LEDCount 60 // Number of LEDs
