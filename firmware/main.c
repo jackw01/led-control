@@ -32,8 +32,6 @@ void write_frame_buffer() {
   }
 }
 
-// hue = hue % 1.0
-
 uint32_t render_hsv2rgb_rainbow(uint8_t h, uint8_t s, uint8_t v,
                                 uint8_t corr_r, uint8_t corr_g, uint8_t corr_b,
                                 uint8_t saturation, uint8_t brightness) {
@@ -164,8 +162,6 @@ uint32_t render_hsv2rgb_rainbow(uint8_t h, uint8_t s, uint8_t v,
   return pack_rgbw(r, g, b, w);
 }
 
-// clamp rgb
-
 uint32_t render_rgb(uint8_t r, uint8_t g, uint8_t b,
                     uint8_t corr_r, uint8_t corr_g, uint8_t corr_b,
                     uint8_t saturation, uint8_t brightness) {
@@ -180,9 +176,9 @@ uint32_t render_rgb(uint8_t r, uint8_t g, uint8_t b,
       b = 0;
       min = max;
     } else {
-      r = scale_8(r - max, saturation) + max;
-      g = scale_8(g - max, saturation) + max;
-      b = scale_8(b - max, saturation) + max;
+      r = (int)r - max * (int)saturation / 255 + max;
+      g = (int)g - max * (int)saturation / 255 + max;
+      b = (int)b - max * (int)saturation / 255 + max;
       min = r < g ? (r < b ? r : b) : (g < b ? g : b);
       r -= min;
       g -= min;

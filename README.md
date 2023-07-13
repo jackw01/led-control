@@ -7,6 +7,7 @@
 * In-browser code editor and color palette editor make creating and modifying animations easy
 * Large selection of built-in animations and color palettes means you don't have to write any code
 * Works with cheap and readily available WS281x and SK6812 LED strips and strings
+* Runs on a Raspberry Pi single-board computer directly connected to LEDs, and on any other computer with the help of a low-cost microcontroller board (Raspberry Pi Pico) connected via USB
 * Supports pixel mapping for arbitrary 2D and 3D LED arrangements
 * Seamlessly supports HSV-to-RGBW and RGB-to-RGBW conversion for RGBW LED strips
 * Supports networked E1.31 sACN DMX control for music visualization through [LedFx](https://github.com/LedFx/LedFx)
@@ -23,15 +24,26 @@ The theoretical maximum framerate for 150 RGBW LEDs is 800000 Hz / (8*4) bits / 
 All built-in animations run at over 50FPS on a Raspberry Pi Zero, and will run faster on any other Raspberry Pi model. The framerate is limited to 60FPS by default to reduce CPU usage.
 
 ## Install
-### Hardware Setup
-1. Obtain a Raspberry Pi (any model), a WS2812B or SK6812B LED strip (**SK6812 RGB/White LEDs are highly recommended**), and a suitable 5V power supply.
+
+### Hardware Setup (All Platforms)
+Obtain a WS2812B or SK6812B LED strip (**SK6812 RGB/White LEDs are highly recommended**) and a suitable 5V power supply. Using USB power may be suitable, and an external power supply may not be needed, when using small numbers of LEDs (less than 80 RGBW or 50 RGB LEDs).
+
+### Hardware Setup (External LED Driver)
+1. Obtain a Raspberry Pi Pico (US$4) or any microcontroller board based on the RP2040 chip.
+2. Connect the LED strip to your microcontroller:
+    - MCU GND to LED GND
+    - MCU GPIO12 to LED Data in
+    - Power supply ground to LED GND
+    - Power supply 5V to LED 5V
+3. Flash the firmware onto your microcontroller board: hold down the BOOTSEL button when connecting it to your computer with a USB cable and it should enumerate as a USB storage device. Drag and drop or copy and paste the `.uf2` binary file, which can be downloaded on the [Releases](https://github.com/jackw01/led-control/releases) page, into the microcontroller. The provided binaries are compiled for the Raspberry Pi Pico and have been tested to also run on Adafruit Feather RP2040 boards.
+
+### Hardware Setup (Raspberry Pi)
+1. Obtain a Raspberry Pi single-board computer (any model). Due to the unavailability of Raspberry Pis, using any other computer with an external LED driver is recommended (see above).
 2. Connect the LED strip to your Raspberry Pi:
     - Pi GND to LED GND
     - Pi GPIO18 to LED Data in
     - Power supply ground to LED GND
     - Power supply 5V to LED 5V
-
-   See [this Adafruit guide](https://learn.adafruit.com/neopixels-on-raspberry-pi/raspberry-pi-wiring#using-external-power-source-without-level-shifting-3005993-11) for other ways to connect the LED strips or for using a level shifter.
 
 #### RGBW LEDs Are Highly Recommended
 Know what you're doing with electricity. Addressable LEDs can draw a lot of current, especially in long strips. You should use RGBW LEDs for the reason that **they look better and require much less power** when displaying whiter colors (a good quality 5V 4A power supply can comfortably handle 150 RGBW LEDs at full brightness).
@@ -42,15 +54,28 @@ Addressable LED strips usually come with seriously undersized power wires and ba
 
 For more information on which GPIO pins LED strips can be connected to, see [here](https://github.com/jgarff/rpi_ws281x).
 
+For more information un using a level shifter, which may be necessary with some WS2812 RGB LED strips, see [this Adafruit guide](https://learn.adafruit.com/neopixels-on-raspberry-pi/raspberry-pi-wiring#using-external-power-source-without-level-shifting-3005993-11).
+
 #### If You Really Want To Use RGB LEDs
 You should budget [at least 50mA for each LED at full brightness](https://www.pjrc.com/how-much-current-do-ws2812-neopixel-leds-really-use/), which means 7.5A for 150 LEDs (5 meters of 30 LED/m strip, 2.5m of 60LED/m strip...). In practice, your LED strips won't draw this much current, but your power supply should be capable of handling it.
 
 The flexible PCBs and connectors used in these LED strips are not really designed to handle these currents, and begin to heat up when passing as little as 2-3A. Again, each group of up to ~150 LEDs should be powered through its own adequately sized wires.
 
-### Software Setup
+### Software Setup (With Pi Pico LED Driver)
 Python 3.7 or newer is required.
 
-1. `sudo apt-get install scons swig libev-dev python3-dev python3-setuptools`
+1. Ensure that git, python, and pip are installed.
+2. Determine the serial port ID of your microcontroller board. On Windows, this can be done through Device Manager.
+3. `git clone https://github.com/jackw01/led-control.git`
+4. `cd led-control`
+5. `git checkout tags/v2.1.0`
+6. `python setup.py develop`
+7. `ledcontrol --led_count 150 --serial_port SERIAL_PORT_HERE` (add `--led_pixel_order GRBW` if using RGBW LEDs)
+
+### Software Setup (Raspberry Pi)
+Python 3.7 or newer is required.
+
+1. `sudo apt-get install scons swig libev-dev python3-dev python3-setuptools git python3-pip`
 2. `git clone --recurse-submodules https://github.com/jackw01/led-control.git`
 3. `cd led-control`
 4. `git checkout tags/v2.0.0`
@@ -61,7 +86,7 @@ Python 3.7 or newer is required.
 LEDControl and the Raspberry Pi audio subsystem cannot be use together since they both use the PWM hardware. On some Linux distributions, you must disable the audio kernel module by commenting out the line `dtparam=audio=on` in `/boot/config.txt` or by creating a file `/etc/modprobe.d/snd-blacklist.conf` with the contents `blacklist snd_bcm2835`.
 
 ### Command Line Configuration Arguments
-Web server and LED hardware parameters must be specified as command line arguments when running ledcontrol.
+Web server and LED hardware parameters must be specified as command line arguments when running ledcontrol. Note that none of the LED hardware-related arguments will have an effect when using a Pi Pico to drive the LEDs.
 ```
 usage: ledcontrol [-h] [--port PORT] [--host HOST] [--led_count LED_COUNT]
                   [--config_file CONFIG_FILE]
@@ -70,8 +95,8 @@ usage: ledcontrol [-h] [--port PORT] [--host HOST] [--led_count LED_COUNT]
                   [--led_dma_channel LED_DMA_CHANNEL]
                   [--led_pixel_order LED_PIXEL_ORDER]
                   [--led_brightness_limit LED_BRIGHTNESS_LIMIT]
-                  [--save_interval SAVE_INTERVAL] [--sacn] [--no_timer_reset]
-                  [--dev]
+                  [--save_interval SAVE_INTERVAL] [--sacn] [--hap] [--no_timer_reset]
+                  [--dev] [--serial_port SERIAL_PORT]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -102,9 +127,12 @@ optional arguments:
                         Interval for automatically saving settings in seconds.
                         Default: 60
   --sacn                Enable sACN / E1.31 support. Default: False
+  --hap                 Enable HomeKit Accessory Protocol support. Default: False
   --no_timer_reset      Do not reset the animation timer when patterns are
                         changed. Default: False
   --dev                 Development flag. Default: False
+  --serial_port SERIAL_PORT
+                        Serial port for external LED driver.
 ```
 
 ### Color Correction
@@ -126,6 +154,9 @@ LEDControl can function as a E1.31 streaming ACN receiver, allowing the connecte
 5. Configure a music visualizer effect in LedFx.
 
 While sACN receiver mode is enabled, the LED refresh rate is determined by your sACN server. There may be noticeable latency when using sACN on congested networks or if other software on the Raspberry Pi is using its network hardware; this is a known limitation of sACN.
+
+### HomeKit Accessory Protocol Support (Experimental)
+The brightness and on/off state of LEDControl can be controlled through Apple HomeKit. Run LEDControl with the `--hap` command line flag and a setup code will be printed for manually pairing in the Apple Home app.
 
 ### Pixel Mapping
 LEDControl supports pixel mapping, which allows 2- and 3-dimensional animation patterns to be mapped to any physical arrangement of LEDs. Currently, pixel mappings can only be specified with a JSON file containing an array of points representing the positions of each LED, using the `--pixel_mapping_json` command line argument. `--led_count` does not need to be specified when pixel mapping is used. The points must be in the same order that the correresponding LEDs are connected, and the units used to define the pixel mapping do not matter (negative and floating-point values are allowed).
@@ -310,7 +341,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 ```
 
 ## Development
-To build the C extension module:
+To build the C extension module (on Raspberry Pi single-board computers only):
 ```
 swig -python ./ledcontrol/driver/ledcontrol_rpi_ws281x_driver.i && sudo python3 setup.py develop
 ```

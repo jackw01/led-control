@@ -389,10 +389,12 @@ class AnimationController:
                     msg = traceback.format_exception(type(e), e, e.__traceback__)
                     print(f'Animation execution: {msg}')
                     r = 0.1 * driver.wave_pulse(time_fix, 0.5)
-                    self._led_controller.set_all_rgb([(r, 0, 0) for i in range(self._led_count)],
-                                                     self._correction,
-                                                     1.0,
-                                                     1.0)
+                    self._led_controller.set_range_rgb([(r, 0, 0) for i in range(self._led_count)],
+                                                       0, self._led_count,
+                                                       self._correction,
+                                                       1.0,
+                                                       1.0)
+                    self._led_controller.render()
                     return
 
                 # If displaying a static pattern, brightness is 0, or speed is 0:
@@ -417,17 +419,21 @@ class AnimationController:
             self._sacn_perf_avg = 0
 
         data = [x / 255.0 for x in packet.dmxData[:self._led_count * 3]]
-        self._led_controller.set_all_rgb(list(zip_longest(*(iter(data),) * 3)),
-                                         self._correction,
-                                         1.0,
-                                         self._settings['global_brightness'])
+        self._led_controller.set_range_rgb(list(zip_longest(*(iter(data),) * 3)),
+                                           0, self._led_count,
+                                           self._correction,
+                                           1.0,
+                                           self._settings['global_brightness'])
+        self._led_controller.render()
 
     def clear_leds(self):
         'Turn all LEDs off'
-        self._led_controller.set_all_rgb([(0, 0, 0) for i in range(self._led_count)],
-                                         self._correction,
-                                         1.0,
-                                         1.0)
+        self._led_controller.set_range_rgb([(0, 0, 0) for i in range(self._led_count)],
+                                           0, self._led_count,
+                                           self._correction,
+                                           1.0,
+                                           1.0)
+        self._led_controller.render()
 
     def end_animation(self):
         'Stop rendering in the animation thread and stop sACN receiver'

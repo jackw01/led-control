@@ -81,6 +81,8 @@ class LEDController:
                 str_resp = driver.ws2811_get_return_t_str(resp)
                 raise RuntimeError('ws2811_init failed with code {0} ({1})'.format(resp, str_resp))
         else:
+            self._where_hue = np.zeros((led_count * 3,),dtype=bool)
+            self._where_hue[0::3] = True
             self._ser = serial.Serial(serial_port, 115200, timeout=0.01, write_timeout=0)
 
     def _cleanup(self):
@@ -97,7 +99,8 @@ class LEDController:
                                                  self._has_white)
         else:
             data = np.fromiter(itertools.chain.from_iterable(pixels), np.float32)
-            data = 255 * data
+            np.fmod(data, 1.0, where=self._where_hue[0:(end - start) * 3], out=data)
+            data = data * 255.0
             data = data.astype(np.uint8)
             self._ser.write(b'\x00\x02'
                             + int((end - start) * 3 + 13).to_bytes(2, 'big')
@@ -108,18 +111,24 @@ class LEDController:
                             + end.to_bytes(2, 'big')
                             + data.tobytes())
 
-    def set_all_rgb(self, pixels, correction, saturation, brightness):
-        if driver.is_raspberrypi():
-            driver.ws2811_rgb_render_all_float(self._leds, self._channel,
-                                               pixels, len(pixels),
-                                               correction, saturation, brightness, 1.0,
-                                               self._has_white)
-
     def set_range_rgb(self, pixels, start, end, correction, saturation, brightness):
         if driver.is_raspberrypi():
             driver.ws2811_rgb_render_range_float(self._channel, pixels, start, end,
                                                  correction, saturation, brightness, 1.0,
                                                  self._has_white)
+        else:
+            data = np.fromiter(itertools.chain.from_iterable(pixels), np.float32)
+            data = data * 255.0
+            data = np.clip(data, 0.0, 255.0)
+            data = data.astype(np.uint8)
+            self._ser.write(b'\x00\x01'
+                            + int((end - start) * 3 + 13).to_bytes(2, 'big')
+                            + correction.to_bytes(3, 'big')
+                            + int(saturation * 255).to_bytes(1, 'big')
+                            + int(brightness * 255).to_bytes(1, 'big')
+                            + start.to_bytes(2, 'big')
+                            + end.to_bytes(2, 'big')
+                            + data.tobytes())
 
     def show_calibration_color(self, count, correction, brightness):
         if driver.is_raspberrypi():
