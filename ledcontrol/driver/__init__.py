@@ -1,6 +1,8 @@
 # led-control WS2812B LED Controller Server
 # Copyright 2023 jackw01. Released under the MIT License (see LICENSE for details).
 
+import io
+
 def is_raspberrypi():
     try:
         with io.open('/sys/firmware/devicetree/base/model', 'r') as m:
