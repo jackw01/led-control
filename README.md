@@ -66,7 +66,7 @@ Python 3.7 or newer is required.
 1. Ensure that git, python, pip, and the Raspberry Pi Pico SDK are installed.
 2. `git clone https://github.com/jackw01/led-control.git`
 3. `cd led-control`
-4. `git checkout tags/v2.1.0`
+4. `git checkout tags/v2.1.1`
 5. `python setup.py develop`
 6. Modify `firmware/config.h` with the correct parameters for your hardware setup.
 7. Following instructions in the Raspberry Pi Pico SDK documentation, build the firmware (located in the `firmware` folder).
@@ -80,7 +80,7 @@ Python 3.7 or newer is required.
 1. `sudo apt-get install scons swig libev-dev python3-dev python3-setuptools git python3-pip`
 2. `git clone --recurse-submodules https://github.com/jackw01/led-control.git`
 3. `cd led-control`
-4. `git checkout tags/v2.1.0`
+4. `git checkout tags/v2.1.1`
 5. `sudo python3 setup.py develop`
 6. `sudo ledcontrol --led_count NUMBER_OF_LEDS_HERE` (add `--led_pixel_order GRBW` if using RGBW LEDs)
 
