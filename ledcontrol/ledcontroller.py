@@ -5,9 +5,15 @@ import atexit
 import serial
 import numpy as np
 import itertools
+import socket
 
+from enum import Enum
+
+import ledcontrol.animationfunctions as animfunctions
 import ledcontrol.driver as driver
 import ledcontrol.utils as utils
+
+TargetMode = Enum('TargetMode', ['serial', 'udp'])
 
 class LEDController:
     def __init__(self,
@@ -83,7 +89,15 @@ class LEDController:
         else:
             self._where_hue = np.zeros((led_count * 3,),dtype=bool)
             self._where_hue[0::3] = True
-            self._ser = serial.Serial(serial_port, 115200, timeout=0.01, write_timeout=0)
+
+            self._target_mode = TargetMode.udp
+
+            if self._target_mode == TargetMode.serial:
+                self._serial = serial.Serial(serial_port, 115200, timeout=0.01, write_timeout=0)
+            elif self._target_mode == TargetMode.udp:
+                self._socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                self._udp_target = "192.168.8.230"
+                self._udp_port = 8888
 
     def _cleanup(self):
         # Clean up memory used by the library when not needed anymore
@@ -92,55 +106,56 @@ class LEDController:
             self._leds = None
             self._channel = None
 
-    def set_range_hsv(self, pixels, start, end, correction, saturation, brightness):
+    def set_range(self, pixels, start, end, correction, saturation, brightness, color_mode):
         if driver.is_raspberrypi():
-            driver.ws2811_hsv_render_range_float(self._channel, pixels, start, end,
-                                                 correction, saturation, brightness, 1.0,
-                                                 self._has_white)
-        else:
-            data = np.fromiter(itertools.chain.from_iterable(pixels), np.float32)
-            np.fmod(data, 1.0, where=self._where_hue[0:(end - start) * 3], out=data)
-            data = data * 255.0
-            data = data.astype(np.uint8)
-            self._ser.write(b'\x00\x02'
-                            + int((end - start) * 3 + 13).to_bytes(2, 'big')
-                            + correction.to_bytes(3, 'big')
-                            + int(saturation * 255).to_bytes(1, 'big')
-                            + int(brightness * 255).to_bytes(1, 'big')
-                            + start.to_bytes(2, 'big')
-                            + end.to_bytes(2, 'big')
-                            + data.tobytes())
+            if color_mode == animfunctions.ColorMode.hsv:
+                driver.ws2811_hsv_render_range_float(self._channel, pixels, start, end,
+                                                     correction, saturation, brightness, 1.0,
+                                                     self._has_white)
+            else:
+                driver.ws2811_rgb_render_range_float(self._channel, pixels, start, end,
+                                                     correction, saturation, brightness, 1.0,
+                                                     self._has_white)
 
-    def set_range_rgb(self, pixels, start, end, correction, saturation, brightness):
-        if driver.is_raspberrypi():
-            driver.ws2811_rgb_render_range_float(self._channel, pixels, start, end,
-                                                 correction, saturation, brightness, 1.0,
-                                                 self._has_white)
         else:
             data = np.fromiter(itertools.chain.from_iterable(pixels), np.float32)
-            data = data * 255.0
-            data = np.clip(data, 0.0, 255.0)
+            if color_mode == animfunctions.ColorMode.hsv:
+                np.fmod(data, 1.0, where=self._where_hue[0:(end - start) * 3], out=data)
+                data = data * 255.0
+            else:
+                data = data * 255.0
+                data = np.clip(data, 0.0, 255.0)
             data = data.astype(np.uint8)
-            self._ser.write(b'\x00\x01'
-                            + int((end - start) * 3 + 13).to_bytes(2, 'big')
-                            + correction.to_bytes(3, 'big')
-                            + int(saturation * 255).to_bytes(1, 'big')
-                            + int(brightness * 255).to_bytes(1, 'big')
-                            + start.to_bytes(2, 'big')
-                            + end.to_bytes(2, 'big')
-                            + data.tobytes())
+            packet = (b'\x00'
+                      + (b'\x02' if color_mode == animfunctions.ColorMode.hsv else b'\x01')
+                      + int((end - start) * 3 + 13).to_bytes(2, 'big')
+                      + correction.to_bytes(3, 'big')
+                      + int(saturation * 255).to_bytes(1, 'big')
+                      + int(brightness * 255).to_bytes(1, 'big')
+                      + start.to_bytes(2, 'big')
+                      + end.to_bytes(2, 'big')
+                      + data.tobytes())
+            self._send(packet)
 
     def show_calibration_color(self, count, correction, brightness):
         if driver.is_raspberrypi():
             driver.ws2811_rgb_render_calibration(self._leds, self._channel, count,
                                                  correction, brightness)
         else:
-            self._ser.write(b'\x00\x00\x00\x08'
-                            + correction.to_bytes(3, 'big')
-                            + int(brightness * 255).to_bytes(1, 'big'))
+            packet = (b'\x00\x00\x00\x08'
+                      + correction.to_bytes(3, 'big')
+                      + int(brightness * 255).to_bytes(1, 'big'))
+            self._send(packet)
 
     def render(self):
         if driver.is_raspberrypi():
             driver.ws2811_render(self._leds)
         else:
-            self._ser.write(b'\x00\x03\x00\x05\x00')
+            packet = b'\x00\x03\x00\x05\x00'
+            self._send(packet)
+
+    def _send(self, packet):
+        if self._target_mode == TargetMode.serial:
+            self._serial.write(packet)
+        elif self._target_mode == TargetMode.udp:
+            self._socket.sendto(packet, (self._udp_target, self._udp_port))

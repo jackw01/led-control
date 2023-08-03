@@ -373,27 +373,22 @@ class AnimationController:
                              for i in range(range_start, range_end)]
                     self._prev_state[range_start:range_end] = state
 
-                    # Write colors to LEDs
-                    if mode == animfunctions.ColorMode.hsv:
-                        self._led_controller.set_range_hsv(state, range_start, range_end,
-                                                           self._correction,
-                                                           computed_saturation,
-                                                           computed_brightness)
-                    elif mode == animfunctions.ColorMode.rgb:
-                        self._led_controller.set_range_rgb(state, range_start, range_end,
-                                                           self._correction,
-                                                           computed_saturation,
-                                                           computed_brightness)
+                    self._led_controller.set_range(state, range_start, range_end,
+                                                   self._correction,
+                                                   computed_saturation,
+                                                   computed_brightness,
+                                                   mode)
 
                 except Exception as e:
                     msg = traceback.format_exception(type(e), e, e.__traceback__)
                     print(f'Animation execution: {msg}')
                     r = 0.1 * driver.wave_pulse(time_fix, 0.5)
-                    self._led_controller.set_range_rgb([(r, 0, 0) for i in range(self._led_count)],
-                                                       0, self._led_count,
-                                                       self._correction,
-                                                       1.0,
-                                                       1.0)
+                    self._led_controller.set_range([(r, 0, 0) for i in range(self._led_count)],
+                                                   0, self._led_count,
+                                                   self._correction,
+                                                   1.0,
+                                                   1.0,
+                                                   animfunctions.ColorMode.rgb)
                     self._led_controller.render()
                     return
 
@@ -419,20 +414,22 @@ class AnimationController:
             self._sacn_perf_avg = 0
 
         data = [x / 255.0 for x in packet.dmxData[:self._led_count * 3]]
-        self._led_controller.set_range_rgb(list(zip_longest(*(iter(data),) * 3)),
-                                           0, self._led_count,
-                                           self._correction,
-                                           1.0,
-                                           self._settings['global_brightness'])
+        self._led_controller.set_range(list(zip_longest(*(iter(data),) * 3)),
+                                       0, self._led_count,
+                                       self._correction,
+                                       1.0,
+                                       self._settings['global_brightness'],
+                                       animfunctions.ColorMode.rgb)
         self._led_controller.render()
 
     def clear_leds(self):
         'Turn all LEDs off'
-        self._led_controller.set_range_rgb([(0, 0, 0) for i in range(self._led_count)],
-                                           0, self._led_count,
-                                           self._correction,
-                                           1.0,
-                                           1.0)
+        self._led_controller.set_range([(0, 0, 0) for i in range(self._led_count)],
+                                       0, self._led_count,
+                                       self._correction,
+                                       1.0,
+                                       1.0,
+                                       animfunctions.ColorMode.rgb)
         self._led_controller.render()
 
     def end_animation(self):
