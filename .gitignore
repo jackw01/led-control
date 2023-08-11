@@ -114,3 +114,4 @@ accessory.state
 
 cmake-*
 config.json
+firmware/wifi_config.h

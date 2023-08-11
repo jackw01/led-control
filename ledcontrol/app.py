@@ -96,6 +96,8 @@ def create_app(led_count,
                         'main': {
                             'range_start': 0,
                             'range_end': 100000,
+                            'render_mode': 'local',
+                            'render_target': '',
                             'mapping': [],
                             'name': 'main',
                             'brightness': 1.0,
@@ -125,8 +127,7 @@ def create_app(led_count,
 
                 print('Successfully upgraded save file.')
 
-            # Enforce sACN off when starting up
-            settings['settings']['sacn'] = 0
+            # Enforce calibration off when starting up
             settings['settings']['calibration'] = 0
 
             # Set controller settings, (automatically) recalculate things that depend on them

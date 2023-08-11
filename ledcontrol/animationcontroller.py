@@ -58,6 +58,8 @@ class AnimationController:
                 'main': {
                     'range_start': 0,
                     'range_end': 100000,
+                    'render_mode': 'local',
+                    'render_target': '',
                     'name': 'main',
                     'mapping': [],
                     'brightness': 1.0,
@@ -191,6 +193,9 @@ class AnimationController:
                     self._check_reset_animation_state()
                 elif k in ['range_start', 'range_end']:
                     self._flag_clear = True # clear LEDs to make range selection less ambiguous
+                elif k in ['render_mode', 'render_target']:
+                    # todo
+                    self._flag_clear = True
                 elif k == 'sacn' and self._enable_sacn:
                     if v:
                         self._receiver = sacn.sACNreceiver()
