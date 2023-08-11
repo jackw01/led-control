@@ -21,12 +21,12 @@
 
 #### Framerate Note
 The theoretical maximum framerate for 150 RGBW LEDs is 800000 Hz / (8*4) bits / 150 = 166.67 FPS.
-All built-in animations run at over 50FPS on a Raspberry Pi Zero, and will run faster on any other Raspberry Pi model. The framerate is limited to 60FPS by default to reduce CPU usage.
+All built-in animations run at over 50FPS with 150 LEDs on a Raspberry Pi Zero, the least powerful Raspberry Pi model. The framerate is limited to 60FPS by default to reduce CPU usage.
 
 ## Install
 
 ### Hardware Setup (All Platforms)
-Obtain a WS2812B or SK6812B LED strip (**SK6812 RGB/White LEDs are highly recommended**) and a suitable 5V power supply. Using USB power may be suitable, and an external power supply may not be needed, when using small numbers of LEDs (less than 80 RGBW or 50 RGB LEDs).
+Obtain a WS2812B or SK6812B LED strip (**SK6812 RGB/White LEDs are highly recommended**) and a suitable 5V power supply. USB power may be suitable, and an external power supply may not be needed, when using small numbers of LEDs (less than 100 RGBW or 50 RGB LEDs).
 
 ### Hardware Setup (External LED Driver)
 1. Obtain a Raspberry Pi Pico (US$4) or any microcontroller board based on the RP2040 chip.
@@ -34,7 +34,9 @@ Obtain a WS2812B or SK6812B LED strip (**SK6812 RGB/White LEDs are highly recomm
     - MCU GND to LED GND
     - MCU GPIO12 to LED Data in
     - Power supply ground to LED GND
-    - Power supply 5V to LED 5V
+    - Power supply 5V to LED 5V (Important: use the VBUS pin, not VSYS, to power LEDs from USB on Raspberry Pi Pico and Pico W boards)
+
+Any GPIO pin can be used instead of GPIO12 if the definition in `firmware/config.h` is changed appropriately.
 
 ### Hardware Setup (Raspberry Pi)
 1. Obtain a Raspberry Pi single-board computer (any model). Due to the unavailability of Raspberry Pis, using any other computer with an external LED driver is recommended (see above).
@@ -44,6 +46,8 @@ Obtain a WS2812B or SK6812B LED strip (**SK6812 RGB/White LEDs are highly recomm
     - Power supply ground to LED GND
     - Power supply 5V to LED 5V
 
+For more information on which Raspberry Pi GPIO pins LED strips can be connected to, see [here](https://github.com/jgarff/rpi_ws281x).
+
 #### RGBW LEDs Are Highly Recommended
 Know what you're doing with electricity. Addressable LEDs can draw a lot of current, especially in long strips. You should use RGBW LEDs for the reason that **they look better and require much less power** when displaying whiter colors (a good quality 5V 4A power supply can comfortably handle 150 RGBW LEDs at full brightness).
 
@@ -51,9 +55,7 @@ For large installations, each group of up to ~200 LEDs should be connected to th
 
 Addressable LED strips usually come with seriously undersized power wires and barrel jacks or JST SM connectors rated for only 3A, and it would be a good idea to replace these appropriately.
 
-For more information on which GPIO pins LED strips can be connected to, see [here](https://github.com/jgarff/rpi_ws281x).
-
-For more information un using a level shifter, which may be necessary with some WS2812 RGB LED strips, see [this Adafruit guide](https://learn.adafruit.com/neopixels-on-raspberry-pi/raspberry-pi-wiring#using-external-power-source-without-level-shifting-3005993-11).
+For more information on using a level shifter, which may be necessary with some WS2812 RGB LED strips, see [this Adafruit guide](https://learn.adafruit.com/neopixels-on-raspberry-pi/raspberry-pi-wiring#using-external-power-source-without-level-shifting-3005993-11).
 
 #### If You Really Want To Use RGB LEDs
 You should budget [at least 50mA for each LED at full brightness](https://www.pjrc.com/how-much-current-do-ws2812-neopixel-leds-really-use/), which means 7.5A for 150 LEDs (5 meters of 30 LED/m strip, 2.5m of 60LED/m strip...). In practice, your LED strips won't draw this much current, but your power supply should be capable of handling it.
@@ -224,7 +226,7 @@ Returns the color from the current palette corresponding to a value `t` between 
 Returns a color from a mirrored version of the current palette that wraps seamlessly. Functionally equivalent to `palette(wave_triangle(t))`, but performs just as well as `palette(t)`.
 
 ### Wave Functions
-All waveforms have a period of 1 time unit, a range from 0 to 1, and a peak (`f(t)=1`) at `t=0`. These wave functions are implemented in C which gives a suprisingly significant performance improvement over Python's builtins.
+All waveforms have a period of 1 time unit, a range from 0 to 1, and a peak (`f(t)=1`) at `t=0`. When running on Raspberry Pi, optimized C implementations of these functions are used which gives a suprisingly significant performance improvement over Python.
 
 ##### `wave_sine(t)`
 Returns the instantaneous value of a 1Hz sine wave at time `t`.

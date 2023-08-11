@@ -2,6 +2,9 @@
 #define _LWIPOPTS_H
 
 
+#define LWIP_MDNS_RESPONDER 1
+
+
 // Common settings used in most of the pico_w examples
 // (see https://www.nongnu.org/lwip/2_1_x/group__lwip__opts.html for details)
 

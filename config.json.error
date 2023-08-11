@@ -1,0 +1,204 @@
+{
+    "functions": {
+        "0": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.0
+        },
+        "1": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.0
+        },
+        "100": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "110": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "112": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "114": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "120": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "130": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "140": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.1
+        },
+        "141": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.1
+        },
+        "150": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.05
+        },
+        "160": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "161": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "170": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "180": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "190": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "2": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.0
+        },
+        "200": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.3
+        },
+        "210": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.3
+        },
+        "3": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.0
+        },
+        "310": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "320": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "330": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.1
+        },
+        "331": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.1
+        },
+        "340": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "350": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "400": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "410": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "420": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "430": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "440": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "450": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "6": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        },
+        "7": {
+            "default": true,
+            "primary_scale": 1.0,
+            "primary_speed": 0.2
+        }
+    },
+    "palettes": {},
+    "presets": {},
+    "save_version": 2,
+    "settings": {
+        "calibration": 0,
+        "global_brightness": 1,
+        "global_brightness_limit": 1.0,
+        "global_color_b": 187,
+        "global_color_g": 184,
+        "global_color_r": 255,
+        "global_color_temp": 6500,
+        "global_saturation": 1,
+        "groups": {
+            "main": {
+                "brightness": 0.7,
+                "color_temp": 6500,
+                "function": 110,
+                "mapping": [],
+                "name": "main",
+                "palette": 100,
+                "range_end": 60,
+                "range_start": 0,
+                "saturation": 1.0,
+                "scale": 2.33,
+                "speed": 0.63
+            }
+        },
+        "on": 1,
+        "sacn": 0
+    }
+}

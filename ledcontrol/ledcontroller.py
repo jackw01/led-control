@@ -96,7 +96,7 @@ class LEDController:
                 self._serial = serial.Serial(serial_port, 115200, timeout=0.01, write_timeout=0)
             elif self._target_mode == TargetMode.udp:
                 self._socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                self._udp_target = "192.168.8.230"
+                self._udp_target = "lcpico-0e3062"
                 self._udp_port = 8888
 
     def _cleanup(self):
@@ -158,4 +158,7 @@ class LEDController:
         if self._target_mode == TargetMode.serial:
             self._serial.write(packet)
         elif self._target_mode == TargetMode.udp:
-            self._socket.sendto(packet, (self._udp_target, self._udp_port))
+            try:
+                self._socket.sendto(packet, (self._udp_target, self._udp_port))
+            except:
+                pass

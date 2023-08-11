@@ -12,6 +12,8 @@
 
 #define CYW43_LWIP 1
 
+#define UDPPort 8888
+
 struct udp_pcb *pcb;
 
 static void udp_receive(void *arg, struct udp_pcb *pcb, struct pbuf *p, const struct ip4_addr *addr, unsigned short port) {
@@ -31,20 +33,29 @@ void wifi_init() {
   }
 
   cyw43_arch_enable_sta_mode();
+
+  char hostname[16];
+  uint8_t mac[6];
+  cyw43_wifi_get_mac(&cyw43_state, CYW43_ITF_STA, mac);
+  sprintf(hostname, "lcpico-%02x%02x%02x", mac[3], mac[4], mac[5]);
+  netif_set_hostname(netif_default, hostname);
+
   printf("Connecting to Wi-Fi...\n");
-  if (cyw43_arch_wifi_connect_timeout_ms(WIFI_SSID, WIFI_PASSWORD, CYW43_AUTH_WPA2_AES_PSK, 30000)) {
-      printf("Failed to connect.\n");
-        return;
+  if (cyw43_arch_wifi_connect_timeout_ms(WiFiSSID, WiFiPassword, CYW43_AUTH_WPA2_AES_PSK, 30000)) {
+    printf("Failed to connect.\n");
+    return;
   } else {
-      printf("Connected.\n");
+    printf("Connected.\n");
   }
 
   cyw43_arch_lwip_begin();
 
+  cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
+
   printf("IP address: %s\n", ip4addr_ntoa(netif_ip4_addr(netif_list)));
 
   pcb = udp_new();
-  udp_bind(pcb, IP_ADDR_ANY, PORT);
+  udp_bind(pcb, IP_ADDR_ANY, UDPPort);
   udp_recv(pcb, udp_receive, 0);
 
   cyw43_arch_lwip_end();
