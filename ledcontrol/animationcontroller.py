@@ -184,6 +184,8 @@ class AnimationController:
                 if k in ['global_color_temp', 'global_color_r', 'global_color_g', 'global_color_b', 'color_temp']:
                     self._flag_correction = True
                 elif k == 'global_brightness':
+                    if d1[k] != 0:
+                        self._settings['on'] = 1 # force homekit 'on' when brightness is changed
                     d1[k] = min(d1[k], self._global_brightness_limit)
                 elif k == 'scale':
                     self._flag_mapping = True
