@@ -30,8 +30,7 @@ def create_app(led_count,
                enable_sacn,
                enable_hap,
                no_timer_reset,
-               dev,
-               serial_port):
+               dev):
     app = Flask(__name__)
 
     # Create pixel mapping function
@@ -49,8 +48,7 @@ def create_app(led_count,
                          led_pin,
                          led_data_rate,
                          led_dma_channel,
-                         led_pixel_order,
-                         serial_port)
+                         led_pixel_order)
     controller = AnimationController(leds,
                                      refresh_rate,
                                      led_count,

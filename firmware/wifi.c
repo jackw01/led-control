@@ -50,13 +50,13 @@ void wifi_init() {
 
   cyw43_arch_lwip_begin();
 
-  cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
-
   printf("IP address: %s\n", ip4addr_ntoa(netif_ip4_addr(netif_list)));
 
   pcb = udp_new();
   udp_bind(pcb, IP_ADDR_ANY, UDPPort);
   udp_recv(pcb, udp_receive, 0);
+
+  cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
 
   cyw43_arch_lwip_end();
 }

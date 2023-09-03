@@ -6,14 +6,17 @@ import serial
 import numpy as np
 import itertools
 import socket
-
+import traceback
 from enum import Enum
 
 import ledcontrol.animationfunctions as animfunctions
 import ledcontrol.driver as driver
 import ledcontrol.utils as utils
 
-TargetMode = Enum('TargetMode', ['serial', 'udp'])
+class TargetMode(str, Enum):
+    local = 'local'
+    serial = 'serial'
+    udp = 'udp'
 
 class LEDController:
     def __init__(self,
@@ -21,8 +24,7 @@ class LEDController:
                  led_pin,
                  led_data_rate,
                  led_dma_channel,
-                 led_pixel_order,
-                 serial_port):
+                 led_pixel_order):
         if driver.is_raspberrypi():
             # This is bad but it's the only way
             px_order = driver.WS2811_STRIP_GRB
@@ -86,18 +88,15 @@ class LEDController:
             if resp != 0:
                 str_resp = driver.ws2811_get_return_t_str(resp)
                 raise RuntimeError('ws2811_init failed with code {0} ({1})'.format(resp, str_resp))
-        else:
-            self._where_hue = np.zeros((led_count * 3,),dtype=bool)
-            self._where_hue[0::3] = True
 
-            self._target_mode = TargetMode.udp
+        # Used for scaling values sent for remote rendering
+        self._where_hue = np.zeros((led_count * 3,), dtype=bool)
+        self._where_hue[0::3] = True
 
-            if self._target_mode == TargetMode.serial:
-                self._serial = serial.Serial(serial_port, 115200, timeout=0.01, write_timeout=0)
-            elif self._target_mode == TargetMode.udp:
-                self._socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                self._udp_target = "lcpico-0e3062"
-                self._udp_port = 8888
+        self._targets_serial = {}
+        self._targets_udp = {}
+
+        self._udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     def _cleanup(self):
         # Clean up memory used by the library when not needed anymore
@@ -106,17 +105,21 @@ class LEDController:
             self._leds = None
             self._channel = None
 
-    def set_range(self, pixels, start, end, correction, saturation, brightness, color_mode):
-        if driver.is_raspberrypi():
-            if color_mode == animfunctions.ColorMode.hsv:
-                driver.ws2811_hsv_render_range_float(self._channel, pixels, start, end,
-                                                     correction, saturation, brightness, 1.0,
-                                                     self._has_white)
-            else:
-                driver.ws2811_rgb_render_range_float(self._channel, pixels, start, end,
-                                                     correction, saturation, brightness, 1.0,
-                                                     self._has_white)
-
+    def set_range(self, pixels, start, end,
+                  correction, saturation, brightness, color_mode,
+                  render_mode, render_target):
+        if render_mode == TargetMode.local:
+            if driver.is_raspberrypi():
+                if color_mode == animfunctions.ColorMode.hsv:
+                    driver.ws2811_hsv_render_range_float(self._channel, pixels,
+                                                         start, end,
+                                                         correction, saturation,  brightness, 1.0,
+                                                         self._has_white)
+                else:
+                    driver.ws2811_rgb_render_range_float(self._channel, pixels,
+                                                         start, end,
+                                                         correction, saturation,  brightness, 1.0,
+                                                         self._has_white)
         else:
             data = np.fromiter(itertools.chain.from_iterable(pixels), np.float32)
             if color_mode == animfunctions.ColorMode.hsv:
@@ -135,30 +138,40 @@ class LEDController:
                       + start.to_bytes(2, 'big')
                       + end.to_bytes(2, 'big')
                       + data.tobytes())
-            self._send(packet)
+            self._send(packet, render_mode, render_target)
+            self._send(b'\x00\x03\x00\x05\x00', render_mode, render_target)
 
-    def show_calibration_color(self, count, correction, brightness):
-        if driver.is_raspberrypi():
-            driver.ws2811_rgb_render_calibration(self._leds, self._channel, count,
-                                                 correction, brightness)
+    def show_calibration_color(self, count, correction, brightness,
+                               render_mode, render_target):
+        if render_mode == TargetMode.local:
+            if driver.is_raspberrypi():
+                driver.ws2811_rgb_render_calibration(self._leds,
+                                                     self._channel, self._count,
+                                                     correction, brightness)
         else:
             packet = (b'\x00\x00\x00\x08'
                       + correction.to_bytes(3, 'big')
                       + int(brightness * 255).to_bytes(1, 'big'))
-            self._send(packet)
+            self._send(packet, render_mode, render_target)
 
     def render(self):
+        # send global render command if output mode is raspberry pi
         if driver.is_raspberrypi():
             driver.ws2811_render(self._leds)
-        else:
-            packet = b'\x00\x03\x00\x05\x00'
-            self._send(packet)
 
-    def _send(self, packet):
-        if self._target_mode == TargetMode.serial:
-            self._serial.write(packet)
-        elif self._target_mode == TargetMode.udp:
-            try:
-                self._socket.sendto(packet, (self._udp_target, self._udp_port))
-            except:
-                pass
+    def _send(self, packet, mode, target):
+        try:
+            if mode == TargetMode.serial:
+                if target not in self._targets_serial:
+                    self._targets_serial[target] = serial.Serial(target,
+                                                                 115200,
+                                                                 timeout=0.01,
+                                                                 write_timeout=0)
+                self._targets_serial[target].write(packet)
+            elif mode == TargetMode.udp:
+                if target not in self._targets_udp:
+                    self._targets_udp[target] = (socket.gethostbyname(target), 8888)
+                self._udp_socket.sendto(packet, self._targets_udp[target])
+        except Exception as e:
+            msg = traceback.format_exception(type(e), e, e.__traceback__)
+            print(f'Error during remote rendering: {msg}')

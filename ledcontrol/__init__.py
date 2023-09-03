@@ -38,8 +38,6 @@ def main():
                         help='Do not reset the animation timer when patterns are changed. Default: False')
     parser.add_argument('--dev', action='store_true',
                         help='Development flag. Default: False')
-    parser.add_argument('--serial_port',
-                        help='Serial port for external LED driver.')
     args = parser.parse_args()
 
     app = create_app(args.led_count,
@@ -55,8 +53,7 @@ def main():
                      args.sacn,
                      args.hap,
                      args.no_timer_reset,
-                     args.dev,
-                     args.serial_port)
+                     args.dev)
 
     if args.dev:
         app.run(host=args.host, port=args.port)
