@@ -460,12 +460,10 @@ class AnimationController:
     def clear_leds(self):
         'Turn all LEDs off'
         for group, settings in list(self._settings['groups'].items()):
-            range_start = settings['range_start']
-            range_end = min(self._led_count, settings['range_end'])
             self._led_controller.set_range(
-                [(0, 0, 0) for i in range(range_end - range_start)],
-                range_start,
-                range_end,
+                [(0, 0, 0) for i in range(self._led_count)],
+                0,
+                self._led_count,
                 self._correction,
                 1.0,
                 1.0,

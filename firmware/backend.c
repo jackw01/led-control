@@ -231,7 +231,9 @@ void backend_handle_command() {
              command_type == CmdTypeRenderHSV) {
     uint start = backend_incoming_data_buffer[9] << 8 | backend_incoming_data_buffer[10];
     uint end = backend_incoming_data_buffer[11] << 8 | backend_incoming_data_buffer[12];
-    if (end > LEDCount) return;
+    start = MIN(start, LEDCount);
+    end = MIN(end, LEDCount);
+    if (start >= end) return;
     if (command_type == CmdTypeRenderRGB) {
       for (int i = start; i < end; i++) {
         uint pos = (i - start) * 3 + 13;
