@@ -1,7 +1,7 @@
 # led-control WS2812B LED Controller Server
 # Copyright 2022 jackw01. Released under the MIT License (see LICENSE for details).
 
-import time
+import time, os
 from threading import Event, Thread
 
 class IntervalTimer:
@@ -21,6 +21,7 @@ class IntervalTimer:
         self._perf_avg = 0
         self._event = Event()
         self._thread = Thread(target=self.target, daemon=True)
+        self._is_windows = (os.name == 'nt')
 
     def start(self):
         'Starts the timer thread'
@@ -36,7 +37,11 @@ class IntervalTimer:
             self._perf_avg += cycle_time
 
             # Calculate wait for next iteration
-            self._wait_time = self._interval - (current_start - self.last_start)
+            # Needed because of timer resolution on windows or something like that???
+            if self._is_windows:
+                self._wait_time = self._interval - (current_start - self.last_start)
+            else:
+                self._wait_time = self._interval - cycle_time
             self.last_start = current_start
             if (self._wait_time < 0):
                 self._wait_time = 0
