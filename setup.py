@@ -39,6 +39,7 @@ requirements = [
     'pyopenssl==22.1.0',
     'numpy>=1.21.0',
     'pyserial>=3.5',
+    'Werkzeug==2.2.2',
 ] + (['bjoern>=3.2.1'] if sys.platform.startswith('linux') else []) + (['pyfastnoisesimd>=0.4.2'] if not is_raspberrypi() else [])
 
 extensions = [
