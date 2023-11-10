@@ -38,6 +38,8 @@ def main():
                         help='Do not reset the animation timer when patterns are changed. Default: False')
     parser.add_argument('--dev', action='store_true',
                         help='Development flag. Default: False')
+    parser.add_argument('--run-unsafe', dest='run_restricted', action='store_false', help='Do NOT run the pattern Python code in RestrictedPython.')
+    parser.set_defaults(run_restricted=True)
     args = parser.parse_args()
 
     app = create_app(args.led_count,
@@ -53,7 +55,8 @@ def main():
                      args.sacn,
                      args.hap,
                      args.no_timer_reset,
-                     args.dev)
+                     args.dev,
+                     args.run_restricted)
 
     if args.dev:
         app.run(host=args.host, port=args.port)

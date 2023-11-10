@@ -25,7 +25,8 @@ class AnimationController:
                  mapping_func,
                  enable_sacn,
                  no_timer_reset,
-                 global_brightness_limit):
+                 global_brightness_limit,
+                 run_restricted):
         self._led_controller = led_controller
         self._refresh_rate = refresh_rate
         self._led_count = led_count
@@ -33,6 +34,7 @@ class AnimationController:
         self._enable_sacn = enable_sacn
         self._no_timer_reset = no_timer_reset
         self._global_brightness_limit = global_brightness_limit
+        self.run_restricted = run_restricted
 
         # Initialize prev state array
         self._prev_state = [(0, 0, 0) for i in range(self._led_count)]
@@ -265,21 +267,30 @@ class AnimationController:
         restricted_locals = {}
         arg_names = ['t', 'dt', 'x', 'y', 'z', 'prev_state']
 
-        result = RestrictedPython.compile_restricted_exec(source)
-        warnings = list(result.warnings)
-        for name in result.used_names:
+        results = None
+        if self.run_restricted:
+          results = RestrictedPython.compile_restricted_exec(source)
+          code = results.code
+        else:
+          code = compile(source, 'pattern', 'exec')
+          print('compiled unsafe')
+          results = type('CompileResult', (object,),{'code': code, 'errors': [], 'warnings': [], 'used_names': []})
+          restricted_globals.update(globals())
+
+        warnings = list(results.warnings)
+        for name in results.used_names:
             if name not in restricted_globals and name not in arg_names:
                 warnings.append(f'NameError: name \'{name}\' is not defined')
 
-        if result.code:
-            exec(result.code, restricted_globals, restricted_locals)
+        if results.code:
+            exec(results.code, restricted_globals, restricted_locals)
 
-        if len(result.errors) == 0 and 'pattern' in restricted_locals:
+        if len(results.errors) == 0 and 'pattern' in restricted_locals:
             self._functions[key] = restricted_locals['pattern']
             self._check_reset_animation_state()
 
         self._update_needed = True
-        return result.errors, warnings
+        return results.errors, warnings
 
     # Palettes frontend
 
